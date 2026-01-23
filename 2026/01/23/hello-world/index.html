@@ -85,7 +85,7 @@
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
     <div class="headband"></div>
-            <a target="_blank" rel="noopener" href="https://github.com/fengye97" class="github-corner" aria-label="View source on GitHub"><s
+#<a target="_blank" rel="noopener" href="https://github.com/fengye97" class="github-corner" aria-label="View source on GitHub"><s
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
@@ -368,6 +368,11 @@
 
           </div>
           
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="2XZ7bdnUiuhl0r4a4AhE"></div>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -643,6 +648,22 @@ $(document).ready(function() {
   
 
   
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
 
 </body>
 </html>
