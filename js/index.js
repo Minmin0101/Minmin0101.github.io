@@ -1,0 +1,1 @@
+window.addEventListener("load",()=>{var d=document.getElementById("fluid-bg");d&&initFluid(d)});
