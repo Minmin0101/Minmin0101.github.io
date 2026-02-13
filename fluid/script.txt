@@ -1,0 +1,119 @@
+class FluidSimulation {
+  constructor() {
+    this.canvas = document.getElementById('fluid-canvas');
+    this.ctx = this.canvas.getContext('2d');
+    // 初始化时强制适配当前屏幕
+    this.adjustToScreen();
+    // 监听屏幕尺寸变化（包括移动端旋转屏幕）
+    window.addEventListener('resize', () => this.adjustToScreen());
+
+    // 粒子参数 - 移动端自动减少粒子数量，提升性能
+    this.isMobile = window.innerWidth < 768;
+    this.particleCount = this.isMobile ? 80 : 150; // 移动端80个粒子，PC端150个
+    this.maxRadius = this.isMobile ? 20 : 30;      // 移动端粒子更小
+    this.minRadius = this.isMobile ? 3 : 5;
+
+    this.particles = [];
+    this.initParticles();
+    this.animate();
+  }
+
+  // 核心：适配屏幕尺寸，保证canvas和粒子比例一致
+  adjustToScreen() {
+    // 获取当前视口的真实尺寸（兼容移动端）
+    const viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+    const viewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    
+    // 设置canvas尺寸为视口尺寸
+    this.canvas.width = viewportWidth;
+    this.canvas.height = viewportHeight;
+    this.width = viewportWidth;
+    this.height = viewportHeight;
+
+    // 重置粒子位置，防止屏幕变化后粒子偏移/溢出
+    if (this.particles.length > 0) {
+      this.particles.forEach(particle => {
+        particle.x = Math.min(Math.max(particle.x, 0), this.width);
+        particle.y = Math.min(Math.max(particle.y, 0), this.height);
+        // 移动端粒子速度更慢，更流畅
+        particle.dx = this.isMobile ? particle.dx * 0.8 : particle.dx;
+        particle.dy = this.isMobile ? particle.dy * 0.8 : particle.dy;
+      });
+    }
+  }
+
+  initParticles() {
+    this.particles = []; // 清空旧粒子
+    for (let i = 0; i < this.particleCount; i++) {
+      this.particles.push({
+        x: Math.random() * this.width,
+        y: Math.random() * this.height,
+        radius: Math.random() * (this.maxRadius - this.minRadius) + this.minRadius,
+        color: this.getRandomColor(),
+        dx: (Math.random() - 0.5) * (this.isMobile ? 1.2 : 2), // 移动端速度更慢
+        dy: (Math.random() - 0.5) * (this.isMobile ? 1.2 : 2),
+        opacity: Math.random() * 0.5 + 0.2
+      });
+    }
+  }
+
+  getRandomColor() {
+    // 移动端颜色更浅，适配小屏幕
+    const opacity = this.isMobile ? Math.random() * 0.6 + 0.3 : Math.random() * 0.8 + 0.2;
+    const colors = [
+      'rgba(70, 130, 180, ' + opacity + ')',
+      'rgba(106, 90, 205, ' + opacity + ')',
+      'rgba(22, 160, 133, ' + opacity + ')',
+      'rgba(148, 148, 148, ' + opacity + ')'
+    ];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
+
+  drawParticles() {
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.particles.forEach(particle => {
+      this.ctx.beginPath();
+      this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+      this.ctx.fillStyle = particle.color;
+      this.ctx.fill();
+      this.ctx.closePath();
+
+      // 粒子移动
+      particle.x += particle.dx;
+      particle.y += particle.dy;
+
+      // 边界反弹（适配新的屏幕尺寸）
+      if (particle.x < 0 || particle.x > this.width) particle.dx = -particle.dx;
+      if (particle.y < 0 || particle.y > this.height) particle.dy = -particle.dy;
+    });
+  }
+
+  animate() {
+    this.drawParticles();
+    requestAnimationFrame(() => this.animate());
+  }
+}
+
+// 页面加载完成后初始化，兼容移动端延迟加载
+window.addEventListener('load', () => {
+  // 延迟初始化，确保移动端视口已计算完成
+  setTimeout(() => {
+    window.fluidInstance = new FluidSimulation();
+  }, 100);
+});
+
+// 移动端触摸交互（替代鼠标移动）
+document.addEventListener('touchmove', (e) => {
+  if (window.fluidInstance && e.touches.length > 0) {
+    const touch = e.touches[0];
+    window.fluidInstance.particles.forEach(particle => {
+      const dx = touch.clientX - particle.x;
+      const dy = touch.clientY - particle.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < 80) { // 移动端感应范围更小
+        particle.x += dx * 0.015;
+        particle.y += dy * 0.015;
+      }
+    });
+  }
+});
