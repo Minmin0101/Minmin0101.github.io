@@ -1,3 +1,6 @@
+http://example.com/fluid/index.html
+http://example.com/fluid/WebGL-Fluid-Simulation/index.html
+http://example.com/fluid/WebGL-Fluid-Simulation/README.html
 http://example.com/about/index-1.html
 http://example.com/2026/01/23/hello-world/
 http://example.com/tags/index.html
