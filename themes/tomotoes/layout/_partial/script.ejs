@@ -1,30 +1,42 @@
-<!-- waves按钮特效 -->
-<script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script src="<%- url_for('/vendor/waves/waves.min.js') %>?v=<%= theme_version() %>"></script>
 
-<!-- 主题配置脚本 -->
 <script>
-var BLOG = { ROOT: '<%= config.root %>', SHARE: <%- theme.share %>, REWARD: <%- Boolean(page.reward) %> };
+var BLOG = {
+    ROOT: '<%= config.root %>',
+    SHARE: <%- theme.share %>,
+    REWARD: <%- Boolean(page.reward) %>
+};
 </script>
 
-<!-- jquery -->
 <script src="<%- url_for(theme_js('/js/jquery', cache)) %>"></script>
 
-<!-- 搜索 -->
 <%- partial('search') %>
 
-<!-- main博客脚本 -->
-<script src="<%- url_for(theme_js('/js/main', cache)) %>" ></script>
+<script src="<%- url_for(theme_js('/js/main', cache)) %>"></script>
+<script src="<%- url_for(theme_js('/js/script', cache)) %>"></script>
 
-<!-- 动画&配置 -->
-<script src="<%- url_for(theme_js('/js/script', cache)) %>" ></script>
-
-<!-- 脚本管理 -->
 <%- partial('switch') %>
 
-<!-- 公式渲染 -->
-<%- partial('plugins/mathjax') %>
-
-<!-- 不蒜子 -->
-<% if (theme.visit_counter) { %>
-<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+<script src="<%- url_for('/vendor/opencc/full.js') %>?v=<%= theme_version() %>"></script>
+<% if (is_post()) { %>
+<script src="<%- url_for('/vendor/katex/katex.min.js') %>?v=<%= theme_version() %>"></script>
+<script src="<%- url_for('/vendor/katex/contrib/mhchem.min.js') %>?v=<%= theme_version() %>"></script>
+<script src="<%- url_for('/vendor/katex/contrib/auto-render.min.js') %>?v=<%= theme_version() %>"></script>
 <% } %>
+<script src="<%- url_for('/js/blog-enhance.js?v=' + theme_version()) %>"></script>
+
+<% if (page.layout === 'gallery') { %>
+<script src="<%- url_for('/js/gallery-viewer.js?v=' + theme_version()) %>"></script>
+<% } %>
+
+<% if (page.layout === 'tags') { %>
+<script src="<%- url_for('/vendor/matter/matter.min.js') %>?v=<%= theme_version() %>"></script>
+<script src="<%- url_for('/vendor/poly-decomp/decomp.min.js') %>?v=<%= theme_version() %>"></script>
+<script src="<%- url_for('/js/tags-gravity.js?v=' + theme_version()) %>"></script>
+<% } %>
+
+<% if (theme.visit_counter) { %>
+<script async src="<%- url_for('/vendor/busuanzi/busuanzi.pure.mini.js') %>?v=<%= theme_version() %>"></script>
+<% } %>
+
+<%- partial('_partial/live2d-loader') %>

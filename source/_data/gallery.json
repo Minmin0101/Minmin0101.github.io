@@ -1,0 +1,70 @@
+{
+  "albums": [
+    {
+      "title": "雨后街角",
+      "subtitle": "偏安静的一组日常记录，适合慢慢翻。",
+      "cover": "/img/avatar.jpg",
+      "photos": [
+        {
+          "src": "/img/avatar.jpg",
+          "title": "暮色站牌",
+          "description": "风从街口吹过来，整座城市都慢了一拍。"
+        },
+        {
+          "src": "/img/markdown-demo-figure.svg",
+          "title": "远山天光",
+          "description": "把一整天里最干净的一束光留在这里。"
+        },
+        {
+          "src": "/img/wechat_channel.jpg",
+          "title": "橙色晚霞",
+          "description": "下班路上随手拍的一张，却意外像一帧电影。"
+        }
+      ]
+    },
+    {
+      "title": "界面草稿",
+      "subtitle": "一些设计灵感、动画测试和页面细节。",
+      "cover": "/img/markdown-demo-motion.svg",
+      "photos": [
+        {
+          "src": "/img/markdown-demo-motion.svg",
+          "title": "动效实验",
+          "description": "记录页面切换和光影粒子的一次小测试。"
+        },
+        {
+          "src": "/img/avatar.png",
+          "title": "卡片头像",
+          "description": "留作不同模块里的视觉占位和头像版本。"
+        },
+        {
+          "src": "/img/wechat.png",
+          "title": "界面色板",
+          "description": "顺手存下来的配色和层次关系，后面继续优化。"
+        }
+      ]
+    },
+    {
+      "title": "长风旅途",
+      "subtitle": "更偏收藏向的一本相册，放几张我想留下来的画面。",
+      "cover": "/img/markdown-demo-figure.svg",
+      "photos": [
+        {
+          "src": "/img/markdown-demo-figure.svg",
+          "title": "山谷来信",
+          "description": "像是从很远的地方寄来的安静消息。"
+        },
+        {
+          "src": "/img/dog.png",
+          "title": "旅途玩伴",
+          "description": "偶然遇见的可爱瞬间，值得被单独留档。"
+        },
+        {
+          "src": "/img/wechat_channel.jpg",
+          "title": "光落窗边",
+          "description": "把普通的一天，拍成了带点温度的片段。"
+        }
+      ]
+    }
+  ]
+}

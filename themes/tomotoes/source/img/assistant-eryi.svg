@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-labelledby="title desc">
+  <title id="title">Erii assistant portrait</title>
+  <desc id="desc">A warm framed portrait of a red-haired anime girl in front of mountain light.</desc>
+  <defs>
+    <linearGradient id="frame" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#050607"/>
+      <stop offset="100%" stop-color="#111418"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="75%" y2="100%">
+      <stop offset="0%" stop-color="#f6ece7"/>
+      <stop offset="52%" stop-color="#ddd5da"/>
+      <stop offset="100%" stop-color="#d68852"/>
+    </linearGradient>
+    <linearGradient id="leftMountain" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d5b8a0"/>
+      <stop offset="100%" stop-color="#826764"/>
+    </linearGradient>
+    <linearGradient id="rightMountain" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e7b17a"/>
+      <stop offset="100%" stop-color="#8a4b2e"/>
+    </linearGradient>
+    <linearGradient id="hair" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#cf3e57"/>
+      <stop offset="55%" stop-color="#99263e"/>
+      <stop offset="100%" stop-color="#61152c"/>
+    </linearGradient>
+    <linearGradient id="kimono" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffdfb"/>
+      <stop offset="100%" stop-color="#e9e4e5"/>
+    </linearGradient>
+    <linearGradient id="obi" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#20191e"/>
+      <stop offset="100%" stop-color="#41353e"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="18%" cy="18%" r="20%">
+      <stop offset="0%" stop-color="#fffef8"/>
+      <stop offset="100%" stop-color="#f4eee4"/>
+    </radialGradient>
+    <clipPath id="sceneClip">
+      <rect x="28" y="24" width="264" height="152" rx="24"/>
+    </clipPath>
+  </defs>
+
+  <rect x="0" y="0" width="320" height="200" rx="34" fill="url(#frame)"/>
+  <rect x="28" y="24" width="264" height="152" rx="24" fill="#0d0f12"/>
+  <g clip-path="url(#sceneClip)">
+    <rect x="28" y="24" width="264" height="152" fill="url(#sky)"/>
+    <circle cx="58" cy="54" r="22" fill="url(#sun)"/>
+
+    <path d="M28 145c20-42 40-64 75-87 9 18 14 41 18 68 6 19 10 32 16 50H28z" fill="url(#leftMountain)" opacity=".94"/>
+    <path d="M226 54c26 8 48 28 66 63v59H181c7-12 17-31 26-58 10-27 16-48 19-64z" fill="url(#rightMountain)"/>
+    <path d="M175 114c22 14 40 18 70 20v42h-94c5-9 12-22 24-41z" fill="#f2dfd4" opacity=".22"/>
+
+    <path d="M125 58c-10 17-16 32-17 47-4 36-11 57-30 71l18 2c19-10 29-26 34-58 2-15 8-30 16-45z" fill="url(#hair)"/>
+    <path d="M160 52c18 10 31 28 31 55 0 26-12 49-33 61-14 8-31 9-45 2-18-9-30-31-30-57 0-28 14-49 39-61 12-6 24-6 38 0z" fill="url(#hair)"/>
+    <path d="M142 112h22c23 0 39 15 42 41l3 23H92l3-23c3-26 19-41 47-41z" fill="url(#kimono)"/>
+    <path d="M136 145h48v18h-48z" fill="url(#obi)"/>
+
+    <path d="M129 76c13-10 24-14 37-14 13 0 24 5 35 16-2 31-19 54-44 54-24 0-39-20-39-48 0-3 0-5 1-8z" fill="#fdf2ef"/>
+    <path d="M121 77c8-22 22-34 42-34 20 0 37 11 46 32-14-9-30-10-48-4-11 3-24 5-40 6z" fill="url(#hair)"/>
+    <path d="M116 88c11 5 23 8 36 8 20 0 36-6 48-16-2 14-8 25-17 34-9 8-18 12-31 12-12 0-22-4-30-12-7-7-12-16-14-26z" fill="#a93a54" opacity=".78"/>
+
+    <ellipse cx="148" cy="94" rx="7" ry="9" fill="#b63b72"/>
+    <ellipse cx="176" cy="94" rx="7" ry="9" fill="#b63b72"/>
+    <circle cx="150" cy="92" r="2" fill="#fff"/>
+    <circle cx="178" cy="92" r="2" fill="#fff"/>
+    <path d="M156 109c5 3 11 3 16 0" fill="none" stroke="#d16c82" stroke-linecap="round" stroke-width="3"/>
+    <circle cx="132" cy="104" r="6" fill="#efb0bf" opacity=".42"/>
+    <circle cx="191" cy="104" r="6" fill="#efb0bf" opacity=".42"/>
+
+    <path d="M142 44c9-11 21-17 36-17 22 0 39 13 47 38-10-8-21-12-34-12-13 0-27 4-43 13-4-8-5-15-6-22z" fill="#7f2038" opacity=".88"/>
+    <path d="M102 176c16-5 29-14 39-29 4 13 10 22 18 29H102z" fill="#a65a43" opacity=".14"/>
+    <circle cx="198" cy="84" r="1.4" fill="#fff" opacity=".65"/>
+    <circle cx="218" cy="98" r="1.2" fill="#fff" opacity=".56"/>
+    <circle cx="110" cy="126" r="1.1" fill="#fff" opacity=".4"/>
+  </g>
+</svg>

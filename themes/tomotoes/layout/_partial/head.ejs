@@ -1,6 +1,9 @@
 <head>
     <meta http-equiv="Content-Language" content="zh-cn">
     <meta charset="utf-8">
+    <%
+        var browserThemeColor = theme.color || '#5275b0';
+    %>
     <% if(theme.google_site_verification){ %>
     <meta name="google-site-verification" content="<%- theme.google_site_verification%>">
     <% }%>
@@ -26,9 +29,9 @@
     %>
     <title><% if (title){ %><%= title %> | <% } %><%= config.title %><% if (config.subtitle){ %> | <%= config.subtitle %><% } %></title>
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <% if(theme.color){ %>
-    <meta name="theme-color" content="<%=theme.color%>">
-    <% } %>
+    <meta name="theme-color" content="<%= browserThemeColor %>">
+    <meta name="apple-mobile-web-app-status-bar-style" content="<%= browserThemeColor %>">
+    <meta name="msapplication-navbutton-color" content="<%= browserThemeColor %>">
     <%
         var keyWords = config.keywords;
         if(page.tags){
@@ -41,24 +44,45 @@
     }
     %>
     <meta name="keywords" content="<%= keyWords %>">
-    
+
     <%- partial('plugins/google-analytics') %>
     <%- partial('plugins/tajs') %>
     <%- partial('plugins/baidu') %>
-    
+
     <%- open_graph({twitter_id: theme.twitter, google_plus: theme.google_plus, fb_admins: theme.fb_admins, fb_app_id: theme.fb_app_id}) %>
     <% if ((config.feed) && (config.feed.path.length)) { %>
         <link rel="alternate" type="application/atom+xml" title="<%= config.title %>" href="<%- url_for(config.feed.path) %>">
     <% } %>
     <%- favicon_tag(theme.favicon) %>
     <link id="style" rel="stylesheet" href="<%- url_for(theme_css('/css/style', cache)) %>">
+    <% if (is_post()) { %>
+    <link rel="stylesheet" href="<%- url_for('/vendor/katex/katex.min.css') %>?v=<%= theme_version() %>">
+    <% } %>
     <script>window.lazyScripts=[]</script>
+    <script>
+    window.selectedColor = '';
+    window.themeColor = localStorage.getItem('theme-color') || '<%= browserThemeColor %>';
+    window.changeColor = function(themeColor) {
+        document.documentElement.style.setProperty('--theme-color', themeColor);
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', themeColor);
+        document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]').setAttribute('content', themeColor);
+        document.querySelector('meta[name="msapplication-navbutton-color"]').setAttribute('content', themeColor);
+        localStorage.setItem('theme-color', themeColor);
+    };
+    window.changeColor(window.themeColor);
+    window.blogNightEnabled = sessionStorage.getItem('night') === '1' || localStorage.getItem('blog-night-mode') === '1';
+    if (localStorage.getItem('blog-night-mode')) {
+        localStorage.removeItem('blog-night-mode');
+        sessionStorage.setItem('night', window.blogNightEnabled ? '1' : '0');
+    }
+    window.isPhone = /Android|iOS|iPhone|iPad|iPod|Windows Phone|KFAPWI/i.test(navigator.userAgent) || (window.innerWidth < 1300);
+    window.isHome = <%- page.layout === 'blog' ? 'true' : 'false' %>;
+    window.isPost = <%- is_post() ? 'true' : 'false' %>;
+    </script>
 
-    <!-- custom head -->
     <% if (site.data.head) { %>
         <% for (var i in site.data.head) { %>
             <%- site.data.head[i] %>
         <% } %>
     <% } %>
-            
 </head>

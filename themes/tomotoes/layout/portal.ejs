@@ -1,0 +1,156 @@
+<%
+const socialMenu = theme.menu2 || {};
+const github = socialMenu.github ? socialMenu.github.url : null;
+const email = socialMenu['envelope-o'] ? socialMenu['envelope-o'].url : null;
+const latestPosts = site.posts.sort('date', -1).limit(3);
+const stats = [
+    { label: '文章', value: site.posts.length || 0 },
+    { label: '标签', value: site.tags.length || 0 },
+    { label: '分类', value: site.categories.length || 0 }
+];
+const cards = [
+    {
+        title: 'Blog',
+        description: '进入博客主列表，阅读最近更新。',
+        url: url_for('/blog/'),
+        icon: 'book'
+    },
+    {
+        title: '关于我',
+        description: '查看个人简介、站点说明和联系方式。',
+        url: url_for('/about/'),
+        icon: 'smile-o'
+    },
+    {
+        title: '归档',
+        description: '按时间线浏览全部文章。',
+        url: url_for('/archives/'),
+        icon: 'archives'
+    },
+    {
+        title: '分类',
+        description: '按主题整理内容，快速定位方向。',
+        url: url_for('/categories/'),
+        icon: 'th-list'
+    },
+    {
+        title: '标签',
+        description: '用关键词检索博客内容。',
+        url: url_for('/tags/'),
+        icon: 'tags'
+    }
+];
+if (github) {
+    cards.push({
+        title: 'GitHub',
+        description: '查看代码仓库与项目更新。',
+        url: github,
+        icon: 'github',
+        external: true
+    });
+}
+%>
+<div class="portal-shell">
+    <section class="portal-hero" id="portal-top">
+        <canvas id="portal-grid" class="portal-grid" aria-hidden="true"></canvas>
+        <div class="portal-glow portal-glow-left" aria-hidden="true"></div>
+        <div class="portal-glow portal-glow-right" aria-hidden="true"></div>
+        <div class="portal-hero__inner">
+            <span class="portal-kicker">Hexo / Tomotoes / Personal Portal</span>
+            <h1 class="portal-title"><%= config.title %></h1>
+            <p
+                class="portal-subtitle"
+                data-phrases='["<%= theme.homesubtitle %>","记录学习、生活与灵感","一个适配手机与桌面的个人入口页"]'
+            >
+                <%= theme.homesubtitle %>
+            </p>
+            <p class="portal-copy"><%= config.description %></p>
+            <div class="portal-actions">
+                <a class="portal-button portal-button-primary" href="<%- url_for('/blog/') %>">进入博客</a>
+                <a class="portal-button portal-button-secondary" href="#portal-hub" data-scroll-target="#portal-hub">PRESS START</a>
+                <% if (github) { %>
+                    <a class="portal-button portal-button-ghost" href="<%- github %>" target="_blank" rel="noopener">GitHub</a>
+                <% } %>
+            </div>
+            <ul class="portal-stats">
+                <% stats.forEach(function(stat) { %>
+                    <li>
+                        <strong><%= stat.value %></strong>
+                        <span><%= stat.label %></span>
+                    </li>
+                <% }) %>
+            </ul>
+        </div>
+    </section>
+
+    <section class="portal-hub" id="portal-hub">
+        <div class="portal-profile reveal-on-scroll">
+            <div class="portal-profile__avatar">
+                <img src="<%- url_for(theme.avatar) %>" alt="<%= config.author %>">
+            </div>
+            <div class="portal-profile__body">
+                <p class="portal-profile__eyebrow">Personal Hub</p>
+                <h2><%= config.author %></h2>
+                <p class="portal-profile__motto"><%= theme.homesubtitle %></p>
+                <p class="portal-profile__text">
+                    这里是博客的统一入口页，保留了作者站点那种“门户首页 + 独立博客区”的结构，同时继续使用 Hexo 管理文章。
+                </p>
+                <div class="portal-profile__meta">
+                    <span><i class="icon icon-lg icon-clock-o"></i><%= theme.startime %></span>
+                    <% if (email) { %>
+                        <a href="<%- email %>"><i class="icon icon-lg icon-envelope-o"></i>联系我</a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <div class="portal-grid-panel">
+            <div class="portal-section-heading reveal-on-scroll">
+                <p>Navigation</p>
+                <h2>和作者站点一致的门户化入口</h2>
+            </div>
+            <div class="portal-card-grid">
+                <% cards.forEach(function(card) { %>
+                    <a
+                        class="portal-card reveal-on-scroll"
+                        href="<%- card.url %>"
+                        <% if (card.external) { %>target="_blank" rel="noopener"<% } %>
+                    >
+                        <span class="portal-card__icon">
+                            <i class="icon icon-lg icon-<%= card.icon %>"></i>
+                        </span>
+                        <span class="portal-card__title"><%= card.title %></span>
+                        <span class="portal-card__desc"><%= card.description %></span>
+                    </a>
+                <% }) %>
+            </div>
+        </div>
+
+        <div class="portal-latest">
+            <div class="portal-section-heading reveal-on-scroll">
+                <p>Latest Posts</p>
+                <h2>最近更新</h2>
+            </div>
+            <div class="portal-latest__list">
+                <% latestPosts.each(function(post) { %>
+                    <article class="portal-post-card reveal-on-scroll">
+                        <p class="portal-post-card__meta"><%= date(post.date, 'YYYY-MM-DD') %></p>
+                        <h3>
+                            <a href="<%- url_for(post.path) %>"><%= post.title %></a>
+                        </h3>
+                        <p>
+                            <%= truncate(strip_html(post.excerpt || post.content), { length: 96 }) %>
+                        </p>
+                    </article>
+                <% }) %>
+            </div>
+        </div>
+
+        <footer class="portal-footer reveal-on-scroll">
+            <p>Built with Hexo and tomotoes, rebuilt as a responsive personal portal.</p>
+            <a href="<%- url_for('/blog/') %>">继续前往博客</a>
+        </footer>
+    </section>
+</div>
+
+<script src="<%- url_for(theme_js('/js/portal', cache)) %>"></script>

@@ -1,45 +1,21 @@
 ---
-title: 你好，世界！
+title: 你好，世界
 top: true
-date: 2026-01-23 10:00:00  # 发布时间（必填）
-updated: 2026-01-23 21:30:00  # 更新时间（添加这个字段，「更新于」才会显示）
+date: 2026-01-23 10:00:00
+updated: 2026-03-12 16:00:00
 tags:
   - 生活
+  - 建站
 categories:
-  - 你好，初次见面，请多关照！
+  - 初次见面
 ---
-Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [documentation](https://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [troubleshooting](https://hexo.io/docs/troubleshooting.html) or you can ask me on [GitHub](https://github.com/hexojs/hexo/issues).
 
-## Quick Start
+这是博客重构后的第一篇文章。
 
-### Create a new post
+最近我把站点从单纯的博客首页，调整成了一个更接近作者个人站的结构：
 
-``` bash
-$ hexo new "My New Post"
-```
+1. 根路径是个人门户首页，用来承接访客和集中导航。
+2. `/blog/` 继续作为博客内容列表页。
+3. 全站同时兼顾手机端和桌面端浏览体验。
 
-More info: [Writing](https://hexo.io/docs/writing.html)
-
-### Run server
-
-``` bash
-$ hexo server
-```
-
-More info: [Server](https://hexo.io/docs/server.html)
-
-### Generate static files
-
-``` bash
-$ hexo generate
-```
-
-More info: [Generating](https://hexo.io/docs/generating.html)
-
-### Deploy to remote sites
-
-``` bash
-$ hexo deploy
-```
-
-More info: [Deployment](https://hexo.io/docs/one-command-deployment.html)
+后面这里会继续更新关于 Hexo、主题修改、部署和日常记录的内容。

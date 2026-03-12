@@ -1,29 +1,34 @@
-﻿# 例子
-# home 就是图标的标识 从这里挑选http://fontawesome.io/icons/ 图标，把图标下面的文字替换即可使用
-#   text ：显示文本
-#   url ： 链接
-#   target: 链接的锚点 是否在本站中打开链接
-
 # 主菜单
 menu:
   home:
     text: 主 页
-    url: /
-  archives:
+    url: /blog/
+  archive:
     text: 归 档
-    url: /archives
-  th-list:
-    text: 分 类
-    url: /categories
+    url: /archives/
   tags:
     text: 标 签
-    url: /tags
-  smile-o:
+    url: /tags/
+  weibo:
+    text: 微 博
+    url: /blog/weibo/
+  camera-retro:
+    text: 相 册
+    url: /gallery/
+  user:
     text: 关 于
-    url: /about
+    url: /about/
+  code:
+    text: 项 目
+    url: /projects/
+  lightbulb-o:
+    text: 思 考
+    url: /thinking/
+  compass:
+    text: 导 航
+    url: /
 
 # 图标菜单
-# 如果您没有微信公众号 您完全可以更改为 其他的链接 比如微博
 menu2:
   envelope-o:
     text: 邮箱
@@ -38,155 +43,101 @@ menu2:
     url: https://weibo.com/u/x
     target: _blank
 
-# 你的头像url
 avatar: /img/avatar.png
-# avatar link
-avatar_link: /
-# favicon
+avatar_link: /blog/
 favicon: /img/favicon1.ico
 
 # 座右铭
-# mymotto:  关闭一言
-#  content: 用此内容代替一言
 mymotto: false
-# content: 我的座右铭
+wechat_qr: /img/wechat_channel.jpg
 
 # 网站开启时间
 startime: 2021/08/01
 
 # 首页副标题
 homesubtitle: 「热爱分享 | 生活记录」
-
-# 归档页标题
-archivestitle: 路漫漫其修远兮
-
-# 标签页标题
-tagstitle: 不积小流无以成江海
-
-# 分类页标题
-categoriestitle: 不积跬步无以至千里
-
-# 关于页标题
-aboutitle: 一个坏掉的番茄
-
-# 设置 Android L Chrome 浏览器状态栏颜色
-color: '#77AAFF'
+homemotto: "“如果你有勇气，我就陪你打断婚车的车轴”--《龙族》楚子航"
+blogsubtitle: STDIN | Think >> /dev/Mind✨
+assistant_name: 上杉绘梨衣
+assistant_intro: 我会帮你找文章、看标签、跳转页面，也能带你去看最新文章和 Markdown 渲染示例。
 
 # 页面标题
+archivestitle: 路漫漫其修远兮
+tagstitle: 不积小流无以成江海
+categoriestitle: 不积跬步无以至千里
+aboutitle: 一个坏掉的番茄
 tags_title: 标签
 archives_title: 归档
 categories_title: 分类
+
+# 浏览器状态栏颜色
+color: '#77AAFF'
 
 # 文章截断
 excerpt_render: true
 excerpt_length: 175
 excerpt_link: 阅读全文 »
-mathjax: false
+mathjax: true
 archive_yearly: true
 
-# 是否显示文章最后更新时间
+# 功能开关
 show_last_updated: true
-
-# 是否开启分享
 share: true
-
-# 是否开启打赏，关闭 reward: false
-reward:
-  title: 感谢您的鼓励支持！     #打赏回馈话语
-  wechat: /img/wechatpay.png     #微信，关闭设为 false
-  alipay: /img/alipay.png     #支付宝，关闭设为 false
-  wechatalipay: /img/dog.png  #点击打赏时显示的图片
-
-# 是否大屏幕下文章页隐藏导航
 hideMenu: true
-
-# 是否开启搜索
 search: true
-
-# 是否开启toc
-# toc: true
 toc:
-  list_number: true  # 是否显示数字排序
+  list_number: true
 
-# 文章页留言内容，hexo中所有变量及辅助函数等均可调用，具体请查阅 hexo.io
+# 打赏
+reward:
+  title: 感谢你的鼓励支持！
+  wechat: /img/wechatpay.png
+  alipay: /img/alipay.png
+  wechatalipay: /img/dog.png
+
+# 文章页留言内容
 postMessage: 原文链接：<a href="<%- url_for(page.path).replace(/index\.html$/, '') %>" target="_blank" rel="external"><%- page.permalink.replace(/index\.html$/, '') %></a>
 
-# ===================== 统计/SEO配置（按需开启）=====================
-# 不蒜子访问量统计（轻量无配置，直接开启）
-#visit_counter:
-#  site_pv: 总访问量：
-#  site_uv: 总访客数：
-
-
-# 百度统计，如要开启，改为你的 key
+# 统计 / SEO
 baidu_tongji: false
-
-# 腾讯分析，如要开启，输入站点id
+baidu_push: false
 tajs: false
-
-# google
 google_analytics: false
 google_site_verification: false
 
-# less
 less:
   compress: true
   paths:
     - source/css/style.less
 
-# 是否使用 gitment，https://github.com/imsun/gitment
 gitment: false
-# owner: xxx
-# repo: xxx
-# client_id: xxx
-# client_secret: xxx
-
 gitalk: false
-# owner: xxx
-# repo: xxx
-# client_id: xxx
-# client_secret: xxx
 
-# Valine Comment system. https://valine.js.org
 valine:
-  enable: false # 如果你想使用valine，请将值设置为 true
-  appId:  # your leancloud appId
-  appKey:  # your leancloud appKey
-  notify: false # Mail notify
-  verify: false # Verify code
-  avatar: mm # Gravatar style : mm/identicon/monsterid/wavatar/retro/hide
-  placeholder: Just go go # Comment Box placeholder
-  guest_info: nick,mail,link # Comment header info
-  pageSize: 10 # comment list page size
+  enable: false
+  appId:
+  appKey:
+  notify: false
+  verify: false
+  avatar: mm
+  placeholder: Just go go
+  guest_info: nick,mail,link
+  pageSize: 10
 
-# 规范网址
-# 让搜索引擎重定向你的不同域名、不同子域、同域不同目录的站点到你期望的路径
-# https://support.google.com/webmasters/answer/139066
-# 假设配置为 canonical: http://imys.net，那么从搜索引擎中 www.imys.net 进入会重定向到 imys.net
 canonical: false
-
-# 版权起始年份
 since_year: 2021
-
-# footer中显示的网址
 site: 衰小孩
 
-# 用户页面中作者相关的描述性文字，如不需要设为 false
-about: 业精于勤荒于嬉，行成于思毁于随
+# 设为 false 以渲染 about/index.md 中的真实内容
+about: false
 
-# “不蒜子”访问量统计，详见 http://ibruce.info/2015/04/04/busuanzi/
 visit_counter:
   site_pv: 访问次数：
   site_uv: 访问用户：
 
-# 设置为 true 发布后将使用 unpkg cdn 最新的主题样式
-# 如果想让你的自定义样式生效，把此项设为 false
 cdn: false
-
-# 设置为 true 将使用 lightbox render 图片
 lightbox: true
 
-# Emoji
 githubEmojis:
   enable: true
   className: github-emoji

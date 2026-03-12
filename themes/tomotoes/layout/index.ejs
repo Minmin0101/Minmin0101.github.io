@@ -1,19 +1,128 @@
-<%- partial('_partial/header', {
-    title: config.title,
-    hdClass: 'index-header'
-}) %>
-<div class="container body-wrap">
-    <ul class="post-list">
-    <% page.posts.each(function(post){ %>
-        <li class="post-list-item fade">
-            <%- partial('_partial/index-item', {
-                post: post,
-                index: true
-            }) %>
-        </li>
-    <% }) %>
-    </ul>
+<%
+const assetVersion = theme_version();
+const introText = theme.homemotto || theme.homesubtitle || config.description || '';
+const signature = theme.homesubtitle || config.description || introText;
+const navItems = [
+    {
+        title: '\u535A\u5BA2',
+        url: url_for('/blog/'),
+        glyph: 'bokeyuan'
+    },
+    {
+        title: '\u5FAE\u535A',
+        url: url_for('/blog/weibo/'),
+        glyph: 'biaoqing'
+    },
+    {
+        title: '\u5173\u4E8E',
+        url: url_for('/about/'),
+        glyph: 'zhifeiji'
+    },
+    {
+        title: '\u76F8\u518C',
+        url: url_for('/gallery/'),
+        glyph: 'xiangce'
+    },
+    {
+        title: '\u9879\u76EE',
+        url: url_for('/projects/'),
+        glyph: 'projects'
+    },
+    {
+        title: '\u601D\u8003',
+        url: url_for('/thinking/'),
+        glyph: 'idea'
+    }
+];
+%>
+<div class="homepage-shell">
+    <section class="content content-intro" id="intro-screen">
+        <div class="content-inner">
+            <canvas id="background" aria-hidden="true"></canvas>
+            <div class="wrap fade">
+                <h2 class="content-title"><%= config.title %></h2>
+                <h3
+                    class="content-subtitle"
+                    original-content="<%= introText %>"
+                >&nbsp;</h3>
+                <a class="enter" role="button" tabindex="0">PRESS START</a>
+                <div class="arrow arrow-1" aria-hidden="true"></div>
+                <div class="arrow arrow-2" aria-hidden="true"></div>
+            </div>
+        </div>
+        <div class="shape-wrap" aria-hidden="true">
+            <svg class="shape" width="100%" height="100vh" preserveAspectRatio="none" viewBox="0 0 1440 800" xmlns:pathdata="http://www.codrops.com/">
+                <path d="M-44-50C-52.71 28.52 15.86 8.186 184 14.69 383.3 22.39 462.5 12.58 638 14 835.5 15.6 987 6.4 1194 13.86 1661 30.68 1652-36.74 1582-140.1 1512-243.5 15.88-589.5-44-50Z" pathdata:id="M -44,-50 C -137.1,117.4 67.86,445.5 236,452 435.3,459.7 500.5,242.6 676,244 873.5,245.6 957,522.4 1154,594 1593,753.7 1793,226.3 1582,-126 1371,-478.3 219.8,-524.2 -44,-50 Z"></path>
+            </svg>
+        </div>
+    </section>
 
-    <%- partial('_partial/paginator') %>
-
+    <section class="content content-main" id="portal-screen">
+        <div id="card">
+            <div class="card-inner fade">
+                <header>
+                    <img src="<%- url_for(theme.avatar) %>" width="100" height="100" alt="<%= config.author %>">
+                    <h1><%= config.author %></h1>
+                    <h2 id="signature" original-content="<%= signature %>"><%= signature %></h2>
+                </header>
+                <ul class="portal-links">
+                    <% navItems.forEach(function(item) { %>
+                        <li class="nav-item">
+                            <a
+                                href="<%- item.url %>"
+                                aria-label="<%= item.title %>"
+                                <% if (item.external) { %>target="_blank" rel="noopener"<% } %>
+                            >
+                                <i class="portal-glyph portal-glyph-<%= item.glyph %>" aria-hidden="true"></i>
+                                <span class="nav-text"><%= item.title %></span>
+                            </a>
+                        </li>
+                    <% }) %>
+                </ul>
+            </div>
+        </div>
+        <canvas class="particle-background" id="particleCanvas" aria-hidden="true"></canvas>
+    </section>
 </div>
+
+<script src="<%- url_for('/js/anime.min.js?v=' + assetVersion) %>"></script>
+<script>
+window.$ = function(selector) { return document.querySelector(selector) }
+const getOriginalContent = function(selector) {
+    const element = window.$(selector)
+    return element ? element.getAttribute('original-content') : ''
+}
+window.subtitle = getOriginalContent('.content-subtitle')
+window.signature = getOriginalContent('#signature')
+window.config = {
+    SIM_RESOLUTION: 128,
+    DYE_RESOLUTION: 1024,
+    CAPTURE_RESOLUTION: 512,
+    DENSITY_DISSIPATION: 1,
+    VELOCITY_DISSIPATION: 0.2,
+    PRESSURE: 0.8,
+    PRESSURE_ITERATIONS: 20,
+    CURL: 30,
+    SPLAT_RADIUS: 0.25,
+    SPLAT_FORCE: 6000,
+    SHADING: true,
+    COLORFUL: true,
+    COLOR_UPDATE_SPEED: 10,
+    PAUSED: false,
+    BACK_COLOR: { r: 30, g: 31, b: 33 },
+    TRANSPARENT: false,
+    BLOOM: true,
+    BLOOM_ITERATIONS: 8,
+    BLOOM_RESOLUTION: 256,
+    BLOOM_INTENSITY: 0.4,
+    BLOOM_THRESHOLD: 0.8,
+    BLOOM_SOFT_KNEE: 0.7,
+    SUNRAYS: true,
+    SUNRAYS_RESOLUTION: 196,
+    SUNRAYS_WEIGHT: 1.0
+}
+</script>
+<script src="<%- url_for('/js/homepage-main.js?v=' + assetVersion) %>"></script>
+<script src="<%- url_for('/js/homepage-background.js?v=' + assetVersion) %>"></script>
+<%- partial('_partial/live2d') %>
+<%- partial('_partial/live2d-loader') %>

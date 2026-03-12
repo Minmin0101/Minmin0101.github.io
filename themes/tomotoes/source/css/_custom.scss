@@ -1,0 +1,101 @@
+// 全局样式重置（对齐 simonaking.com 的极简风格）
+:root {
+  --primary-color: #333;       // 主文字色（目标站的深灰）
+  --secondary-color: #666;     // 次要文字色
+  --background-color: #fff;    // 背景色
+  --hover-color: #000;         // hover 高亮色
+  --border-color: #eee;        // 边框浅灰
+}
+
+// 全局字体（和目标站一致的无衬线字体，清晰易读）
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;            // 行高（目标站的舒适行高）
+  color: var(--primary-color);
+  background: var(--background-color);
+  padding: 0;
+  margin: 0;
+}
+
+// 页面容器（控制宽度+居中，和目标站一致的留白）
+.container {
+  max-width: 800px;            // 目标站的内容宽度
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+// 导航栏样式（极简，无背景、无边框，hover 仅文字变色）
+.header {
+  border-bottom: none !important;
+  padding: 20px 0;
+}
+.nav-menu a {
+  color: var(--secondary-color) !important;
+  margin: 0 12px;
+  font-size: 15px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.nav-menu a:hover {
+  color: var(--hover-color) !important;
+  border-bottom: none !important; // 去掉默认的下划线 hover 效果
+}
+
+// 文章标题/正文样式（对齐目标站的排版）
+.post-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 20px 0 15px;
+}
+.post-content {
+  font-size: 16px;
+  line-height: 1.8;
+  margin: 20px 0;
+}
+.post-content p {
+  margin: 12px 0;
+}
+.post-content h2, .post-content h3 {
+  margin: 25px 0 15px;
+  font-weight: 600;
+}
+
+// 归档/分类页面样式（极简列表）
+.archive-list, .category-list {
+  padding: 0;
+  list-style: none;
+}
+.archive-list-item, .category-list-item {
+  margin: 8px 0;
+  padding: 0;
+}
+
+// 去掉所有冗余装饰（阴影、圆角、多余边框）
+.card, .post, .archive {
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+// 平滑滚动（目标站的丝滑体验）
+html {
+  scroll-behavior: smooth;
+}
+
+// 移动端适配
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+    padding: 0 15px;
+  }
+  .post-title {
+    font-size: 20px;
+  }
+  .nav-menu a {
+    margin: 0 8px;
+    font-size: 14px;
+  }
+}

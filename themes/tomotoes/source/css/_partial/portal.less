@@ -1,0 +1,473 @@
+@font-face {
+    font-family: "portal-homepage";
+    src:
+        url("./fonts/portal-homepage.woff2") format("woff2"),
+        url("./fonts/portal-homepage.woff") format("woff");
+    font-display: swap;
+}
+
+body.portal-page {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: #060606;
+    color: #fff;
+    font-family: "Comic Sans MS", "Helvetica Neue", "Microsoft YaHei", -apple-system, sans-serif;
+}
+
+body.portal-page #main {
+    position: relative;
+    height: 100vh;
+    min-height: 100vh;
+    padding-left: 0;
+    overflow: hidden;
+    background: transparent;
+}
+
+.homepage-shell,
+.content {
+    position: relative;
+    width: 100%;
+}
+
+.homepage-shell,
+.content-inner,
+.wrap {
+    height: 100vh;
+}
+
+.content {
+    background: transparent;
+}
+
+.content-intro {
+    z-index: 100;
+    height: 200vh;
+}
+
+.content-main {
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 50% 26%, rgba(113, 196, 255, 0.08), transparent 30%),
+        radial-gradient(circle at 50% 88%, rgba(255, 255, 255, 0.04), transparent 24%),
+        #060606;
+}
+
+.content-inner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    user-select: none;
+}
+
+.content-intro .content-inner {
+    background: transparent;
+}
+
+.wrap {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.fade {
+    opacity: 0;
+    transform: translateY(200px);
+    transition: all 1s;
+}
+
+.fade.in {
+    opacity: 1;
+    transform: none;
+}
+
+#background {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+}
+
+.shape-wrap {
+    position: relative;
+    z-index: 0;
+    margin: -5px 0 0;
+    background: transparent;
+}
+
+.shape {
+    display: block;
+    width: 100%;
+    height: 100vh;
+    background: transparent;
+}
+
+.shape path {
+    fill: #151515;
+}
+
+.content-title {
+    margin-top: 0.8em;
+    margin-bottom: 0.3em;
+    font-size: clamp(3rem, 8vw, 4.7rem);
+    font-weight: 200;
+    line-height: 1;
+    color: #fff;
+    text-shadow:
+        0 0 1px #fff,
+        0 0 2px #fff,
+        0 0 3px #fff,
+        0 0 5px #333,
+        0 0 8px #333,
+        0 0 10px #333;
+}
+
+.content-subtitle {
+    max-width: min(92vw, 900px);
+    margin-bottom: 2em;
+    padding: 0 8px;
+    color: #fff;
+    font-size: clamp(1rem, 2.8vw, 1.2rem);
+    font-weight: 200;
+    line-height: 1.65;
+    text-shadow: 0 0 4px #fff;
+}
+
+.content-subtitle span {
+    display: inline-block;
+    animation: letter-glow 0.7s ease both;
+}
+
+.enter {
+    color: #fff;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    white-space: pre;
+    pointer-events: auto;
+    transition: all 0.4s;
+    z-index: 999;
+    position: relative;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+    background-size: 200% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 2s linear infinite;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.enter:hover,
+.enter:focus-visible {
+    color: #5f5f5f;
+}
+
+.arrow {
+    position: absolute;
+    left: 49.5%;
+    top: 95%;
+    transform-origin: 50% 50%;
+    transform: translate3d(-50%, 0, 0);
+}
+
+.arrow::before,
+.arrow::after {
+    background: #fff;
+    display: block;
+    content: "";
+    height: 3px;
+    left: 0;
+    box-shadow: 1px 1px 20px 0 #fff;
+    position: absolute;
+    top: 0;
+    width: 13px;
+}
+
+.arrow::before {
+    transform: rotate(45deg) translateX(-10%);
+    transform-origin: top left;
+}
+
+.arrow::after {
+    transform: rotate(-45deg) translateX(10%);
+    transform-origin: top right;
+}
+
+.arrow-1 {
+    animation: arrow-movement 2s ease-in-out infinite;
+}
+
+.arrow-2 {
+    animation: arrow-movement 2s 1s ease-in-out infinite;
+}
+
+#card {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    color: #93979e;
+    text-align: center;
+    transition: width 0.5s ease, height 0.5s ease;
+}
+
+#card .card-inner {
+    width: 100%;
+    max-width: 700px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
+#card .card-inner header {
+    margin-bottom: 40px;
+}
+
+#card .card-inner header img {
+    position: relative;
+    z-index: 2;
+    width: 100px;
+    height: 100px;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.3);
+    object-fit: cover;
+}
+
+#card .card-inner header h1 {
+    position: relative;
+    z-index: 2;
+    margin: 15px 15px 0;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 300;
+    line-height: 1.2em;
+}
+
+#card .card-inner header h2 {
+    position: relative;
+    z-index: 2;
+    margin: 10px 0 0;
+    color: #ccc;
+    font-size: 0.8rem;
+    font-weight: lighter;
+    letter-spacing: 3px;
+}
+
+#card .portal-links {
+    position: relative;
+    display: inline-flex;
+    width: 100%;
+    margin: 0;
+    padding: 0 0 40px;
+    list-style-type: none;
+    justify-content: space-around;
+}
+
+#card .portal-links .nav-item {
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    transition: all 0.2s;
+}
+
+#card .portal-links .nav-item a {
+    display: block;
+    color: #b6b6b6;
+    transition: all 0.2s;
+}
+
+#card .portal-links .nav-item a:hover,
+#card .portal-links .nav-item a:focus-visible {
+    color: #f6f6f6;
+    text-shadow: 0 0 2px #f6f6f6;
+    transform: translateY(-2px);
+}
+
+.portal-glyph {
+    display: block;
+    width: 1.5em;
+    height: 1.5em;
+    margin: 0 auto 12px;
+    fill: currentColor;
+    font-family: "portal-homepage" !important;
+    font-size: 1.72rem;
+    font-style: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.portal-glyph-bokeyuan::before {
+    content: "\e603";
+}
+
+.portal-glyph-biaoqing::before {
+    content: "\e624";
+}
+
+.portal-glyph-zhifeiji::before {
+    content: "\e60a";
+}
+
+.portal-glyph-xiangce::before {
+    content: "\e69b";
+}
+
+.portal-glyph-projects::before {
+    content: "\e625";
+}
+
+.portal-glyph-idea::before {
+    content: "\e608";
+}
+
+#card .portal-links .nav-text {
+    display: block;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+}
+
+.particle-background {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200%;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    50% {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+    }
+
+    100% {
+        background-position: -200%;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+}
+
+@keyframes arrow-movement {
+    0% {
+        opacity: 0;
+        top: 92%;
+    }
+
+    70% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes letter-glow {
+    0% {
+        opacity: 0;
+        text-shadow: 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+
+    66% {
+        opacity: 1;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.9);
+    }
+
+    100% {
+        opacity: 0.7;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+}
+
+@media screen and (max-width: 50em) {
+    .content-title {
+        font-size: 2rem;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .content-subtitle {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 760px) {
+    .wrap {
+        padding: 0 16px;
+    }
+
+    #card .card-inner {
+        max-width: 560px;
+    }
+
+    #card .card-inner header h1 {
+        font-size: 1.35rem;
+    }
+
+    #card .card-inner header h2 {
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+    }
+
+    #card .portal-links {
+        flex-wrap: wrap;
+        padding-bottom: 24px;
+    }
+
+    #card .portal-links .nav-item {
+        width: 33.333%;
+        margin-bottom: 18px;
+    }
+
+    .portal-glyph {
+        margin-bottom: 8px;
+        font-size: 1.5rem;
+    }
+
+    #card .portal-links .nav-text {
+        font-size: 0.78rem;
+    }
+}
+
+@media screen and (max-width: 540px) {
+    #card .card-inner {
+        max-width: 340px;
+    }
+
+    #card .card-inner header h1 {
+        font-size: 1rem;
+    }
+
+    #card .card-inner header h2,
+    #card .portal-links .nav-item {
+        font-size: 0.8rem;
+    }
+
+    #card .portal-links .nav-item {
+        width: 50%;
+    }
+
+}
+
+@media screen and (max-width: 400px) {
+    #card .portal-links .nav-item {
+        font-size: 0.7rem;
+    }
+}

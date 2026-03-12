@@ -19,10 +19,12 @@ hexo.extend.helper.register('theme_css', (path, cache) =>
 )
 
 function renderImage(src, alt = '', title = '') {
+	const placeholder =
+		hexo.theme.config.image_placeholder || '/img/img-loading.png'
 	return `<figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
-                    <img src="${src}" alt="${alt}" title="${title}">
+                    <img src="${placeholder}" data-original="${src}" alt="${alt}" title="${title}" loading="lazy">
                 </div>
                 <div class="image-caption">${title || alt}</div>
             </figure>`

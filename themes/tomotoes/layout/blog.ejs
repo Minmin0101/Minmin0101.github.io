@@ -1,0 +1,78 @@
+<%
+const blogPosts = site.posts.sort('date', -1).toArray();
+const excerptLimit = theme.excerpt_length || 175;
+const toneClasses = ['tone-a', 'tone-b', 'tone-c', 'tone-d'];
+const formatWordCount = function(total) {
+    if (total >= 1000) {
+        return (total / 1000).toFixed(1).replace(/\.0$/, '') + 'k 字';
+    }
+    return total + ' 字';
+};
+%>
+<%- partial('_partial/header', {
+    title: config.author || config.title || 'Blog',
+    hdClass: 'index-header blog-home-header'
+}) %>
+<div class="container body-wrap blog-home">
+    <aside class="blog-home-rail fade">
+        <a href="#blog-top">顶部</a>
+        <a href="#post-list-start">最新</a>
+        <a href="<%- url_for('/tags/') %>">标签</a>
+        <a href="<%- url_for('/archives/') %>">归档</a>
+    </aside>
+    <section class="blog-home-summary fade" id="blog-top">
+        <div>
+            <small>Blog Index</small>
+            <h2>沿着时间往下翻，就是这段时间留下来的思考与记录。</h2>
+        </div>
+        <div class="post-count-custom">目前共收录 <%= blogPosts.length %> 篇文章</div>
+    </section>
+    <ul class="post-list rich-post-list" id="post-list-start">
+    <% blogPosts.forEach(function(post, index){ %>
+        <%
+            const excerptSource = strip_html(post.excerpt || post.content || '').replace(/\s+/g, ' ').trim();
+            const excerpt = truncate(excerptSource || '这是一篇新的文章，后续会继续补充更完整的内容。', {
+                length: excerptLimit
+            });
+            const contentSource = strip_html(post.content || '').replace(/\s+/g, '');
+            const wordCount = contentSource.length || excerptSource.replace(/\s+/g, '').length || 1;
+            const readMinutes = Math.max(1, Math.ceil(wordCount / 420));
+            const toneClass = toneClasses[index % toneClasses.length];
+        %>
+        <li class="post-list-item fade">
+            <article class="article-card article-type-post author-post-card <%= toneClass %>" itemprop="blogPost">
+                <a class="post-cover" href="<%- url_for(post.path) %>" aria-label="<%- post.title %>">
+                    <canvas class="canvas-cover" data-post-id="<%= post.slug %>" data-tone="<%= toneClass %>"></canvas>
+                </a>
+                <h3 class="post-title">
+                    <a href="<%- url_for(post.path) %>"><%- post.title %></a>
+                </h3>
+                <div class="post-meta">
+                    <div class="post-meta-info">
+                        <span><i class="icon icon-calendar"></i><%= date(post.date, 'YYYY-MM-DD') %></span>
+                        <span><i class="icon icon-clock-o"></i><%= readMinutes %> 分钟阅读</span>
+                        <span><i class="icon icon-file-text-o"></i><%= formatWordCount(wordCount) %></span>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p><%= excerpt %></p>
+                    <div class="post-more-wrapper">
+                        <a href="<%- url_for(post.path) %>" class="post-more">阅读全文 <span>»</span></a>
+                    </div>
+                </div>
+                <% if(post.tags && post.tags.length){ %>
+                <div class="post-footer">
+                    <ul class="article-tag-list">
+                        <% post.tags.each(function(tag){ %>
+                            <li class="article-tag-list-item">
+                                <a class="article-tag-list-link" href="<%- url_for(tag.path) %>"><%= tag.name %></a>
+                            </li>
+                        <% }) %>
+                    </ul>
+                </div>
+                <% } %>
+            </article>
+        </li>
+    <% }) %>
+    </ul>
+</div>

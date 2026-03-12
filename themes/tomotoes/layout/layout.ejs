@@ -1,17 +1,31 @@
+<%
+const isPortal = page.layout === 'portal' || is_home();
+const bodyClasses = [];
+if (isPortal) bodyClasses.push('portal-page');
+if (!isPortal) bodyClasses.push('blog-shell');
+if (page.layout === 'blog') bodyClasses.push('blog-home-page');
+if (is_post()) bodyClasses.push('post-detail-page');
+%>
 <!DOCTYPE html>
-<html>
+<html lang="<%= config.language || 'zh-CN' %>">
 <%- partial('_partial/head') %>
-<body>
-    <%- partial('_partial/loading') %>
-    <%- partial('_partial/menu') %>
-    <main id="main">
+<body class="<%= bodyClasses.join(' ') %>">
+    <% if (!isPortal) { %>
+        <%- partial('_partial/loading') %>
+        <%- partial('_partial/menu') %>
+    <% } %>
+    <main id="main" class="<%= isPortal ? 'portal-main' : '' %>">
         <%- body %>
-        <%- partial('_partial/footer') %>
+        <% if (!isPortal) { %>
+            <%- partial('_partial/footer') %>
+        <% } %>
     </main>
-    <% if(is_post()){ %>
+    <% if (!isPortal && is_post()) { %>
         <%- partial('_partial/post/reward') %>
     <% } %>
-    <%- partial('_partial/after-footer') %>
-    <%- partial('_partial/script') %>
+    <% if (!isPortal) { %>
+        <%- partial('_partial/after-footer') %>
+        <%- partial('_partial/script') %>
+    <% } %>
 </body>
 </html>

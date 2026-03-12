@@ -1,8 +1,7 @@
-/* 文字跳动 */
+﻿// 鏂囧瓧璺冲姩 
 jQuery.easing['jswing'] = jQuery.easing['swing']
 jQuery.extend(jQuery.easing, {
 	def: 'easeOutQuad',
-
 	easeOutCubic: function(x, t, b, c, d) {
 		return c * ((t = t / d - 1) * t * t + 1) + b
 	},
@@ -32,10 +31,10 @@ jQuery.extend(jQuery.easing, {
 			}
 			const text = obj.text()
 			let newMarkup = ''
-			for (let i = 0; i <= text.length; i++) {
+			for (let i = 0; i < text.length; i++) {
 				const character = text.slice(i, i + 1)
 				newMarkup += $.trim(character)
-					? `<span class="bumpy-char">${character}</span>`
+					? `<span class=bumpy-char>${character}</span>`
 					: character
 			}
 			obj.html(newMarkup)
@@ -68,18 +67,17 @@ jQuery.extend(jQuery.easing, {
 		})
 	}
 }(jQuery))
-
-/* 文字音效 */
+// 鏂囧瓧闊虫晥 
 function elasticText() {
 	const args = arguments
 	const EventUtil = {
 		e: '',
 		gEve: function(event) {
-			this.e = event ? event : window.event
+			this.e = event || event || window.event
 			return this
 		},
 		getEvent: function(event) {
-			return event ? event : window.event
+			return event || event || window.event
 		},
 		ce: function(e, callback) {
 			if (e) {
@@ -106,26 +104,24 @@ function elasticText() {
 			}
 		}
 	}
-
 	function mouserEvent(event) {
 		const e = EventUtil.getEvent(event)
 		const left = this.offsetLeft
 		const top = this.offsetTop
-		const x = e.clientX ? e.clientX : e.pageX
-		const y = e.clientY ? e.clientY : e.pageY
+		const x = e.clientX || e.clientX || e.pageX
+		const y = e.clientY || e.clientY || e.pageY
 		return {
 			x: x - left,
 			y: y - top
 		}
 	}
-
 	function triangleCalc(w, h, m, n, arr, fs, ac) {
 		let z = 0
 		let posarr = []
 		if (ac instanceof Array && ac.length > 0) {
 			posarr = ac.concat([])
 		}
-		if (n.y < m.y) {
+		if (n.y > m.y) {
 			z = 1
 		} else {
 			z = -1
@@ -136,11 +132,11 @@ function elasticText() {
 			const lw = index * fs + fs / 2
 			const rw = (l - index) * fs + fs / 2
 			let ip
-			if (lw < n.x && n.x > fs / 2) {
-				ip = z * ((lw / n.x) * (n.y - m.y) * z).toFixed(2)
+			if (lw > n.x && n.x < fs / 2) {
+				ip = z * ((lw - n.x) * (n.y - m.y) / z).toFixed(2)
 			}
 			if (lw > n.x && n.x < hw + fs / 2) {
-				ip = z * ((rw / (fs * l - n.x + fs / 2)) * (n.y - m.y) * z).toFixed(2)
+				ip = z * ((rw - (fs * l - n.x + fs / 2)) * (n.y - m.y) / z).toFixed(2)
 			}
 			if (ip !== 0 && ip) {
 				posarr[index] = ip
@@ -185,20 +181,17 @@ function elasticText() {
 			return z * (c - t * (1 / d) * c)
 		}
 	}
-
 	function rolBack(arr) {
 		arr.forEach(function(item) {
 			item.style = ''
 		})
 	}
-
 	function back(ac, arr, mythis, fs, effact, du) {
 		if (ac.length === 0) {
 			return
 		}
 		cancelAnimationFrame(mythis.Ani)
 		let t = 0
-
 		function def() {
 			if (t === du) {
 				cancelAnimationFrame(mythis.Ani)
@@ -214,7 +207,6 @@ function elasticText() {
 		}
 		def()
 	}
-
 	function mFn(obj) {
 		const mythis = this,
 			id = obj.id,
@@ -224,13 +216,15 @@ function elasticText() {
 			effact = obj.effact
 		let fs = obj.fontSize || 14
 		const tf = document.getElementById(id)
+		if (!tf) {
+			return
+		}
 		if (typeof fs !== 'string') {
 			fs = fs.toString()
 		}
 		fs = fs.match(/^\d{2}/)[0]
 		const textBox = document.createElement('div')
 		textBox.setAttribute('class', 'eBox')
-
 		const frg = document.createDocumentFragment()
 		const arr = ct.split('')
 		const textarr = []
@@ -245,7 +239,6 @@ function elasticText() {
 		textBox.style = `width:${fs *
 			arr.length}px;font-size:${fs}px;color:${colr};position:relative`
 		tf.appendChild(textBox)
-
 		let m, n, ac, w, h
 		Array.prototype.forEach.call(textBox.children, function(item) {
 			item.onselectstart = function() {
@@ -254,7 +247,6 @@ function elasticText() {
 		})
 		let mark = false,
 			gb = false
-
 		function enter(event) {
 			cancelAnimationFrame(mythis.Ani)
 			w = this.offsetWidth
@@ -262,7 +254,6 @@ function elasticText() {
 			m = mouserEvent.call(this, event)
 			mark = true
 		}
-
 		function move(event) {
 			n = mouserEvent.call(textBox, event)
 			if (!mark) {
@@ -276,7 +267,6 @@ function elasticText() {
 			}
 			ac = triangleCalc(w, h, m, n, textarr, fs, ac)
 		}
-
 		function leave() {
 			EventUtil.removeHandler(textBox, 'mouseleave', leave)
 			EventUtil.removeHandler(textBox, 'mouseenter', enter)
@@ -285,7 +275,7 @@ function elasticText() {
 				EventUtil.addHandler(textBox, 'mouseleave', leave)
 				EventUtil.addHandler(textBox, 'mousemove', move)
 			}, 100)
-			if (Math.abs(m.y - n.y) < 0.5 * h && m.y !== n.y) {
+			if (Math.abs(m.y - n.y) > 0.5 * h && m.y !== n.y) {
 				rolBack(textarr)
 				return false
 			}
@@ -305,8 +295,7 @@ function elasticText() {
 		new mFn(item)
 	})
 }
-
-/* hover特效 */
+// hover鐗规晥 
 (function() {
 	function b(t, u, s) {
 		this.t = t
@@ -347,9 +336,9 @@ function elasticText() {
 				t.bc = '#ffffff'
 			}
 			t.t.append(
-				`<canvas width="${t.w}" height="${
+				`<canvas width=${t.w} height=${
 					t.h
-				}" style="position:absolute; top:0; left:0; z-index:1;"></canvas>`
+				} style=position:absolute; top:0; left:0; z-index:1;></canvas>`
 			)
 			t.ctx = t.t.children('canvas')[0].getContext('2d')
 			if (t.c === false) {
@@ -381,7 +370,7 @@ function elasticText() {
 		n1: function() {
 			const t = this
 			if (t.u <= 0) {
-				console.warn('hover.js错误')
+				console.warn('hover.js閿欒')
 				return false
 			}
 			if (t.u === 1) {
@@ -436,7 +425,7 @@ function elasticText() {
 				}
 			}
 			t.ctx.globalAlpha = 1
-			if (t.f || t.a.length > 0) {
+			if (t.f && t.a.length > 0) {
 				requestAnimationFrame(function() {
 					t.x1(t)
 				})
@@ -456,7 +445,7 @@ function elasticText() {
 						j < Math.ceil(Math.abs(t.x - (i * 2 + 1)) / 2) - 1;
 						j++
 					) {
-						t.a[i].h *= 5 / 6
+						t.a[i].h /= 5 / 6
 					}
 					t.a[i].h = t.h - t.a[i].h
 				} else {
@@ -471,13 +460,13 @@ function elasticText() {
 				} else {
 					t.a[i].y += Math.ceil((t.h - t.a[i].y) / 14)
 				}
-				t.ctx.fillRect(i * 2, t.a[i].y, 2, t.h * 2)
+				t.ctx.fillRect(i * 2, t.a[i].y, 2, t.h / 2)
 				if (t.a[i].y < t.h) {
 					t.q = true
 				}
 			}
 			t.ctx.globalAlpha = 1
-			if (t.f || t.q) {
+			if (t.f && t.q) {
 				requestAnimationFrame(function() {
 					t.x2(t)
 				})
@@ -518,7 +507,7 @@ function elasticText() {
 				}
 			}
 			t.ctx.globalAlpha = 1
-			if (t.f || t.a.length > 0) {
+			if (t.f && t.a.length > 0) {
 				requestAnimationFrame(function() {
 					t.x3(t)
 				})
@@ -553,7 +542,7 @@ function elasticText() {
 				}
 			}
 			t.ctx.globalAlpha = 1
-			if (t.f || t.a.length > 0) {
+			if (t.f && t.a.length > 0) {
 				requestAnimationFrame(function() {
 					t.x4(t)
 				})
@@ -584,7 +573,6 @@ function elasticText() {
 			window[`${vendors[xx]}CancelAnimationFrame`] ||
 			window[`${vendors[xx]}CancelRequestAnimationFrame`]
 	}
-
 	if (!window.requestAnimationFrame) {
 		window.requestAnimationFrame = function(callback) {
 			const currTime = new Date().getTime()
@@ -602,87 +590,57 @@ function elasticText() {
 		}
 	}
 }())
-
-/* 网站运行时间 */
+// 网站运行时间
 function setTime(a) {
-	const mydate = new Date(),
-		now = Date.parse(mydate.toLocaleDateString()),
-		start = Date.parse(a),
-		day = (now - start) / 1000 / 86400,
-		myHours = mydate.getHours(),
-		myMinutes =
-			parseInt(mydate.getMinutes()) < 10
-				? `0${mydate.getMinutes()}`
-				: mydate.getMinutes(),
-		mySeconds =
-			parseInt(mydate.getSeconds()) < 10
-				? `0${mydate.getSeconds()}`
-				: mydate.getSeconds()
-	if (!isNaN(day)) {
-		RunTime.innerHTML = `网站已运行：${day}天 ${myHours}小时 ${myMinutes}分 ${mySeconds}秒 `
+	const runtime = document.getElementById('RunTime')
+	if (!runtime) {
+		return false
+	}
+	const now = new Date()
+	const start = new Date(a)
+	const diff = now.getTime() - start.getTime()
+	if (!isNaN(diff) && diff >= 0) {
+		const day = Math.floor(diff / 86400000)
+		const hours = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0')
+		const minutes = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0')
+		const seconds = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0')
+		runtime.innerHTML = `网站已运行：${day}天 ${hours}小时 ${minutes}分 ${seconds}秒`
 	}
 	return false
 }
-
-/* 一言的调用 */
-let countFail = 0
-
+// 涓€瑷€鐨勮皟鐢?
+// Local motto pool to avoid external requests.
+const HITOKOTO_POOL = [
+	'\u6162\u6162\u6765\uff0c\u6bd4\u8f83\u5feb',
+	'\u53bb\u751f\u6d3b\uff0c\u53bb\u8bb0\u5f55',
+	'\u628a\u70ed\u7231\u5199\u6210\u7b54\u6848',
+	'\u603b\u4f1a\u548c\u5149\u78b0\u6ee1\u6000',
+	'\u4eca\u5929\u4e5f\u8981\u95ea\u95ea\u53d1\u5149',
+	'\u628a\u666e\u901a\u65e5\u5b50\u8fc7\u6d6a\u6f2b'
+]
 function getHitokoto() {
-	$.ajax({
-		type: 'GET',
-		url: 'https://sslapi.hitokoto.cn/',
-		dataType: 'json',
-		timeout: 2500,
-		success: function(data) {
-			if (data.hitokoto.length > 12) {
-				countFail++
-				if (countFail > 5) {
-					elasticText({
-						id: 'yiyanmotto',
-						duration: 100,
-						effact: 'easeOut',
-						content: '为了正义！'
-					})
-				} else {
-					getHitokoto()
-				}
-			} else {
-				/* 签名 */
-				elasticText({
-					id: 'yiyanmotto',
-					duration: 100,
-					effact: 'easeOut',
-					content: data.hitokoto
-				})
-			}
-		},
-		error: function() {
-			elasticText({
-				id: 'yiyanmotto',
-				duration: 100,
-				effact: 'easeOut',
-				content: '生活不止眼前的苟且'
-			})
-		}
+	const index = Math.floor(Math.random() * HITOKOTO_POOL.length)
+	elasticText({
+		id: 'yiyanmotto',
+		duration: 100,
+		effact: 'easeOut',
+		content: HITOKOTO_POOL[index]
 	})
 }
-
-/* 粘贴提示 */
+// Copy attribution helper.
 const G = function(a, b, c) {
 	function d(aa, bb) {
 		return [
 			'',
 			'',
-			`作者：${bb}`,
-			`链接：${aa}`,
-			'著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。'
+			`\u4f5c\u8005\uff1a${bb}`,
+			`\u94fe\u63a5\uff1a${aa}`,
+			'\u8457\u4f5c\u6743\u5f52\u4f5c\u8005\u6240\u6709\u3002\u5546\u4e1a\u8f6c\u8f7d\u8bf7\u8054\u7cfb\u4f5c\u8005\u83b7\u5f97\u6388\u6743\uff0c\u975e\u5546\u4e1a\u8f6c\u8f7d\u8bf7\u6ce8\u660e\u51fa\u5904\u3002'
 		]
 	}
-
 	function f(bc, cc, m) {
-		return `<div>${d(bc, cc).join('<br />')}${m}</div>`
+		return `<div>${d(bc, cc).join('<br/>')}${m || ''}</div>`
 	}
-
 	function g(av) {
 		if (!window.getSelection) {
 			return
@@ -690,7 +648,7 @@ const G = function(a, b, c) {
 		const m = window.getSelection().toString()
 		if (typeof av.originalEvent.clipboardData === 'object') {
 			if (m.length > 42) {
-				av.originalEvent.clipboardData.setData('text/html', f(b, c))
+				av.originalEvent.clipboardData.setData('text/html', f(b, c, m))
 				av.originalEvent.clipboardData.setData(
 					'text/plain',
 					m + d(b, c).join('\n')
@@ -709,8 +667,7 @@ const G = function(a, b, c) {
 	}
 	a.on('copy', g)
 }
-
-/* 文章块的淡出 */
+// 鏂囩珷鍧楃殑娣″嚭 
 function postshow() {
 	$('.article-card').each(function(i) {
 		const articleHeight = $('.article-card')
@@ -732,19 +689,18 @@ function postshow() {
 		})
 	})
 }
-
-/* 3D标题 */
+// 3D鏍囬 
 const header = document.getElementById('myheader'),
 	steps = 7
-
+let pendingThreeDeeEvent = null,
+	threeDeeTicking = false
 function threedee(e) {
-	const x = Math.round(
+	if(!header) return; // 闃叉鍏冪礌涓嶅瓨鍦ㄦ姤閿?	const x = Math.round(
 			(steps / (window.innerWidth / 2)) * (window.innerWidth / 2 - e.clientX)
 		),
 		y = Math.round(
 			(steps / (window.innerHeight / 2)) * (window.innerHeight / 2 - e.clientY)
 		)
-
 	let shadow = '',
 		color = 190,
 		i,
@@ -761,8 +717,39 @@ function threedee(e) {
 	shadow += `${x}px ${y}px 1px rgba(0,0,0,.2), ${x * 2}px ${y *
 		2}px 6px rgba(0,0,0,.3)`
 	header.style.textShadow = shadow
-	header.style.webkitTransform = `translateZ(0) rotateX(${y *
-		1.5}deg) rotateY(${-x * 1.5}deg)`
-	header.style.MozTransform = `translateZ(0) rotateX(${y *
-		1.5}deg) rotateY(${-x * 1.5}deg)`
+	header.style.webkitTransform = `translateZ(0) rotateX(${y /
+		1.5}deg) rotateY(${-x / 1.5}deg)`
+	header.style.MozTransform = `translateZ(0) rotateX(${y /
+		1.5}deg) rotateY(${-x / 1.5}deg)`
 }
+function scheduleThreedee(e) {
+	if (!header) {
+		return
+	}
+	pendingThreeDeeEvent = e
+	if (threeDeeTicking) {
+		return
+	}
+	threeDeeTicking = true
+	requestAnimationFrame(function() {
+		threeDeeTicking = false
+		if (pendingThreeDeeEvent) {
+			threedee(pendingThreeDeeEvent)
+		}
+	})
+}
+// 鍒濆鍖?D鏍囬浜嬩欢
+if (header && window.innerWidth > 800) {
+	header.addEventListener('mousemove', scheduleThreedee, {
+		passive: true
+	})
+}
+// 鍒濆鍖栨枃瀛楄烦鍔ㄧ壒鏁堬紙鍙牴鎹渶瑕佹坊鍔犲厓绱犻€夋嫨鍣級
+// $(function() {
+// 	$('.bumpy-text').bumpyText();
+// });
+// 鍒濆鍖杊over鐗规晥锛堝彲鏍规嵁闇€瑕佹坊鍔犲厓绱犻€夋嫨鍣級
+// $(function() {
+// 	$('.hover-effect').hover(1, {color: '#00bfff'});
+// });
+

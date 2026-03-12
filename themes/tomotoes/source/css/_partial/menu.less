@@ -75,18 +75,20 @@
     }
     .scroll-wrap {
         position: relative;
-        overflow-y: hidden;
+        overflow-y: auto;
         overflow-x: hidden;
     }
     .nav {
         border-top: 1px solid #e0e0e0;
         margin: 0;
         padding: 0;
-        height: 300px;
+        height: auto;
         min-height: ~"calc(100% - 115px)";
         list-style: none;
         line-height: @navH;
-        overflow: hidden;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-bottom: 12px;
         li {
             padding: 0 @menuPadding;
             .icon:not(.icon-caret-left) {

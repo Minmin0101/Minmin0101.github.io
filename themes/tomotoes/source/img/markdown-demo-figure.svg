@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" role="img" aria-labelledby="title desc">
+  <title id="title">Markdown 图像示例</title>
+  <desc id="desc">用于测试图片渲染的抽象图像</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10213d"/>
+      <stop offset="50%" stop-color="#2f5e8b"/>
+      <stop offset="100%" stop-color="#9bc7ef"/>
+    </linearGradient>
+    <linearGradient id="blob" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff0b0"/>
+      <stop offset="100%" stop-color="#ffc86f"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="520" fill="url(#bg)"/>
+  <circle cx="170" cy="145" r="88" fill="rgba(255,255,255,.14)"/>
+  <circle cx="640" cy="120" r="110" fill="rgba(255,255,255,.12)"/>
+  <circle cx="620" cy="360" r="150" fill="rgba(255,255,255,.08)"/>
+  <path d="M90 350c42-53 87-81 143-81 68 0 127 39 165 97 35 54 94 83 173 83 46 0 87-11 129-34v105H90V350Z" fill="rgba(8,18,33,.34)"/>
+  <path d="M240 215c38-50 99-80 153-80 63 0 119 28 167 81-28 28-66 42-115 42-40 0-75-10-111-10-36 0-60 9-94 23-8-17-8-34 0-56Z" fill="url(#blob)" opacity=".92"/>
+  <g stroke="rgba(255,255,255,.18)" stroke-width="2">
+    <path d="M0 88h800"/>
+    <path d="M0 170h800"/>
+    <path d="M0 252h800"/>
+    <path d="M0 334h800"/>
+    <path d="M0 416h800"/>
+    <path d="M114 0v520"/>
+    <path d="M228 0v520"/>
+    <path d="M342 0v520"/>
+    <path d="M456 0v520"/>
+    <path d="M570 0v520"/>
+    <path d="M684 0v520"/>
+  </g>
+  <text x="60" y="80" font-size="34" font-family="Arial, sans-serif" fill="#eef6ff">Markdown Image</text>
+  <text x="60" y="120" font-size="18" font-family="Arial, sans-serif" fill="rgba(238,246,255,.82)">用于测试博客内图片、灯箱与响应式布局效果</text>
+</svg>

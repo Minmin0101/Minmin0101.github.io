@@ -8,19 +8,31 @@
 menu:
   home:
     text: 主 页
-    url: /
-  archives:
+    url: /blog/
+  archive:
     text: 归 档
-    url: /archives
-  th-list:
-    text: 分 类
-    url: /categories
+    url: /archives/
   tags:
     text: 标 签
-    url: /tags
-  smile-o:
+    url: /tags/
+  weibo:
+    text: 微 博
+    url: /blog/weibo/
+  camera-retro:
+    text: 相 册
+    url: /gallery/
+  user:
     text: 关 于
-    url: /about
+    url: /about/
+  code:
+    text: 项 目
+    url: /projects/
+  lightbulb-o:
+    text: 思 考
+    url: /thinking/
+  compass:
+    text: 导 航
+    url: /
 
 # 图标菜单
 # 如果您没有微信公众号 您完全可以更改为 其他的链接 比如微博
@@ -41,7 +53,7 @@ menu2:
 # 你的头像url
 avatar: /img/avatar.jpg
 # avatar link
-avatar_link: /
+avatar_link: /blog/
 # favicon
 favicon: /img/favicon.ico
 
@@ -49,6 +61,7 @@ favicon: /img/favicon.ico
 # mymotto:  关闭一言
 #  content: 用此内容代替一言
 mymotto: false
+wechat_qr: /img/wechat.png
 # content: 我的座右铭
 
 # 网站开启时间
@@ -56,6 +69,9 @@ startime: 2017/10/11
 
 # 首页副标题
 homesubtitle: 在Web全栈的道路上努力前行
+blogsubtitle: STDIN | Think >> /dev/Mind✨
+assistant_name: 上杉绘梨衣
+assistant_intro: 我会帮你找文章、看标签、跳转页面，也能带你去看最新文章和 Markdown 渲染示例。
 
 # 归档页标题
 archivestitle: 路漫漫其修远兮
@@ -81,21 +97,21 @@ categories_title: 分类
 excerpt_render: true
 excerpt_length: 175
 excerpt_link: 阅读全文 »
-mathjax: false
+mathjax: true
 archive_yearly: true
 
 # 是否显示文章最后更新时间
 show_last_updated: true
 
 # 是否开启分享
-share: true
+share: false
 
 # 是否开启打赏，关闭 reward: false
-reward:
-  title: 感谢您的鼓励支持！     #打赏回馈话语
-  wechat: /img/wechat.png     #微信，关闭设为 false
-  alipay: /img/alipay.png     #支付宝，关闭设为 false
-  wechatalipay: /img/dog.png  #点击打赏时显示的图片
+reward: false
+#  title: 感谢您的鼓励支持！     #打赏回馈话语
+#  wechat: /img/wechat.png     #微信，关闭设为 false
+#  alipay: /img/alipay.png     #支付宝，关闭设为 false
+#  wechatalipay: /img/dog.png  #点击打赏时显示的图片
 
 # 是否大屏幕下文章页隐藏导航
 hideMenu: true
@@ -104,7 +120,7 @@ hideMenu: true
 search: true
 
 # 是否开启toc
-# toc: true
+#toc: true
 toc:
   list_number: true  # 是否显示数字排序
 
@@ -114,6 +130,7 @@ postMessage: 原文链接：<a href="<%- url_for(page.path).replace(/index\.html
 
 # 百度统计，如要开启，改为你的 key
 baidu_tongji: false
+baidu_push: false
 
 # 腾讯分析，如要开启，输入站点id
 tajs: false

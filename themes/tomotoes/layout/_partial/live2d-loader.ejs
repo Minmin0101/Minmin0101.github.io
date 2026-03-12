@@ -1,0 +1,39 @@
+<script defer>
+var dynamicLoad = window.dynamicLoad || {
+    css: function(src) {
+        var link = document.createElement('link');
+        link.href = src;
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        document.head.appendChild(link);
+    },
+    js: function(src, callback) {
+        var script = document.createElement('script');
+        script.src = src;
+        script.type = 'text/javascript';
+        script.async = false;
+        if (typeof callback === 'function') {
+            script.onload = callback;
+        }
+        document.head.appendChild(script);
+    }
+};
+
+window.dynamicLoad = dynamicLoad;
+
+function loadLive2DResources() {
+    if (window.__authorLive2DLoaded) {
+        return;
+    }
+    window.__authorLive2DLoaded = true;
+    dynamicLoad.css('https://cdn.jsdelivr.net/gh/SimonAKing/blog@7d04115230169/css/live2d-f1e3bae765.css');
+    dynamicLoad.js('https://cdn.jsdelivr.net/gh/SimonAKing/blog@7d04115230169/js/live2d/live2d-00d3feb260.js');
+    dynamicLoad.js('https://cdn.jsdelivr.net/gh/SimonAKing/blog@7d04115230169/js/live2d/live-7348bf1137.js');
+}
+
+var allowLive2D = !/Android|iOS|iPhone|iPad|iPod|Windows Phone|KFAPWI/i.test(navigator.userAgent) && window.innerWidth >= 960;
+
+if (allowLive2D && document.getElementById('landlord')) {
+    loadLive2DResources();
+}
+</script>

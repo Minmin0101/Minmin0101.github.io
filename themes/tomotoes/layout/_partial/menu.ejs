@@ -1,64 +1,142 @@
-
-
-
-
-<aside id="menu"  <% if((is_post() || page.layout === 'page') && theme.hideMenu){ %>class="hide"<% } %> >
+<%
+var normalizePath = function(pathname) {
+    return (pathname || '/')
+        .replace(/index\.html$/, '')
+        .replace(/\/?$/, '/');
+};
+var currentPath = normalizePath(url_for(page.path));
+var isActive = function(item) {
+    var itemPath = normalizePath(url_for(item.url));
+    if (itemPath === '/') {
+        return currentPath === '/';
+    }
+    if (itemPath === '/blog/') {
+        return currentPath === '/blog/';
+    }
+    return currentPath === itemPath || _.startsWith(currentPath, itemPath);
+};
+var allPages = site.pages ? site.pages.toArray() : [];
+var allPosts = site.posts ? site.posts.toArray() : [];
+var findPageByPath = function(targetPath) {
+    return _.find(allPages, function(item) {
+        return item.path === targetPath;
+    });
+};
+var weiboPage = findPageByPath('blog/weibo/index.html');
+var galleryPage = findPageByPath('gallery/index.html');
+var galleryAlbums = (site.data.gallery && site.data.gallery.albums) || [];
+var galleryCount = galleryAlbums.reduce(function(total, album) {
+    return total + (((album && album.photos) || []).length);
+}, 0);
+var countMatches = function(content, pattern) {
+    if (!content) return 0;
+    var matched = String(content).match(pattern);
+    return matched ? matched.length : 0;
+};
+var socialLinks = [];
+if (theme.wechat_qr) {
+    socialLinks.push({
+        icon: 'wechat',
+        text: '微信',
+        href: 'javascript:;',
+        id: 'link-wechat',
+        trigger: 'wechat'
+    });
+}
+for (var icon in theme.menu2) {
+    socialLinks.push({
+        icon: icon,
+        text: theme.menu2[icon].text || _.startCase(icon),
+        href: url_for(theme.menu2[icon].url),
+        target: theme.menu2[icon].target || '',
+        id: '',
+        trigger: ''
+    });
+}
+var statItems = [
+    {
+        label: '微博',
+        count: countMatches(weiboPage && weiboPage.content, /weibo-entry/g) || (weiboPage ? 1 : 0),
+        url: url_for('/blog/weibo/')
+    },
+    {
+        label: '文章',
+        count: allPosts.length,
+        url: url_for('/archives/')
+    },
+    {
+        label: '相册',
+        count: galleryCount || countMatches(galleryPage && galleryPage.content, /gallery-item/g),
+        url: url_for('/gallery/')
+    }
+];
+%>
+<aside id="menu" <% if((is_post() || page.layout === 'page') && theme.hideMenu){ %>class="hide"<% } %>>
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+      <i class="icon icon-lg icon-close"></i>
     </a>
-    <div class="brand-wrap" >
-      <div class="brand">
+    <div class="brand-wrap">
+      <div class="brand fade">
         <a href="<%- url_for(theme.avatar_link) %>" class="avatar waves-effect waves-circle waves-light">
           <img src="<%- url_for(theme.avatar) %>" alt="avatar">
         </a>
-        <hgroup class="introduce">
+        <div class="introduce">
           <h5 class="nickname" id="name"><%- config.author %></h5>
-          <% if(theme.mymotto) { %>
-            <div id="mymotto" class="motto"></div>
-          <% } else { %>
-            <div id="yiyanmotto" class="motto">&nbsp;</div>
-          <% } %>
-        </hgroup>
+          <div class="links-of-author fade">
+            <% socialLinks.forEach(function(link) { %>
+              <span class="links-of-author-item">
+                <a
+                  href="<%- link.href %>"
+                  <% if (link.target) { %>target="<%- link.target %>"<% } %>
+                  <% if (link.id) { %>id="<%- link.id %>"<% } %>
+                  <% if (link.trigger) { %>data-trigger="<%- link.trigger %>"<% } %>
+                  title="<%- link.text %>"
+                >
+                  <i class="icon icon-lg icon-<%= link.icon %>"></i>
+                </a>
+              </span>
+            <% }) %>
+          </div>
+          <div class="statistics">
+            <ul>
+              <% statItems.forEach(function(item) { %>
+                <li>
+                  <a class="total-link" href="<%- item.url %>">
+                    <div class="count"><%= item.count %></div>
+                    <div class="type"><%= item.label %></div>
+                  </a>
+                </li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
     <div class="scroll-wrap flex-col">
-      <ul class="nav">
-        <%
-          var menuItem, isActive = function(item) {
-              var pageUrl = url_for(page.path)
-              return item.url === '/' ? pageUrl === url_for(item.url + 'index.html') : _.startsWith(pageUrl, url_for(item.url))
-          };
-              for (var i in theme.menu) {
-                menuItem = theme.menu[i];
-              %>
-              <li class="waves-block waves-effect<% if(isActive(menuItem)){ %> active<% } %>">
-                  <a href="<%- url_for(menuItem.url) %>" <% if(menuItem.target){ %>target="_blank"<% } %> >
-                    <i class="icon icon-lg icon-<%= i %>"></i>
-                    <span><%=(menuItem.text || _.startCase(i)) %></span><i class="icon icon-lg icon-caret-left"></i>
-                  </a>
-              </li>
-            <% } %>
-      <div class="nav2">
-          <%
-            var menuItem, isActive = function(item) {
-                var pageUrl = url_for(page.path)
-                return item.url === '/' ? pageUrl === url_for(item.url + 'index.html') : _.startsWith(pageUrl, url_for(item.url))
-            };
-            for (var i in theme.menu2) {
-              menuItem = theme.menu2[i];
-            %>
-              <a class="nav2item" data-title="<%-menuItem.text %>" href="<%- url_for(menuItem.url) %>" <% if(menuItem.target){ %>target="<%- menuItem.target %>"<% } if(menuItem.text){ %>title="<%-menuItem.text %>"<% } %> >
-                <i class="icon icon-lg icon-<%= i %> <%= i %>"></i>
-              </a>
-          <% } %>
-
-            </div>
-        
+      <ul class="nav fade">
+        <% for (var i in theme.menu) { var menuItem = theme.menu[i]; %>
+          <li class="items waves-block waves-effect<% if(isActive(menuItem)){ %> active<% } %>">
+            <a href="<%- url_for(menuItem.url) %>" <% if(menuItem.target){ %>target="_blank"<% } %>>
+              <i class="icon icon-lg icon-<%= i %>"></i>
+              <span><%= menuItem.text || _.startCase(i) %></span>
+              <i class="icon icon-lg icon-caret-left custom-caret-left"></i>
+            </a>
+          </li>
+        <% } %>
+        <div class="sliding-bar"></div>
       </ul>
-        
+      <div class="nav-tool">
+        <a class="nav-tool-item exchange" data-title="简繁互换" href="javascript:translatePage();">
+          <i class="icon icon-lg icon-refresh"></i>
+        </a>
+        <a class="nav-tool-item picker" data-title="调色板" href="javascript:;" id="color-picker-icon">
+          <i class="icon icon-lg icon-eyedropper"></i>
+        </a>
+        <a class="nav-tool-item light" data-title="关灯" href="javascript:switchNightMode();">
+          <i class="icon icon-lg icon-lightbulb-o"></i>
+        </a>
+      </div>
     </div>
   </div>
- 
 </aside>
-

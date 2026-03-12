@@ -1,0 +1,94 @@
+<%
+const albums = ((site.data.gallery && site.data.gallery.albums) || []).map(function(album) {
+    return album;
+});
+const totalPhotos = albums.reduce(function(sum, album) {
+    return sum + (((album && album.photos) || []).length);
+}, 0);
+const galleryPayload = albums.map(function(album) {
+    return {
+        title: album.title,
+        subtitle: album.subtitle || '',
+        photos: ((album && album.photos) || []).map(function(photo) {
+            return {
+                src: url_for(photo.src),
+                thumb: url_for(photo.thumb || photo.src),
+                title: photo.title || '',
+                description: photo.description || ''
+            };
+        })
+    };
+});
+%>
+<%- partial('_partial/header', {
+    title: page.title || '相册',
+    hdClass: 'page-header gallery-header'
+}) %>
+
+<div class="container body-wrap page-gallery fade">
+    <section class="gallery-overview">
+        <div>
+            <small>Album Archive</small>
+            <h2>把生活碎片收进相册里，想看的时候就翻出来。</h2>
+        </div>
+        <p class="gallery-total">目前收录 <strong><%= albums.length %></strong> 本相册，<strong><%= totalPhotos %></strong> 张照片</p>
+    </section>
+
+    <% if (page.content && page.content.trim()) { %>
+    <div class="post-content page-content gallery-copy">
+        <%- page.content %>
+    </div>
+    <% } %>
+
+    <section class="gallery-album-list">
+        <% albums.forEach(function(album, albumIndex) { %>
+        <%
+            const photos = (album && album.photos) || [];
+            const cover = album.cover || (photos[0] && photos[0].src) || '/img/avatar.jpg';
+        %>
+        <article class="gallery-album" data-album="<%= albumIndex %>">
+            <button type="button" class="gallery-album-hero" data-gallery-album="<%= albumIndex %>" data-gallery-photo="0" aria-label="打开 <%- album.title %>">
+                <img src="<%- url_for(cover) %>" alt="<%- album.title %>">
+                <span class="gallery-album-open">打开相册</span>
+            </button>
+            <div class="gallery-album-meta">
+                <div>
+                    <h3><%- album.title %></h3>
+                    <% if (album.subtitle) { %>
+                    <p><%- album.subtitle %></p>
+                    <% } %>
+                </div>
+                <div class="gallery-album-count"><span><%= photos.length %></span> 张照片</div>
+            </div>
+            <div class="gallery-album-strip">
+                <% photos.forEach(function(photo, photoIndex) { %>
+                <button type="button" class="gallery-album-photo" data-gallery-album="<%= albumIndex %>" data-gallery-photo="<%= photoIndex %>" aria-label="查看 <%- photo.title || album.title %>">
+                    <img src="<%- url_for(photo.thumb || photo.src) %>" alt="<%- photo.title || album.title %>">
+                </button>
+                <% }) %>
+            </div>
+        </article>
+        <% }) %>
+    </section>
+</div>
+
+<div class="gallery-lightbox" id="gallery-lightbox" aria-hidden="true">
+    <div class="gallery-lightbox-backdrop" data-gallery-close></div>
+    <div class="gallery-lightbox-dialog" role="dialog" aria-modal="true" aria-label="相册预览">
+        <button type="button" class="gallery-lightbox-close" data-gallery-close aria-label="关闭">×</button>
+        <button type="button" class="gallery-lightbox-nav gallery-lightbox-prev" id="gallery-lightbox-prev" aria-label="上一张">‹</button>
+        <button type="button" class="gallery-lightbox-nav gallery-lightbox-next" id="gallery-lightbox-next" aria-label="下一张">›</button>
+        <figure class="gallery-lightbox-figure">
+            <img id="gallery-lightbox-image" src="" alt="">
+            <figcaption class="gallery-lightbox-caption">
+                <strong id="gallery-lightbox-title"></strong>
+                <span id="gallery-lightbox-description"></span>
+                <em id="gallery-lightbox-counter"></em>
+            </figcaption>
+        </figure>
+    </div>
+</div>
+
+<script>
+window.galleryAlbums = <%- JSON.stringify(galleryPayload) %>;
+</script>

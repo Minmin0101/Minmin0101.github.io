@@ -1,9 +1,9 @@
-<header class="top-header" id="header">
+<header class="top-header<% if (is_post()) { %> in-post<% } %><% if (page.layout === 'blog') { %> in-home<% } %>" id="header">
     <div class="flex-row">
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis"><%=title %></div>
+        <div class="flex-col"></div>
         <% if(theme.search){ %>
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -15,18 +15,17 @@
             </a>
         </div>
         <% }%>
-        <a href="../../atom.xml" target="_blank" class="header-icon waves-effect waves-circle waves-light" id="Rss">
-            <i class="icon icon-lg icon-rss"></i>
-        </a>
     </div>
+    <div class="header-title ellipsis"><%=title %></div>
 </header>
 <header class="content-header <%-hdClass %>">
-    
-    
+    <% if (page.layout === 'blog' || is_post() || page.layout === 'tags') { %>
+    <canvas class="flickering-grid-canvas" aria-hidden="true"></canvas>
+    <% } %>
     <div class="container fade-scale">
         <div id="myheader">
             <h1 class="title">
-                <% if(is_home()){ %> 
+                <% if(is_home() || page.layout === 'blog' || page.layout === 'gallery'){ %> 
                     <%=title %>
                 <% } %>
             </h1>
@@ -34,6 +33,10 @@
                 <% if(is_post()){ %>
                 <% } else if(is_home()){ %>
                     <%= theme.homesubtitle %>
+                <% } else if (page.layout === 'blog' && page.description) { %>
+                    <%- page.description %>
+                <% } else if (page.layout === 'gallery' && page.description) { %>
+                    <%- page.description %>
                 <% } else if(is_archive()){ %>
                     <h1 class="archivestitle"><%= theme.archivestitle %></h1>
                 <% } else if (page.layout === 'page' && page.description) {%>

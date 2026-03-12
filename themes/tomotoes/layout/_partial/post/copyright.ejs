@@ -6,9 +6,18 @@
         <% } %>
     </div>
     <footer>
-        <div onclick="location.href='<%- config.url %>'">
+        <% if (post.tags && post.tags.length) { %>
+        <ul class="article-tag-list">
+            <% post.tags.each(function(tag){ %>
+            <li class="article-tag-list-item">
+                <a class="article-tag-list-link" href="<%- url_for(tag.path) %>"><%= tag.name %></a>
+            </li>
+            <% }) %>
+        </ul>
+        <% } %>
+        <div onclick="location.href='<%- url_for('/about/') %>'">
             <img src="<%- url_for(theme.avatar) %>" alt="<%- config.author %>">
-            <a><%- config.author %></a>
+            <a href="<%- url_for('/about/') %>"><%- config.author %></a>
         </div>
     </footer>
 </blockquote>

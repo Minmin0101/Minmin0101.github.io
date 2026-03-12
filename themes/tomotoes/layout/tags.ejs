@@ -26,9 +26,9 @@
             </div>
         <% } else { %>
             <h5 class="tag-tip"><i class="icon icon-lg icon-tags"></i>
-                目前共<%-site.tags.length %>个标签
+                目前共 <span class="card-count"><%-site.tags.length %></span> 个标签
             </h5>
-            <div class="card-pool">
+            <div class="card-pool physics-container">
             <% site.tags.each(function(tag){
                 if(tag.length){ %>
                     <%- partial('card', {

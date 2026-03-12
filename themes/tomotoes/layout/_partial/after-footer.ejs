@@ -1,5 +1,32 @@
 <div class="mask" id="mask"></div>
-<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
-<% if(is_post() && theme.share){ %>
-<%- partial('post/share', {scope: 'global'}) %>
+<a href="javascript:;" id="gotop" class="fade-scale waves-effect waves-circle waves-light">
+    <span class="icon icon-lg icon-chevron-up"></span>
+</a>
+
+<% if (is_post() && theme.share) { %>
+<%- partial('post/share', { scope: 'global' }) %>
 <% } %>
+
+<div id="color-picker" class="page-modal">
+    <a class="close" href="javascript:;"><i class="icon icon-lg icon-close"></i></a>
+    <h4>RGB 调色实验室</h4>
+    <div class="color-picker-body">
+        <input type="color" id="theme-color-input" value="<%= theme.color || '#5275b0' %>">
+        <div class="color-presets">
+            <button type="button" class="color-swatch" data-color="#5275b0" style="--swatch:#5275b0"></button>
+            <button type="button" class="color-swatch" data-color="#8f4d76" style="--swatch:#8f4d76"></button>
+            <button type="button" class="color-swatch" data-color="#2f6a53" style="--swatch:#2f6a53"></button>
+            <button type="button" class="color-swatch" data-color="#bd6a3c" style="--swatch:#bd6a3c"></button>
+            <button type="button" class="color-swatch" data-color="#6a5acd" style="--swatch:#6a5acd"></button>
+        </div>
+        <p class="color-picker-tip">挑一个你喜欢的主色，顶部、按钮和高亮会一起切换。</p>
+    </div>
+</div>
+
+<div id="wechat" class="page-modal wechat-wrap">
+    <a class="close" href="javascript:;"><i class="icon icon-lg icon-close"></i></a>
+    <h4 class="wechat-title">欢迎添加我的微信</h4>
+    <img id="wechat_img" src="<%- url_for(theme.wechat_qr || '/img/wechat_channel.jpg') %>" alt="微信二维码">
+</div>
+
+<%- partial('_partial/live2d') %>

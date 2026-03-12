@@ -1,129 +1,147 @@
 .tag-tip {
-    font-size: 120%;
-    letter-spacing: 2px;
-    margin-bottom: 3%;
-    text-shadow: rgb(150, 147, 147) 0px 0px 1px, rgb(255, 255, 251) 0px 0px 1px, rgb(255, 255, 251) 0px 0px 2px;
+    margin-bottom: 10px;
+    min-height: 20px;
+    color: #333;
+    letter-spacing: 1px;
+    font-size: 20px;
+    font-family: "Comic Sans MS", "Helvetica Neue", "Microsoft Yahei", -apple-system, sans-serif;
 }
 
 .card-pool {
-    -webkit-columns: 180px 4;
-    columns: 180px 4;
-    -moz-column: 180px 4;
-    -webkit-column: 180px 4;
-    -o-column: 180px 4;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 14px 18px;
+}
+
+.tag-link {
+    display: inline-flex;
+    max-width: 100%;
+    cursor: pointer;
+    outline: none;
 }
 
 .card-card {
-    text-align: center;
-    border-radius: 30px;
-    width: 180px;
-    min-height: 25px;
-    -webkit-box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
-    box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
-    padding: 10px 5px;
-    margin: 10px;
-    display: inline-block;
-    font-size: 15px;
-    background-color: rgb(250, 250, 245);
     overflow: hidden;
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s;
-    display: inline-block;
+    margin: 0;
+    padding: 8px 10px;
+    min-height: 22px;
+    width: 140px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 1px solid rgba(0, 0, 0, .05);
     vertical-align: middle;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -moz-osx-font-smoothing: grayscale;
-    &:active,
-    &:focus,
-    &:hover {
-        -webkit-animation-name: hvr-bob-float, hvr-bob;
-        animation-name: hvr-bob-float, hvr-bob;
-        -webkit-animation-duration: .3s, 1.5s;
-        animation-duration: .3s, 1.5s;
-        -webkit-animation-delay: 0s, .3s;
-        animation-delay: 0s, .3s;
-        -webkit-animation-timing-function: ease-out, ease-in-out;
-        animation-timing-function: ease-out, ease-in-out;
-        -webkit-animation-iteration-count: 1, infinite;
-        animation-iteration-count: 1, infinite;
-        -webkit-animation-fill-mode: forwards;
-        animation-fill-mode: forwards;
-        -webkit-animation-direction: normal, alternate;
-        animation-direction: normal, alternate;
-        -webkit-box-shadow: 0 5px 5px -3px rgba(112, 111, 111, 0.2), 0 8px 10px 1px rgba(104, 102, 102, 0.14), 0 3px 14px 2px rgba(155, 154, 154, 0.12);
-        box-shadow: 0 5px 5px -3px rgba(112, 111, 111, 0.2), 0 8px 10px 1px rgba(104, 102, 102, 0.14), 0 3px 14px 2px rgba(155, 154, 154, 0.12);
-    }
-    @-webkit-keyframes hvr-bob-float {
-        100% {
-            -webkit-transform: translateY(-6px);
-            transform: translateY(-6px)
-        }
-    }
-    @keyframes hvr-bob-float {
-        100% {
-            -webkit-transform: translateY(-6px);
-            transform: translateY(-6px)
-        }
-    }
-    @-webkit-keyframes hvr-bob {
-        0% {
-            -webkit-transform: translateY(-6px);
-            transform: translateY(-6px)
-        }
-        50% {
-            -webkit-transform: translateY(-2px);
-            transform: translateY(-2px)
-        }
-        100% {
-            -webkit-transform: translateY(-6px);
-            transform: translateY(-6px)
-        }
-    }
-    @keyframes hvr-bob {
-        0% {
-            -webkit-transform: translateY(-6px);
-            transform: translateY(-6px)
-        }
-        50% {
-            -webkit-transform: translateY(-2px);
-            transform: translateY(-2px)
-        }
-        100% {
-            -webkit-transform: translateY(-6px);
-            transform: translateY(-6px)
-        }
-    }
+    text-align: center;
+    transition: all .3s ease;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+}
+
+.tag-link:hover .card-card,
+.tag-link:focus-visible .card-card {
+    background: linear-gradient(135deg, #fff, #f1f3f5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, .12);
 }
 
 .card-container {
     line-height: 25px;
     letter-spacing: 2px;
-    text-shadow: rgb(150, 147, 147) 0px 0px 1px, rgb(255, 255, 251) 0px 0px 1px, rgb(255, 255, 251) 0px 0px 2px;
 }
 
 .card-link {
-    color: #000;
-    font-size: 20px;
+    color: #333;
+    font-size: 18px;
 }
 
 .card-count {
-    color: rgb(134, 131, 131);
+    color: #868383;
+    font-size: 16px;
+    font-family: "Comic Sans MS", "Helvetica Neue", "Microsoft Yahei", -apple-system, sans-serif;
 }
 
-@media screen and (max-width:760px) {
-    .card-link {
-        font-size: 17px;
+.physics-container {
+    position: relative;
+    width: 100%;
+    min-height: 600px;
+    margin-bottom: 40px;
+    padding: 20px;
+    overflow: hidden;
+    border-radius: 4px;
+    border: 1px dashed #ccc;
+    background: rgba(255, 255, 255, .28);
+}
+
+.physics-container canvas {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background: transparent !important;
+}
+
+.physics-container.physics-ready {
+    display: block;
+}
+
+.physics-container.physics-ready .tag-link {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+    pointer-events: none;
+    user-select: none;
+    z-index: 2;
+}
+
+.physics-container.physics-ready .tag-link .card-card {
+    display: block;
+    max-width: 100%;
+}
+
+@media screen and (max-width: 991px) {
+    .tag-tip {
+        font-size: 18px;
     }
+
+    .physics-container {
+        min-height: 550px;
+        max-width: 95%;
+    }
+
     .card-card {
-        width: 90%;
+        width: auto;
+        max-width: 90%;
+        padding: 8px 12px;
     }
+
+    .card-link {
+        font-size: 16px;
+    }
+
+    .card-count {
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 767px) {
     .card-pool {
-        columns: 0px 2;
-        -moz-columns: 0px 2;
-        -webkit-columns: 0px 2;
-        -o-columns: 0px 2;
-        padding-left: 0px !important;
+        gap: 10px;
+    }
+
+    .card-card {
+        width: auto;
+        max-width: 80%;
+        padding: 6px 10px;
+    }
+
+    .physics-container {
+        max-width: 100%;
+        min-height: 500px;
+        padding: 16px;
+    }
+
+    .physics-container.physics-ready .tag-link {
+        max-width: 80%;
     }
 }
