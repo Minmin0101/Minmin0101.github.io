@@ -28,6 +28,12 @@
             return;
         }
 
+        if (isPhone || window.innerWidth < 760) {
+            element.textContent = text || "";
+            element.dataset.rendered = "true";
+            return;
+        }
+
         fragment = document.createDocumentFragment();
         Array.from(text || "").forEach(function (character, index) {
             var span = document.createElement("span");

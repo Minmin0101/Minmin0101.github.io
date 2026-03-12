@@ -1712,8 +1712,10 @@ html.night-mode {
         float: none;
         padding-right: 0 !important;
     }
-    .post-detail-page .post-widget {
-        display: none;
+    .post-detail-page .post-widget,
+    .post-detail-page .post-toc-wrap,
+    .post-detail-page .post-toc {
+        display: none !important;
     }
     .post-detail-page #gotop {
         right: 18px;
@@ -1725,6 +1727,12 @@ html.night-mode {
 }
 
 @media screen and (max-width:760px) {
+    .blog-shell .fade,
+    .blog-shell .fade-scale {
+        opacity: 1;
+        transform: none;
+    }
+
     .blog-shell .header-title {
         position: static;
         text-align: left;
@@ -1735,22 +1743,31 @@ html.night-mode {
         font-size: 16px;
     }
     .blog-shell .content-header {
-        min-height: 220px;
-        padding: 84px 0 24px;
+        min-height: 196px;
+        padding: 78px 0 20px;
         .title {
-            font-size: 38px;
+            font-size: 34px;
             line-height: 1.2;
             letter-spacing: 2px;
         }
         .subtitle {
-            padding-top: 12px;
-            font-size: 14px;
+            padding-top: 10px;
+            font-size: 13px;
             letter-spacing: 2px;
             line-height: 1.7;
         }
     }
+    .body-wrap.blog-home {
+        padding-top: 14px;
+        padding-bottom: 28px;
+    }
     .blog-home-summary {
         display: block;
+        padding-bottom: 14px;
+        h2 {
+            font-size: 20px;
+            line-height: 1.65;
+        }
         .post-count-custom {
             margin-top: 12px;
         }
@@ -1808,12 +1825,12 @@ html.night-mode {
     .author-post-card {
         border-radius: 22px;
         .post-cover {
-            height: 168px;
+            height: 152px;
         }
         .post-title {
             padding: 18px 18px 8px;
             a {
-                font-size: 22px;
+                font-size: 20px;
             }
         }
         .post-meta,
@@ -1825,13 +1842,17 @@ html.night-mode {
             margin: 18px 18px 20px;
         }
     }
+    .rich-post-list .post-list-item {
+        margin-bottom: 20px;
+    }
     .post-detail-page .post-card {
-        margin-top: -42px;
-        padding: 24px 18px 18px;
+        margin-top: -18px;
+        padding: 20px 16px 16px;
         border-radius: 22px;
     }
     .post-detail-page .post-card-title {
-        font-size: 28px;
+        font-size: 24px;
+        line-height: 1.35;
     }
     .post-detail-page .post-content {
         font-size: 15px;
