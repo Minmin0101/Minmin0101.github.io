@@ -12,7 +12,7 @@
 		menuOff = $('#menu-off'),
 		title = $('.header-title'),
 		loading = $('#loading'),
-		isPost = location.href.indexOf('post') !== -1,
+		isPost = body.classList.contains('post-detail-page') || !!w.isPost,
 		animate = w.requestAnimationFrame,
 		scrollSpeed = 200 / (1000 / 60),
 		forEach = Array.prototype.forEach,
@@ -55,22 +55,40 @@
 			}
 		}
 	}
+	const getScrollTop = function() {
+		const root = d.scrollingElement || docEl || body
+		return w.pageYOffset || root.scrollTop || body.scrollTop || docEl.scrollTop || 0
+	}
+	const setScrollTop = function(top) {
+		const root = d.scrollingElement || docEl || body
+		root.scrollTop = top
+		docEl.scrollTop = top
+		if (docEl !== body) {
+			body.scrollTop = top
+		}
+		if (typeof w.scrollTo === 'function' && w.pageYOffset !== top) {
+			w.scrollTo(0, top)
+		}
+	}
 	const Blog = {
 		goTop: function(end) {
-			const top = docEl.scrollTop
+			const top = getScrollTop()
 			const interval =
 				arguments.length > 2 ? arguments[1] : Math.abs(top - end) / scrollSpeed
 			if (top && top > end) {
-				docEl.scrollTop = Math.max(top - interval, 0)
+				setScrollTop(Math.max(top - interval, 0))
 				animate(arguments.callee.bind(this, end, interval))
 			} else if (end && top < end) {
-				docEl.scrollTop = Math.min(top + interval, end)
+				setScrollTop(Math.min(top + interval, end))
 				animate(arguments.callee.bind(this, end, interval))
 			} else {
 				this.toc.actived(end)
 			}
 		},
 		toggleGotop: function(top) {
+			if (!gotop) {
+				return
+			}
 			if (top > w.innerHeight / 2) {
 				gotop.classList.add('in')
 			} else {
@@ -82,16 +100,18 @@
 				menu.classList.remove('hide')
 				if (!isPost) {
 					main.classList.remove('menuoff')
-					jQuery(title).animate({
-						marginRight: '-20%'
-					})
+					if (!body.classList.contains('blog-shell')) {
+						jQuery(title).animate({
+							marginRight: '-20%'
+						})
+					}
 				}
 				if (w.innerWidth < 1241) {
 					mask.classList.add('in')
 					menu.classList.add('show')
 
 					if (isWX) {
-						const top = docEl.scrollTop
+						const top = getScrollTop()
 						main.classList.add('lock')
 						main.scrollTop = top
 					} else {
@@ -105,13 +125,38 @@
 				if (isWX) {
 					const top = main.scrollTop
 					main.classList.remove('lock')
-					docEl.scrollTop = top
+					setScrollTop(top)
 				} else {
 					root.classList.remove('lock')
 				}
 			}
 		},
+		closeMenu: function() {
+			menu.classList.add('hide')
+			mask.classList.remove('in')
+			menu.classList.remove('show')
+
+			if (isWX) {
+				const top = main.scrollTop
+				main.classList.remove('lock')
+				setScrollTop(top)
+			} else {
+				root.classList.remove('lock')
+			}
+
+			if (!isPost) {
+				main.classList.add('menuoff')
+				if (!body.classList.contains('blog-shell')) {
+					jQuery(title).animate({
+						marginRight: '-3%'
+					})
+				}
+			}
+		},
 		fixedHeader: function(top) {
+			if (!header) {
+				return
+			}
 			if (top > header.clientHeight) {
 				header.classList.add('fixed')
 			} else {
@@ -120,7 +165,8 @@
 		},
 		toc: (function() {
 			const toc = $('#post-toc')
-			if (!toc || !toc.children.length) {
+			const postContent = $('#post-content')
+			if (!toc || !toc.children.length || !postContent) {
 				if (isPost) {
 					main.classList.add('show')
 				}
@@ -130,41 +176,114 @@
 					actived: noop
 				}
 			}
-			const bannerH = $('.post-header').clientHeight,
-				headerH = header.clientHeight,
-				titles = $('#post-content').querySelectorAll('h1, h2, h3, h4, h5, h6')
-			toc
-				.querySelector(`a[href="#${titles[0].id}"]`)
-				.parentNode.classList.add('active')
+			const banner = $('.post-header'),
+				footer = $('.footer'),
+				bannerH = banner ? banner.clientHeight : 0,
+				titles = postContent.querySelectorAll('h1, h2, h3, h4, h5, h6'),
+				tocLinks = toc.querySelectorAll('a[href^="#"]')
+			if (!titles.length || !tocLinks.length) {
+				return {
+					fixed: noop,
+					actived: noop
+				}
+			}
+			const normalizeHash = function(hash) {
+				if (!hash) {
+					return ''
+				}
+				const raw = hash.charAt(0) === '#' ? hash.slice(1) : hash
+				try {
+					return decodeURIComponent(raw)
+				} catch (err) {
+					return raw
+				}
+			}
+			const getHeaderHeight = function() {
+				return header ? header.clientHeight : 0
+			}
+			const findLinkById = function(id) {
+				for (let i = 0; i < tocLinks.length; i++) {
+					if (normalizeHash(tocLinks[i].getAttribute('href')) === id) {
+						return tocLinks[i]
+					}
+				}
+				return null
+			}
+			const findTitleByHash = function(hash) {
+				const targetId = normalizeHash(hash)
+				for (let i = 0; i < titles.length; i++) {
+					if (titles[i].id === targetId) {
+						return titles[i]
+					}
+				}
+				return null
+			}
+			const setActive = function(link) {
+				const current = toc.querySelector('li.active')
+				if (current) {
+					current.classList.remove('active')
+				}
+				if (link && link.parentNode) {
+					link.parentNode.classList.add('active')
+				}
+			}
+			const firstLink = findLinkById(titles[0].id)
+			if (firstLink) {
+				setActive(firstLink)
+			}
+			forEach.call(tocLinks, function(link) {
+				link.addEventListener('click', function(event) {
+					const target = findTitleByHash(link.getAttribute('href'))
+					if (!target) {
+						return
+					}
+					event.preventDefault()
+					const destination = Math.max(
+						offset(target).y - getHeaderHeight() - 18,
+						0
+					)
+					setScrollTop(destination)
+					Blog.toc.actived(destination)
+					Blog.toggleGotop(destination)
+					Blog.fixedHeader(destination)
+					if (w.history && w.history.replaceState) {
+						w.history.replaceState(null, '', `#${encodeURIComponent(target.id)}`)
+					}
+					setActive(link)
+				})
+			})
 
 			main.classList.add('tocshow')
 
-			title.classList.add('toc')
-			$('.footer').classList.add('toc')
+			if (title) {
+				title.classList.add('toc')
+			}
+			if (footer) {
+				footer.classList.add('toc')
+			}
 
 			return {
 				fixed: function(top) {
-					if (top >= bannerH - headerH) {
+					if (top >= bannerH - getHeaderHeight()) {
 						toc.classList.add('fixed')
 					} else {
 						toc.classList.remove('fixed')
 					}
 				},
 				actived: function(top) {
+					let currentLink = firstLink
 					for (let i = 0, len = titles.length; i < len; i++) {
-						if (top > offset(titles[i]).y - headerH - 5) {
-							toc.querySelector('li.active').classList.remove('active')
-							const active = toc.querySelector(`a[href="#${titles[i].id}"]`)
-								.parentNode
-							active.classList.add('active')
+						if (top >= offset(titles[i]).y - getHeaderHeight() - 18) {
+							const active = findLinkById(titles[i].id)
+							if (active) {
+								currentLink = active
+							}
 						}
 					}
-					if (top < offset(titles[0]).y) {
-						toc.querySelector('li.active').classList.remove('active')
-						toc
-							.querySelector(`a[href="#${titles[0].id}"]`)
-							.parentNode.classList.add('active')
+					if (top < offset(titles[0]).y - getHeaderHeight() - 18) {
+						currentLink = firstLink
 					}
+					setActive(currentLink)
 				}
 			}
 		}()),
@@ -297,12 +416,18 @@
 			return {
 				loaded: function() {
 					forEach.call($elements, function(el) {
+						if (el.id === 'gotop') {
+							return
+						}
 						el.classList.add('in')
 					})
 					visible = true
 				},
 				unload: function() {
 					forEach.call($elements, function(el) {
+						if (el.id === 'gotop') {
+							return
+						}
 						el.classList.remove('in')
 					})
 					visible = false
@@ -438,7 +563,7 @@
 	})
 	/* 页面加载第一个执行的事件 */
 	w.addEventListener('DOMContentLoaded', function() {
-		const top = docEl.scrollTop
+		const top = getScrollTop()
 		Blog.toc.fixed(top)
 		Blog.toc.actived(top)
 		Blog.page.loaded()
@@ -471,13 +596,18 @@
 		w.BLOG.even = even
 		Blog.toggleMenu()
 	})
-	gotop.addEventListener(
-		even,
-		function() {
-			animate(Blog.goTop.bind(Blog, 0))
-		},
-		false
-	)
+	if (gotop) {
+		gotop.addEventListener(
+			even,
+			function(e) {
+				e.preventDefault()
+				setScrollTop(0)
+				Blog.toggleGotop(0)
+				Blog.toc.actived(0)
+			},
+			false
+		)
+	}
 	menuToggle.addEventListener(
 		even,
 		function(e) {
@@ -489,13 +619,7 @@
 	menuOff.addEventListener(
 		even,
 		function() {
-			menu.classList.add('hide')
-			if (!isPost) {
-				main.classList.add('menuoff')
-				jQuery(title).animate({
-					marginRight: '-3%'
-				})
-			}
+			Blog.closeMenu()
 		},
 		false
 	)
@@ -510,17 +634,32 @@
 		},
 		false
 	)
-	d.addEventListener(
-		'scroll',
-		function() {
-			const top = docEl.scrollTop
-			Blog.toggleGotop(top)
-			Blog.fixedHeader(top)
-			Blog.toc.fixed(top)
-			Blog.toc.actived(top)
-		},
-		false
-	)
+	let scrollTicking = false
+	const onScroll = function() {
+		scrollTicking = false
+		const top = getScrollTop()
+		Blog.toggleGotop(top)
+		Blog.fixedHeader(top)
+		Blog.toc.fixed(top)
+		Blog.toc.actived(top)
+	}
+	const requestScrollSync = function() {
+		if (scrollTicking) {
+			return
+		}
+		scrollTicking = true
+		animate(onScroll)
+	}
+	const scrollTarget =
+		body.scrollHeight > body.clientHeight ? body : d.scrollingElement || docEl || body
+	w.addEventListener('scroll', requestScrollSync, {
+		passive: true
+	})
+	if (scrollTarget && scrollTarget !== w) {
+		scrollTarget.addEventListener('scroll', requestScrollSync, {
+			passive: true
+		})
+	}
 	if (w.BLOG.SHARE && isPost) {
 		Blog.share()
 	}
