@@ -166,6 +166,25 @@
 		toc: (function() {
 			const toc = $('#post-toc')
 			const postContent = $('#post-content')
+			const compactTouchViewport =
+				!!(
+					w.matchMedia &&
+					w.matchMedia('(hover: none) and (pointer: coarse)').matches
+				)
+			if (isPost && (w.innerWidth <= 960 || compactTouchViewport)) {
+				main.classList.remove('tocshow')
+				if (title) {
+					title.classList.remove('toc')
+				}
+				const footer = $('.footer')
+				if (footer) {
+					footer.classList.remove('toc')
+				}
+				return {
+					fixed: noop,
+					actived: noop
+				}
+			}
 			if (!toc || !toc.children.length || !postContent) {
 				if (isPost) {
 					main.classList.add('show')
