@@ -10,270 +10,386 @@
             return;
         }
 
-        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        var coarsePointer = window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches;
-        var isTouchDevice = coarsePointer || /Android|iPhone|iPad|iPod|iOS|Windows Phone/i.test(window.navigator.userAgent);
-        var raf = window.requestAnimationFrame || function(callback) {
-            return window.setTimeout(callback, 16);
-        };
-        var caf = window.cancelAnimationFrame || window.clearTimeout;
+        var state = container.__tagDropState || {};
+
+        function readNumber(value) {
+            var number = parseFloat(value || '0');
+            return Number.isFinite(number) ? number : 0;
+        }
 
         function randomBetween(min, max) {
             return min + Math.random() * (max - min);
         }
 
-        function getViewportHeight() {
-            return window.innerHeight || document.documentElement.clientHeight || 0;
+        function shuffle(list) {
+            var result = list.slice();
+            for (var index = result.length - 1; index > 0; index--) {
+                var swapIndex = Math.floor(Math.random() * (index + 1));
+                var current = result[index];
+                result[index] = result[swapIndex];
+                result[swapIndex] = current;
+            }
+            return result;
         }
 
-        function getContainerPadding() {
-            var computedStyle = window.getComputedStyle(container);
+        function getLayoutProfile() {
+            var viewportWidth = Math.max(window.innerWidth || 0, document.documentElement.clientWidth || 0);
+            var coarsePointer = window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+            if (viewportWidth <= 767 || coarsePointer) {
+                return {
+                    baseHeight: 232,
+                    gapX: 10,
+                    gapY: 12,
+                    startBand: 26,
+                    maxTilt: 4,
+                    flowLayout: false
+                };
+            }
+
+            if (viewportWidth <= 1024) {
+                return {
+                    baseHeight: 248,
+                    gapX: 14,
+                    gapY: 14,
+                    startBand: 34,
+                    maxTilt: 5,
+                    flowLayout: false
+                };
+            }
+
             return {
-                left: parseFloat(computedStyle.paddingLeft) || 0,
-                right: parseFloat(computedStyle.paddingRight) || 0
+                baseHeight: 264,
+                gapX: 18,
+                gapY: 16,
+                startBand: 42,
+                maxTilt: 6,
+                flowLayout: false
             };
         }
 
-        function shuffleMetrics(metrics) {
-            var clone = metrics.slice();
-            for (var i = clone.length - 1; i > 0; i--) {
-                var swapIndex = Math.floor(Math.random() * (i + 1));
-                var current = clone[i];
-                clone[i] = clone[swapIndex];
-                clone[swapIndex] = current;
-            }
-            return clone;
-        }
-
-        function destroyDrop() {
-            var state = container.__tagDropState;
-            if (state) {
-                if (state.frame) {
-                    caf(state.frame);
-                }
-                if (state.resizeTimer) {
-                    window.clearTimeout(state.resizeTimer);
-                }
-                if (state.onResize) {
-                    window.removeEventListener('resize', state.onResize);
-                }
+        function resetTags() {
+            if (state.resizeTimer) {
+                window.clearTimeout(state.resizeTimer);
             }
 
             tagLinks.forEach(function(link) {
-                link.classList.remove('drop-entered');
+                link.classList.remove('reveal-in');
+                link.style.order = '';
+                link.style.left = '';
+                link.style.top = '';
                 link.style.width = '';
                 link.style.height = '';
-                link.style.opacity = '';
-                link.style.transform = '';
                 link.style.transitionDelay = '';
+                link.style.opacity = '';
+                link.style.filter = '';
+                link.style.transform = '';
+                link.style.setProperty('--tag-order', '');
+                link.style.setProperty('--tag-drop-delay', '');
+                link.style.setProperty('--tag-drop-start-y', '');
+                link.style.setProperty('--tag-drop-tilt', '');
+                link.style.setProperty('--tag-final-tilt', '');
+                delete link.dataset.finalTransform;
             });
 
-            container.classList.remove('physics-ready');
+            container.classList.remove('physics-ready', 'physics-animating', 'physics-mobile');
             container.style.height = '';
             container.__tagDropState = null;
         }
 
         function measureTags() {
+            tagLinks.forEach(function(link) {
+                link.style.width = '';
+                link.style.height = '';
+                link.style.left = '0px';
+                link.style.top = '0px';
+            });
+
             return tagLinks.map(function(link) {
-                var card = link.querySelector('.card-card');
-                var previous = {
-                    linkWidth: link.style.width,
-                    linkHeight: link.style.height,
-                    linkTransform: link.style.transform,
-                    cardDisplay: card ? card.style.display : '',
-                    cardWidth: card ? card.style.width : '',
-                    cardMaxWidth: card ? card.style.maxWidth : ''
+                var rect = link.getBoundingClientRect();
+                return {
+                    element: link,
+                    width: Math.ceil(rect.width),
+                    height: Math.ceil(rect.height)
                 };
-
-                link.style.width = 'auto';
-                link.style.height = 'auto';
-                link.style.transform = 'none';
-
-                if (card) {
-                    card.style.display = 'inline-flex';
-                    card.style.width = 'auto';
-                    card.style.maxWidth = Math.min(container.clientWidth - 24, isTouchDevice ? 268 : 320) + 'px';
-                }
-
-                var rect = (card || link).getBoundingClientRect();
-                var metric = {
-                    link: link,
-                    width: Math.ceil(Math.max(rect.width, 108)),
-                    height: Math.ceil(Math.max(rect.height, 46))
-                };
-
-                link.style.width = previous.linkWidth;
-                link.style.height = previous.linkHeight;
-                link.style.transform = previous.linkTransform;
-
-                if (card) {
-                    card.style.display = previous.cardDisplay;
-                    card.style.width = previous.cardWidth;
-                    card.style.maxWidth = previous.cardMaxWidth;
-                }
-
-                return metric;
             });
         }
 
-        function buildLayout(metrics) {
-            var padding = getContainerPadding();
-            var containerWidth = Math.max(container.clientWidth, 320);
-            var usableWidth = Math.max(containerWidth - padding.left - padding.right, 220);
-            var baseGap = isTouchDevice ? 10 : 14;
-            var rowGap = isTouchDevice ? 12 : 16;
-            var topPadding = isTouchDevice ? 14 : 18;
-            var bottomPadding = isTouchDevice ? 14 : 18;
-            var dropBandHeight = isTouchDevice ? 74 : 96;
-            var baseHeight = isTouchDevice ? Math.max(260, getViewportHeight() * 0.34) : Math.max(320, getViewportHeight() * 0.4);
-            var shuffled = shuffleMetrics(metrics);
+        function buildRows(items, boundsWidth, gapX) {
             var rows = [];
             var currentRow = [];
             var currentWidth = 0;
-            var currentHeight = 0;
+            var rowHeight = 0;
 
-            shuffled.forEach(function(metric) {
-                metric.width = Math.min(metric.width, usableWidth);
-                var nextWidth = currentRow.length ? currentWidth + baseGap + metric.width : metric.width;
-                if (currentRow.length && nextWidth > usableWidth) {
+            items.forEach(function(item) {
+                var nextWidth = currentRow.length
+                    ? currentWidth + gapX + item.width
+                    : item.width;
+
+                if (currentRow.length && nextWidth > boundsWidth) {
                     rows.push({
-                        items: currentRow.slice(),
-                        height: currentHeight
+                        items: currentRow,
+                        width: currentWidth,
+                        height: rowHeight
                     });
                     currentRow = [];
                     currentWidth = 0;
-                    currentHeight = 0;
+                    rowHeight = 0;
                 }
 
-                currentWidth = currentRow.length ? currentWidth + baseGap + metric.width : metric.width;
-                currentHeight = Math.max(currentHeight, metric.height);
-                currentRow.push(metric);
+                currentRow.push(item);
+                currentWidth = currentRow.length === 1 ? item.width : currentWidth + gapX + item.width;
+                rowHeight = Math.max(rowHeight, item.height);
             });
 
             if (currentRow.length) {
                 rows.push({
-                    items: currentRow.slice(),
-                    height: currentHeight
+                    items: currentRow,
+                    width: currentWidth,
+                    height: rowHeight
                 });
             }
 
-            var contentHeight = rows.reduce(function(sum, row) {
-                return sum + row.height;
-            }, 0) + rowGap * Math.max(rows.length - 1, 0);
-            var containerHeight = Math.ceil(Math.max(baseHeight, contentHeight + topPadding + dropBandHeight + bottomPadding));
-            var cursorBottom = containerHeight - bottomPadding;
-
-            for (var rowIndex = rows.length - 1; rowIndex >= 0; rowIndex--) {
-                var row = rows[rowIndex];
-                var contentWidth = row.items.reduce(function(sum, item) {
-                    return sum + item.width;
-                }, 0);
-                var fixedGapWidth = baseGap * Math.max(row.items.length - 1, 0);
-                var freeSpace = Math.max(0, usableWidth - contentWidth - fixedGapWidth);
-                var slots = row.items.length + 1;
-                var weights = [];
-                var weightTotal = 0;
-
-                for (var i = 0; i < slots; i++) {
-                    var weight = 0.55 + Math.random();
-                    weights.push(weight);
-                    weightTotal += weight;
-                }
-
-                var extraSpacing = weights.map(function(weight) {
-                    return freeSpace * (weight / weightTotal);
-                });
-
-                var rowTop = cursorBottom - row.height;
-                var cursorX = padding.left + extraSpacing[0];
-
-                row.items.forEach(function(item, itemIndex) {
-                    var verticalSlack = Math.max((row.height - item.height) / 2, 0);
-                    var yJitter = Math.min(isTouchDevice ? 3 : 5, verticalSlack);
-                    var finalX = Math.max(padding.left, Math.min(cursorX, containerWidth - padding.right - item.width));
-                    var finalY = Math.max(topPadding + dropBandHeight, Math.min(rowTop + verticalSlack + randomBetween(-yJitter, yJitter), containerHeight - bottomPadding - item.height));
-                    var maxStartX = containerWidth - padding.right - item.width;
-                    var startX = randomBetween(padding.left, Math.max(padding.left, maxStartX));
-                    var startY = randomBetween(topPadding, Math.max(topPadding, topPadding + dropBandHeight - item.height));
-
-                    item.finalX = finalX;
-                    item.finalY = finalY;
-                    item.finalRotation = randomBetween(-3.5, 3.5);
-                    item.startX = startX;
-                    item.startY = startY;
-                    item.startRotation = randomBetween(-12, 12);
-                    item.delay = Math.round(randomBetween(40, 320) + (rows.length - 1 - rowIndex) * 90 + itemIndex * 28);
-
-                    cursorX += item.width + baseGap + extraSpacing[itemIndex + 1];
-                });
-
-                cursorBottom = rowTop - rowGap;
-            }
-
-            return {
-                height: containerHeight,
-                metrics: metrics
-            };
+            return rows;
         }
 
-        function applyLayout(layout) {
-            container.classList.add('physics-ready');
-            container.style.height = layout.height + 'px';
+        function revealFlowTags(reduceMotion) {
+            var order = shuffle(tagLinks.map(function(_, index) {
+                return index;
+            }));
 
-            layout.metrics.forEach(function(metric) {
-                var link = metric.link;
-                link.classList.remove('drop-entered');
-                link.style.width = metric.width + 'px';
-                link.style.height = metric.height + 'px';
-                link.style.opacity = reduceMotion ? '1' : '0';
-                link.style.transitionDelay = reduceMotion ? '0ms' : metric.delay + 'ms';
-                link.style.transform = reduceMotion ?
-                    'translate3d(' + metric.finalX + 'px, ' + metric.finalY + 'px, 0) rotate(' + metric.finalRotation + 'deg)' :
-                    'translate3d(' + metric.startX + 'px, ' + metric.startY + 'px, 0) rotate(' + metric.startRotation + 'deg)';
+            container.classList.add('physics-ready', 'physics-mobile');
+            container.style.height = '';
+
+            tagLinks.forEach(function(link, index) {
+                var finalTilt = randomBetween(-2.2, 2.2);
+                var startTilt = randomBetween(-5, 5);
+                var delay = Math.round(randomBetween(30, 120) + (order[index] * randomBetween(22, 42)));
+                var startOffset = Math.round(-1 * randomBetween(18, 38));
+
+                link.style.order = String(order[index]);
+                link.style.setProperty('--tag-order', String(order[index]));
+                link.style.transitionDelay = delay + 'ms';
+                link.style.opacity = '0';
+                link.style.filter = 'blur(1.5px)';
+                link.style.transform = 'translate3d(0, ' + startOffset + 'px, 0) scale(0.96) rotate(' + startTilt.toFixed(2) + 'deg)';
+                link.style.setProperty('--tag-drop-delay', delay + 'ms');
+                link.style.setProperty('--tag-drop-tilt', startTilt.toFixed(2) + 'deg');
+                link.style.setProperty('--tag-final-tilt', finalTilt.toFixed(2) + 'deg');
+                link.dataset.finalTransform = 'translate3d(0, 0, 0) scale(1) rotate(' + finalTilt.toFixed(2) + 'deg)';
             });
 
             if (reduceMotion) {
-                layout.metrics.forEach(function(metric) {
-                    metric.link.classList.add('drop-entered');
+                tagLinks.forEach(function(link) {
+                    link.style.opacity = '1';
+                    link.style.filter = 'none';
+                    link.style.transform = link.dataset.finalTransform || 'translate3d(0, 0, 0) scale(1) rotate(0deg)';
+                    link.classList.add('reveal-in');
                 });
                 return;
             }
 
-            container.__tagDropState.frame = raf(function() {
-                container.__tagDropState.frame = raf(function() {
-                    layout.metrics.forEach(function(metric) {
-                        var link = metric.link;
-                        link.style.opacity = '1';
-                        link.style.transform = 'translate3d(' + metric.finalX + 'px, ' + metric.finalY + 'px, 0) rotate(' + metric.finalRotation + 'deg)';
-                        link.classList.add('drop-entered');
-                    });
+            window.setTimeout(function() {
+                container.classList.add('physics-animating');
+                tagLinks.forEach(function(link) {
+                    link.classList.add('reveal-in');
+                    link.style.opacity = '1';
+                    link.style.filter = 'none';
+                    link.style.transform = link.dataset.finalTransform || 'translate3d(0, 0, 0) scale(1) rotate(0deg)';
+                });
+            }, 34);
+        }
+
+        function applyRowOffsets(rows, boundsWidth) {
+            rows.forEach(function(row) {
+                var remaining = Math.max(0, boundsWidth - row.width);
+                var segments = [];
+                var segmentCount = row.items.length + 1;
+                var weightTotal = 0;
+
+                for (var segmentIndex = 0; segmentIndex < segmentCount; segmentIndex++) {
+                    var weight = Math.random();
+                    segments.push(weight);
+                    weightTotal += weight;
+                }
+
+                var normalizedSegments = segments.map(function(weight) {
+                    return weightTotal > 0 ? (weight / weightTotal) * remaining : 0;
+                });
+
+                var cursor = normalizedSegments[0] || 0;
+
+                row.items.forEach(function(item, itemIndex) {
+                    item.left = cursor;
+                    cursor += item.width;
+
+                    if (itemIndex !== row.items.length - 1) {
+                        cursor += state.profile.gapX + (normalizedSegments[itemIndex + 1] || 0);
+                    }
                 });
             });
         }
 
-        destroyDrop();
+        function placeRows(rows, padding) {
+            var totalRowsHeight = rows.reduce(function(sum, row) {
+                return sum + row.height;
+            }, 0);
+            var totalGapHeight = Math.max(0, rows.length - 1) * state.profile.gapY;
+            var requiredHeight = Math.ceil(padding.top + padding.bottom + totalRowsHeight + totalGapHeight);
+            var containerHeight = Math.max(state.profile.baseHeight, requiredHeight);
+            var cursorY = containerHeight - padding.bottom;
 
-        var layout = buildLayout(measureTags());
+            rows.forEach(function(row) {
+                cursorY -= row.height;
+                row.top = cursorY;
 
-        function onResize() {
-            window.clearTimeout(container.__tagDropState.resizeTimer);
-            container.__tagDropState.resizeTimer = window.setTimeout(function() {
-                destroyDrop();
-                initTagDrop();
-            }, 220);
+                row.items.forEach(function(item) {
+                    item.top = row.top + Math.max(0, row.height - item.height);
+                });
+
+                cursorY -= state.profile.gapY;
+            });
+
+            return containerHeight;
         }
 
-        container.__tagDropState = {
-            frame: null,
-            resizeTimer: null,
-            onResize: onResize
-        };
+        function revealRows(rows, padding, reduceMotion) {
+            tagLinks.forEach(function(link) {
+                link.classList.remove('reveal-in');
+            });
 
-        applyLayout(layout);
+            container.classList.add('physics-ready');
+            container.style.height = state.containerHeight + 'px';
 
-        window.addEventListener('resize', onResize, {
-            passive: true
-        });
+            rows.forEach(function(row, rowIndex) {
+                row.items.forEach(function(item, itemIndex) {
+                    var finalTilt = randomBetween(-state.profile.maxTilt * 0.35, state.profile.maxTilt * 0.35);
+                    var startTilt = randomBetween(-state.profile.maxTilt, state.profile.maxTilt);
+                    var startTop = Math.min(
+                        item.top,
+                        padding.top + randomBetween(0, state.profile.startBand)
+                    );
+                    var delay = Math.round(
+                        randomBetween(40, 140) +
+                        rowIndex * randomBetween(60, 100) +
+                        itemIndex * randomBetween(16, 34)
+                    );
+
+                    item.element.style.left = Math.round(padding.left + item.left) + 'px';
+                    item.element.style.top = Math.round(item.top) + 'px';
+                    item.element.style.width = item.width + 'px';
+                    item.element.style.height = item.height + 'px';
+                    item.element.style.transitionDelay = delay + 'ms';
+                    item.element.style.opacity = '0';
+                    item.element.style.filter = 'blur(2px)';
+                    item.element.style.transform = 'translate3d(0, ' + Math.round(startTop - item.top) + 'px, 0) scale(0.94) rotate(' + startTilt.toFixed(2) + 'deg)';
+                    item.element.style.setProperty('--tag-drop-delay', delay + 'ms');
+                    item.element.style.setProperty('--tag-drop-start-y', Math.round(startTop - item.top) + 'px');
+                    item.element.style.setProperty('--tag-drop-tilt', startTilt.toFixed(2) + 'deg');
+                    item.element.style.setProperty('--tag-final-tilt', finalTilt.toFixed(2) + 'deg');
+                    item.element.dataset.finalTransform = 'translate3d(0, 0, 0) scale(1) rotate(' + finalTilt.toFixed(2) + 'deg)';
+                });
+            });
+
+            if (reduceMotion) {
+                tagLinks.forEach(function(link) {
+                    link.style.opacity = '1';
+                    link.style.filter = 'none';
+                    link.style.transform = link.dataset.finalTransform || 'translate3d(0, 0, 0) scale(1) rotate(0deg)';
+                    link.classList.add('reveal-in');
+                });
+                return;
+            }
+
+            window.setTimeout(function() {
+                container.classList.add('physics-animating');
+                tagLinks.forEach(function(link) {
+                    link.classList.add('reveal-in');
+                    link.style.opacity = '1';
+                    link.style.filter = 'none';
+                    link.style.transform = link.dataset.finalTransform || 'translate3d(0, 0, 0) scale(1) rotate(0deg)';
+                });
+            }, 34);
+        }
+
+        function layoutTags() {
+            resetTags();
+
+            state.profile = getLayoutProfile();
+
+            var containerStyle = window.getComputedStyle(container);
+            var padding = {
+                top: readNumber(containerStyle.paddingTop),
+                right: readNumber(containerStyle.paddingRight),
+                bottom: readNumber(containerStyle.paddingBottom),
+                left: readNumber(containerStyle.paddingLeft)
+            };
+
+            var boundsWidth = Math.max(
+                0,
+                Math.floor(container.clientWidth - padding.left - padding.right)
+            );
+
+            if (!boundsWidth) {
+                return;
+            }
+
+            if (state.profile.flowLayout) {
+                revealFlowTags(
+                    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                );
+                return;
+            }
+
+            container.style.height = state.profile.baseHeight + 'px';
+
+            var measured = shuffle(measureTags());
+            var rows = buildRows(measured, boundsWidth, state.profile.gapX);
+
+            if (!rows.length) {
+                return;
+            }
+
+            applyRowOffsets(rows, boundsWidth);
+            state.containerHeight = placeRows(rows, padding);
+            revealRows(
+                rows,
+                padding,
+                window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            );
+        }
+
+        function scheduleLayout() {
+            if (state.resizeTimer) {
+                window.clearTimeout(state.resizeTimer);
+            }
+
+            state.resizeTimer = window.setTimeout(function() {
+                layoutTags();
+            }, 120);
+        }
+
+        resetTags();
+        container.__tagDropState = state;
+        scheduleLayout();
+
+        if (!state.boundResize) {
+            state.boundResize = true;
+            window.addEventListener('resize', scheduleLayout, {
+                passive: true
+            });
+            window.addEventListener('orientationchange', scheduleLayout, {
+                passive: true
+            });
+            window.addEventListener('load', scheduleLayout, {
+                passive: true,
+                once: true
+            });
+
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(scheduleLayout).catch(function() {});
+            }
+        }
     }
 
     if (document.readyState === 'loading') {
