@@ -588,6 +588,86 @@
         });
     }
 
+    function initPostRailLayout() {
+        if (!document.body.classList.contains('post-detail-page')) {
+            return;
+        }
+        var gotop = document.getElementById('gotop');
+        var widget = document.querySelector('.post-widget');
+        var postCard = document.querySelector('.post-card');
+        var landlord = document.getElementById('landlord');
+        var resizeFrame = 0;
+
+        if (!gotop || !widget) {
+            return;
+        }
+
+        function isCompactViewport() {
+            return !!(
+                (window.matchMedia &&
+                    window.matchMedia('(hover: none) and (pointer: coarse)').matches) ||
+                window.innerWidth <= 960
+            );
+        }
+
+        function clearDesktopRail() {
+            gotop.classList.remove('post-origin-hidden');
+            gotop.style.display = '';
+            widget.style.top = '';
+            widget.style.maxHeight = '';
+        }
+
+        function syncPlacement() {
+            if (isCompactViewport()) {
+                clearDesktopRail();
+                return;
+            }
+
+            var fallbackTop = parseFloat(window.getComputedStyle(widget).top) || 224;
+            var articleTop = postCard
+                ? Math.round(postCard.getBoundingClientRect().top + getScrollTop())
+                : fallbackTop;
+            var widgetTop = Math.max(getHeaderOffset() + 8, articleTop);
+            var live2dGap = 34;
+            var safeBottom = 20;
+            var landlordRect = landlord ? landlord.getBoundingClientRect() : null;
+            var fallbackLandlordTop = window.innerHeight - 260;
+            var landlordTop = landlordRect &&
+                landlordRect.height >= 160 &&
+                landlordRect.top > 0 &&
+                landlordRect.top < window.innerHeight - 40
+                ? landlordRect.top
+                : fallbackLandlordTop;
+            var availableHeight = Math.floor(
+                landlordTop - widgetTop - live2dGap - safeBottom
+            );
+            var dockHeight = Math.max(360, Math.min(availableHeight, 620));
+
+            gotop.classList.remove('post-origin-hidden');
+            gotop.style.display = '';
+            widget.style.top = widgetTop + 'px';
+            widget.style.maxHeight = dockHeight + 'px';
+        }
+
+        function requestSync() {
+            if (resizeFrame) {
+                window.cancelAnimationFrame(resizeFrame);
+            }
+            resizeFrame = window.requestAnimationFrame(function() {
+                resizeFrame = 0;
+                syncPlacement();
+            });
+        }
+
+        requestSync();
+        window.addEventListener('resize', requestSync);
+        window.addEventListener('load', requestSync);
+        window.setTimeout(requestSync, 400);
+        window.setTimeout(requestSync, 1400);
+        window.setTimeout(requestSync, 2800);
+        window.setTimeout(requestSync, 4200);
+    }
+
     function initScrollReveal() {
         var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var groups = [
@@ -1014,7 +1094,7 @@
         initPostTitleTyping();
         initScrollReveal();
         initKaTeX();
-        initPostSideStack();
+        initPostRailLayout();
         initPostNavigator();
     }
 

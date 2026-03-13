@@ -172,6 +172,20 @@
 		toc: (function() {
 			const toc = $('#post-toc')
 			const postContent = $('#post-content')
+			const pageFooter = $('.footer')
+			if (body.classList.contains('post-detail-page')) {
+				main.classList.remove('tocshow')
+				if (title) {
+					title.classList.remove('toc')
+				}
+				if (pageFooter) {
+					pageFooter.classList.remove('toc')
+				}
+				return {
+					fixed: noop,
+					actived: noop
+				}
+			}
 			const compactTouchViewport =
 				!!(
 					w.matchMedia &&
@@ -182,9 +196,8 @@
 				if (title) {
 					title.classList.remove('toc')
 				}
-				const footer = $('.footer')
-				if (footer) {
-					footer.classList.remove('toc')
+				if (pageFooter) {
+					pageFooter.classList.remove('toc')
 				}
 				return {
 					fixed: noop,
