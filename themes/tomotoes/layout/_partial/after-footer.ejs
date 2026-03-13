@@ -9,7 +9,7 @@
 
 <div id="color-picker" class="page-modal">
     <a class="close" href="javascript:;"><i class="icon icon-lg icon-close"></i></a>
-    <h4>RGB 璋冭壊瀹為獙瀹?/h4>
+    <h4>RGB 调色实验室</h4>
     <div class="color-picker-body">
         <input type="color" id="theme-color-input" value="<%= theme.color || '#5275b0' %>">
         <div class="color-presets">
@@ -19,19 +19,18 @@
             <button type="button" class="color-swatch" data-color="#bd6a3c" style="--swatch:#bd6a3c"></button>
             <button type="button" class="color-swatch" data-color="#6a5acd" style="--swatch:#6a5acd"></button>
         </div>
-        <p class="color-picker-tip">鎸戜竴涓綘鍠滄鐨勪富鑹诧紝椤堕儴銆佹寜閽拰楂樹寒浼氫竴璧峰垏鎹€?/p>
+        <p class="color-picker-tip">挑一个你喜欢的主色，顶部、按钮和高亮会一起切换。</p>
     </div>
 </div>
 
 <div id="wechat" class="page-modal wechat-wrap">
     <a class="close" href="javascript:;"><i class="icon icon-lg icon-close"></i></a>
-    <h4 class="wechat-title">娆㈣繋娣诲姞鎴戠殑寰俊</h4>
+    <h4 class="wechat-title">欢迎添加我的微信</h4>
     <img id="wechat_img" src="<%- url_for(theme.wechat_qr || '/img/wechat_channel.jpg') %>" alt="wechat qr">
 </div>
 
-<div id="avatarPreview" class="page-modal avatar-preview-modal" role="dialog" aria-modal="true" aria-label="头像预览">
-    <a class="close" href="javascript:;" aria-label="关闭头像预览"><i class="icon icon-lg icon-close"></i></a>
-    <div class="avatar-preview-body">
+<div id="avatarPreview" class="avatar-preview-modal" role="dialog" aria-modal="true" aria-label="头像预览">
+    <div class="avatar-preview-stage">
         <div class="avatar-preview-frame">
             <img src="<%- url_for(theme.avatar) %>" alt="<%- config.author %> avatar preview">
         </div>

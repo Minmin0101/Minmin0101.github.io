@@ -526,10 +526,42 @@
 			setRewardMethod('default')
 		},
 		avatarPreview: function() {
-			const modal = new this.modal('#avatarPreview')
+			const modal = $('#avatarPreview')
+			const previewFrame = modal && modal.querySelector('.avatar-preview-frame')
+			const previewImage = previewFrame && previewFrame.querySelector('img')
 			const triggers = $$('.avatar-preview-trigger')
-			if (!modal.$modal || !triggers.length) {
+			if (!modal || !previewFrame || !previewImage || !triggers.length) {
 				return
+			}
+			let isOpen = false
+			const show = function(src, alt) {
+				if (src) {
+					previewImage.src = src
+				}
+				if (alt) {
+					previewImage.alt = alt
+				}
+				isOpen = true
+				root.classList.add('avatar-preview-open')
+				body.classList.add('avatar-preview-open')
+				modal.classList.add('ready')
+				animate(function() {
+					modal.classList.add('in')
+				})
+			}
+			const hide = function() {
+				if (!isOpen) {
+					return
+				}
+				isOpen = false
+				modal.classList.remove('in')
+				root.classList.remove('avatar-preview-open')
+				body.classList.remove('avatar-preview-open')
+				w.setTimeout(function() {
+					if (!isOpen) {
+						modal.classList.remove('ready')
+					}
+				}, 280)
 			}
 			const bindPress = function(el, handler) {
 				let lastTouchTime = 0
@@ -570,17 +602,37 @@
 				bindPress(
 					trigger,
 					function(event) {
+						const triggerImage = trigger.querySelector('img')
 						event.preventDefault()
 						event.stopPropagation()
-						modal.show()
+						show(
+							triggerImage && (triggerImage.currentSrc || triggerImage.src),
+							triggerImage && triggerImage.alt
+						)
 					}
 				)
 			})
+			previewFrame.addEventListener('click', function(event) {
+				event.stopPropagation()
+			})
+			modal.addEventListener('click', function(event) {
+				if (previewFrame.contains(event.target)) {
+					return
+				}
+				hide()
+			})
+			modal.addEventListener(
+				'touchmove',
+				function(event) {
+					event.preventDefault()
+				},
+				{ passive: false }
+			)
 			d.addEventListener(
 				'keydown',
 				function(event) {
-					if (event.key === 'Escape' && modal.$modal.classList.contains('in')) {
-						modal.hide()
+					if (event.key === 'Escape' && isOpen) {
+						hide()
 					}
 				},
 				false
