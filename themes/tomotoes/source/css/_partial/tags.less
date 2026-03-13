@@ -1,174 +1,218 @@
+.lock {
+    overflow: hidden;
+    max-height: 100%;
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+}
+
+.fade {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: .4s ease-in-out;
+}
+
+.fade.in {
+    opacity: 1;
+    transform: none;
+}
+
+.fade-scale {
+    opacity: .8;
+    transition: .6s ease-in-out;
+    transform: scale(.55);
+}
+
+.fade-scale.in {
+    opacity: 1;
+    transform: none;
+}
+
+@media screen and (max-width: 767px) {
+    .fade {
+        transition: .2s ease-in-out;
+        transform: translateY(20px);
+    }
+
+    .fade-scale {
+        transition: .3s ease-in-out;
+        transform: translate(5%, 10%) scale(.8);
+    }
+}
+
+.hover-out:before {
+    animation: continueRight .5s forwards !important;
+}
+
 .tag-tip {
-    margin-bottom: 16px;
-    min-height: 20px;
+    margin-bottom: 10px;
+    height: 20px;
     color: #333;
     letter-spacing: 1px;
     font-size: 20px;
     font-family: "Comic Sans MS", "Helvetica Neue", "Microsoft Yahei", -apple-system, sans-serif;
 }
 
-.card-pool {
-    position: relative;
-    width: 100%;
-}
-
-.tag-link {
-    display: block;
-    width: auto;
-    max-width: min(320px, calc(100% - 20px));
-    cursor: pointer;
-    outline: none;
-    border-radius: 18px;
-    will-change: transform, opacity;
-}
-
 .card-card {
     overflow: hidden;
-    margin: 0;
-    padding: 14px 16px;
-    min-height: 58px;
-    width: auto;
-    max-width: 100%;
-    border-radius: 18px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, .98), rgba(232, 239, 251, .88));
-    border: 1px solid rgba(153, 176, 210, .16);
+    margin: 10px 50px 10px 0;
+    padding: 8px 10px;
+    min-height: 22px;
+    width: 140px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    border: 1px solid rgba(0, 0, 0, .05);
     vertical-align: middle;
-    text-align: left;
-    transition: transform .28s ease, box-shadow .28s ease, background .28s ease;
-    display: inline-flex;
-    box-shadow: 0 12px 28px rgba(15, 23, 42, .08);
+    text-align: center;
+    transition: all .3s ease;
+    display: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .04);
+    position: relative;
 }
 
-.tag-link:hover .card-card,
-.tag-link:focus-visible .card-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(239, 245, 255, .94));
+.card-card:hover {
+    background-color: #fff;
     transform: translateY(-2px);
-    box-shadow: 0 16px 30px rgba(15, 23, 42, .12);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, .1);
+}
+
+.card-card .card-link {
+    color: #333;
+    font-size: 18px;
+}
+
+.card-card .card-count {
+    color: #868383;
+    font-size: 16px;
 }
 
 .card-container {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 8px;
-    flex-wrap: wrap;
-    line-height: 1.45;
-    letter-spacing: .8px;
-}
-
-.card-link {
-    color: #333;
-    font-size: 17px;
-    font-weight: 600;
-    word-break: break-word;
+    letter-spacing: 2px;
+    line-height: 25px;
 }
 
 .card-count {
-    color: #6b7788;
-    font-size: 14px;
-    flex: none;
+    color: #868383;
     font-family: "Comic Sans MS", "Helvetica Neue", "Microsoft Yahei", -apple-system, sans-serif;
 }
 
 .physics-container {
     position: relative;
     width: 100%;
-    min-height: 760px;
+    height: 100%;
+    min-height: 600px;
     margin-bottom: 40px;
-    padding: 24px 24px 22px;
     overflow: hidden;
-    border-radius: 28px;
-    border: 1px solid rgba(172, 191, 221, .38);
-    background: linear-gradient(180deg, rgba(255, 255, 255, .62), rgba(240, 246, 255, .74));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .75), 0 20px 48px rgba(15, 23, 42, .08);
-    isolation: isolate;
-    contain: layout paint;
-    touch-action: pan-y pinch-zoom;
+    border-radius: 4px;
+    border: 1px dashed #ccc;
+}
+
+.physics-container canvas {
+    background: transparent !important;
+    z-index: 1;
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 .physics-container .tag-link {
     position: absolute;
+    pointer-events: none;
+    margin: 0;
+    user-select: none;
+    z-index: 2;
     left: 0;
     top: 0;
-    opacity: 0;
-    z-index: 2;
-    filter: blur(6px);
-    transform: translate3d(-9999px, -9999px, 0);
-    transition: opacity .26s ease, filter .34s ease;
-    transform-origin: center center;
-    pointer-events: none;
+    max-width: 100%;
 }
 
-.physics-container .tag-link.is-visible {
-    opacity: 1;
-    filter: none;
-    pointer-events: auto;
+.physics-container .tag-link .card-card {
+    margin: 0;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow: hidden;
+    transition: all .3s ease;
 }
 
-.physics-container.physics-fallback .tag-link {
-    transition: none !important;
+.physics-container .tag-link .card-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, .15);
+    background: linear-gradient(135deg, #fff, #f1f3f5);
 }
 
 @media screen and (max-width: 991px) {
-    .tag-tip {
-        font-size: 18px;
+    .card-card {
+        width: auto;
+        max-width: 90%;
+        margin: 8px;
+        padding: 8px 12px;
+    }
+
+    .card-pool {
+        padding-left: 0 !important;
+        columns: 0 2;
     }
 
     .physics-container {
-        min-height: 700px;
-        padding: 20px 20px 18px;
-        border-radius: 24px;
+        min-height: 550px;
+        max-width: 95%;
     }
 
-    .tag-link {
-        max-width: min(200px, calc(50% - 14px));
+    .physics-container .tag-link {
+        max-width: 90%;
     }
 
-    .card-card {
-        min-height: 44px;
-        padding: 10px 14px;
+    .physics-container .tag-link .card-card {
+        width: auto;
+        max-width: 100%;
+        padding: 6px 10px;
     }
 
-    .card-link {
+    .physics-container .tag-link .card-card .card-link {
         font-size: 16px;
     }
 
-    .card-count {
+    .physics-container .tag-link .card-card .card-count {
         font-size: 14px;
+    }
+
+    .tag-tip {
+        font-size: 18px;
     }
 }
 
 @media screen and (max-width: 767px) {
-    .physics-container {
-        min-height: 660px;
-        padding: 16px 16px 14px;
-        border-radius: 22px;
-    }
-
-    .tag-link {
-        max-width: min(160px, calc(50% - 12px));
-    }
-
     .card-card {
-        min-height: 42px;
-        padding: 10px 13px;
-        border-radius: 16px;
+        width: auto;
+        max-width: 80%;
+        margin: 6px;
+        padding: 6px 10px;
     }
 
-    .card-link {
-        font-size: 15px;
+    .card-pool {
+        padding-left: 0 !important;
+        columns: 0 1;
     }
 
-    .card-count {
-        font-size: 13px;
+    .physics-container {
+        max-width: 100%;
     }
-}
 
-@media (prefers-reduced-motion: reduce) {
-    .physics-container .tag-link,
-    .physics-container .tag-link.is-visible {
-        opacity: 1 !important;
-        transition: none !important;
-        filter: none !important;
+    .physics-container .tag-link {
+        max-width: 80%;
+    }
+
+    .physics-container .tag-link .card-card {
+        width: auto;
+        max-width: 100%;
+        padding: 4px 8px;
+    }
+
+    .tag-tip {
+        font-size: 18px;
     }
 }
