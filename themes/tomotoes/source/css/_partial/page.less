@@ -215,6 +215,35 @@
 }
 
 @media screen and(max-width: 760px) {
+    .page-article {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+    .page-content {
+        margin-bottom: 24px;
+        padding: 6px max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+        font-size: 15px;
+        line-height: 1.9;
+        border-bottom-width: 1px;
+        >*:first-child {
+            margin-top: 0;
+        }
+        >*:last-child {
+            margin-bottom: 0;
+        }
+        ol,
+        ul {
+            padding-left: 24px;
+        }
+    }
+    .weibo-stream {
+        gap: 14px;
+        margin-top: 18px;
+    }
+    .weibo-entry {
+        padding: 18px 18px;
+        border-radius: 18px;
+    }
     .wechatshare {
         font-size: 12px;
     }
@@ -222,11 +251,17 @@
 
 @media screen and(max-width: 480px) {
     .page-content {
-        margin-left: -16px;
-        margin-right: -16px;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: max(14px, env(safe-area-inset-left));
+        padding-right: max(14px, env(safe-area-inset-right));
         .column {
             display: block;
         }
+    }
+    .page-article {
+        padding-left: 2px;
+        padding-right: 2px;
     }
     .page-about-me {
         padding: 15px 20px!important;
