@@ -11,30 +11,77 @@
         });
 
         var sortPosts = _[_.orderBy ? 'orderBy' : 'sortByOrder'](posts, ['date'], ['desc']);
+        var archiveTree = [];
+        var currentYear = null;
+        var currentMonth = null;
+
+        sortPosts.forEach(function(post) {
+            var yearLabel = post.date.format('YYYY');
+            var monthLabel = post.date.format('MM');
+
+            if (!currentYear || currentYear.label !== yearLabel) {
+                currentYear = {
+                    label: yearLabel,
+                    count: 0,
+                    months: []
+                };
+                archiveTree.push(currentYear);
+                currentMonth = null;
+            }
+
+            if (!currentMonth || currentMonth.label !== monthLabel) {
+                currentMonth = {
+                    label: monthLabel,
+                    count: 0,
+                    posts: []
+                };
+                currentYear.months.push(currentMonth);
+            }
+
+            currentYear.count += 1;
+            currentMonth.count += 1;
+            currentMonth.posts.push(post);
+        });
     %>
 
-    <%
-    var y = 0, m = 0;
-    sortPosts.forEach(function(post, i){
-        var dt = post.date;
-        var ny = post.date.year();
-        var nm = post.date.month();
-
-        if(ny !== y ) {
-            y = ny;
-         %>
-            <% if(i > 0){%></div> <% } %>
-            <h3 class="archive-separator">
-                <i class="icon icon-lg icon-folder-o"></i>&nbsp;&nbsp;
-                <%=dt.format('YYYY')%>
-            </h3>
-            <div class="waterfall">
-    <%    } %>
-
-        <%- partial('_partial/archive', {post: post, date_format: 'MM-DD'}) %>
-
-    <%})%>
+    <% if (archiveTree.length) { %>
+    <div class="archive-tree">
+        <% archiveTree.forEach(function(yearGroup, yearIndex) { %>
+        <details class="archive-tree-year" open>
+            <summary class="archive-tree-summary archive-tree-summary-year">
+                <span class="archive-tree-caret" aria-hidden="true"></span>
+                <span class="archive-tree-label"><%= yearGroup.label %> 年</span>
+                <span class="archive-tree-count"><%= yearGroup.count %> 篇</span>
+            </summary>
+            <div class="archive-tree-children">
+                <% yearGroup.months.forEach(function(monthGroup, monthIndex) { %>
+                <details class="archive-tree-month" <%= yearIndex === 0 && monthIndex === 0 ? 'open' : '' %>>
+                    <summary class="archive-tree-summary archive-tree-summary-month">
+                        <span class="archive-tree-caret" aria-hidden="true"></span>
+                        <span class="archive-tree-label"><%= monthGroup.label %> 月</span>
+                        <span class="archive-tree-count"><%= monthGroup.count %> 篇</span>
+                    </summary>
+                    <ol class="archive-tree-posts">
+                        <% monthGroup.posts.forEach(function(post) { %>
+                        <li class="archive-tree-post">
+                            <time class="archive-tree-post-date" datetime="<%= post.date.toISOString() %>">
+                                <%= post.date.format('MM-DD') %>
+                            </time>
+                            <a class="archive-tree-post-link" href="<%- url_for(post.path) %>">
+                                <span class="archive-tree-post-title"><%= post.title %></span>
+                            </a>
+                        </li>
+                        <% }) %>
+                    </ol>
+                </details>
+                <% }) %>
+            </div>
+        </details>
+        <% }) %>
     </div>
+    <% } else { %>
+    <div class="archive-empty">这里还没有可以归档的文章。</div>
+    <% } %>
 
     <%- partial('_partial/paginator') %>
 </div>
