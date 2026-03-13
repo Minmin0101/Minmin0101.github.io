@@ -73,7 +73,7 @@
 .physics-container {
     position: relative;
     width: 100%;
-    min-height: 264px;
+    min-height: 312px;
     margin-bottom: 40px;
     padding: 20px 22px 18px;
     overflow: hidden;
@@ -92,51 +92,17 @@
     top: 0;
     opacity: 0;
     z-index: 2;
-    filter: blur(2px);
-    transform: translate3d(0, 0, 0) rotate(0deg);
-    transition: transform 1.18s cubic-bezier(.2, .96, .28, 1), opacity .38s ease, filter .56s ease;
-    transition-delay: 0ms;
+    filter: blur(6px);
+    transform: translate3d(-9999px, -9999px, 0);
+    transition: opacity .42s ease, filter .48s ease;
+    transform-origin: center center;
+    pointer-events: none;
 }
 
-.physics-container.physics-ready .tag-link {
-    opacity: 0;
-}
-
-.physics-container.physics-ready .tag-link.reveal-in {
+.physics-container .tag-link.is-visible {
     opacity: 1;
     filter: none;
-}
-
-.physics-container.physics-mobile {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-end;
-    gap: 12px 10px;
-}
-
-.physics-container.physics-mobile .tag-link {
-    position: relative;
-    left: auto !important;
-    top: auto !important;
-    width: auto !important;
-    height: auto !important;
-    order: var(--tag-order, 0);
-}
-
-.physics-container.physics-mobile .card-card {
-    background: rgba(255, 255, 255, .98);
-    border-color: rgba(146, 168, 201, .32);
-    box-shadow: 0 12px 26px rgba(15, 23, 42, .09);
-}
-
-.physics-container.physics-mobile .card-link {
-    color: #2c3747;
-    font-weight: 700;
-}
-
-.physics-container.physics-mobile .card-count {
-    color: #76859a;
-    font-weight: 600;
+    pointer-events: auto;
 }
 
 @media screen and (max-width: 991px) {
@@ -145,7 +111,7 @@
     }
 
     .physics-container {
-        min-height: 248px;
+        min-height: 300px;
         padding: 16px 18px;
         border-radius: 24px;
     }
@@ -170,13 +136,9 @@
 
 @media screen and (max-width: 767px) {
     .physics-container {
-        min-height: 232px;
+        min-height: 286px;
         padding: 14px 14px 12px;
         border-radius: 22px;
-    }
-
-    .physics-container.physics-mobile {
-        gap: 10px 10px;
     }
 
     .tag-link {
@@ -199,11 +161,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .physics-container.physics-ready .tag-link,
-    .physics-container.physics-ready .tag-link.reveal-in {
+    .physics-container .tag-link,
+    .physics-container .tag-link.is-visible {
         opacity: 1 !important;
         transition: none !important;
-        transform: rotate(var(--tag-final-tilt, 0deg)) !important;
         filter: none !important;
     }
 }
