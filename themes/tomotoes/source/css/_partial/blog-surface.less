@@ -814,12 +814,16 @@ html.night-mode {
     display: flex !important;
     flex-direction: column;
     align-items: stretch;
+    gap: 18px;
     width: 288px;
+    max-height: clamp(360px, calc(100vh - 480px), 460px);
+    min-height: 0;
     float: none;
     padding-left: 0;
     z-index: 20;
     opacity: 1;
     visibility: visible;
+    overflow: visible;
 }
 
 .post-detail-page .post-article {
@@ -833,9 +837,11 @@ html.night-mode {
 .post-detail-page .post-toc-wrap {
     position: relative;
     top: auto;
+    flex: 1 1 auto;
+    min-height: 0;
     width: 100%;
     height: auto;
-    max-height: clamp(250px, calc(100vh - 604px), 520px);
+    max-height: none;
     padding-right: 0;
     padding-bottom: 0;
     opacity: 1 !important;
@@ -922,6 +928,53 @@ html.night-mode {
         transform: scale(1.08);
         -webkit-transform: scale(1.08);
     }
+}
+
+.post-detail-page #gotop.post-origin-hidden {
+    display: none !important;
+}
+
+.post-side-gotop {
+    position: fixed;
+    z-index: 26;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    line-height: 56px;
+    text-align: center;
+    color: #fff;
+    background: linear-gradient(180deg, #7391c5 0%, #5b79ae 100%);
+    border-radius: 50%;
+    box-shadow: 0 18px 32px rgba(46, 67, 108, .24);
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0);
+    -webkit-transform: scale(0);
+    transform-origin: center center;
+    -webkit-transform-origin: center center;
+    transition: transform .32s ease, opacity .32s ease, box-shadow .32s ease;
+    .icon {
+        font-size: 22px;
+        line-height: inherit;
+    }
+}
+
+.post-side-gotop.in {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+    -webkit-transform: scale(1);
+}
+
+.post-side-gotop.in:hover {
+    transform: scale(1.08);
+    -webkit-transform: scale(1.08);
+}
+
+.post-side-gotop.post-gotop-docked {
+    margin: 0;
 }
 
 .post-detail-page .post-card {
@@ -1400,6 +1453,10 @@ body #landlord {
 }
 
 .blog-shell:not(.post-detail-page) #landlord {
+    right: 108px !important;
+}
+
+.post-detail-page #landlord {
     right: 108px !important;
 }
 
@@ -1908,6 +1965,10 @@ html.night-mode {
         left: auto !important;
         right: 24px !important;
     }
+    .post-detail-page #landlord {
+        left: auto !important;
+        right: 24px !important;
+    }
     .blog-shell:not(.post-detail-page) #landlord {
         left: auto !important;
         right: 24px !important;
@@ -1927,6 +1988,7 @@ html.night-mode {
     .post-detail-page .post-widget {
         right: 18px;
         width: 260px;
+        max-height: clamp(332px, calc(100vh - 500px), 408px);
     }
     .post-detail-page #gotop {
         bottom: 270px;
@@ -1937,10 +1999,14 @@ html.night-mode {
     .post-detail-page .post-widget {
         right: 18px;
         width: 228px;
+        max-height: clamp(316px, calc(100vh - 500px), 390px);
     }
 }
 
 @media screen and (max-width:960px) {
+    .post-side-gotop {
+        display: none !important;
+    }
     .gallery-album-list {
         grid-template-columns: 1fr;
     }
@@ -2113,6 +2179,9 @@ html.night-mode {
 }
 
 @media screen and (max-width:760px) {
+    .post-side-gotop {
+        display: none !important;
+    }
     .blog-shell .fade,
     .blog-shell .fade-scale {
         opacity: 1;
