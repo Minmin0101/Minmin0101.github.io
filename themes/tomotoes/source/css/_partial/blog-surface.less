@@ -1929,6 +1929,13 @@ html.night-mode {
 }
 
 @media screen and (max-width:960px), screen and (hover:none) and (pointer:coarse) {
+    .blog-shell .header-title,
+    .blog-shell .top-header.fixed .header-title,
+    .blog-shell .top-header.in-home .header-title,
+    .blog-shell .top-header.in-post .header-title {
+        display: none !important;
+        visibility: hidden !important;
+    }
     .post-detail-page #main.tocshow .container {
         width: min(100%, calc(100% - 24px));
     }
@@ -1967,13 +1974,8 @@ html.night-mode {
     }
 
     .blog-shell .header-title {
-        position: static;
-        text-align: left;
-        margin-left: 8px;
-        line-height: 1;
-        height: auto;
-        padding: 0 16px 12px;
-        font-size: 16px;
+        display: none !important;
+        visibility: hidden !important;
     }
     .blog-shell .content-header {
         min-height: 196px;

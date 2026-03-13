@@ -7,9 +7,12 @@
     display: inline-block;
 }
 
-.myreward a {
+.myreward .reward-trigger {
     position: relative;
     display: inline-block;
+    border: none;
+    background: transparent;
+    cursor: pointer;
     outline: none;
     color: #999;
     text-decoration: none;
@@ -21,8 +24,8 @@
     text-shadow: rgb(187, 186, 186) 0px 0px 1px, rgb(255, 255, 251) 0px 0px 1px, rgb(255, 255, 251) 0px 0px 2px;
 }
 
-.myreward a::before,
-.myreward a::after {
+.myreward .reward-trigger::before,
+.myreward .reward-trigger::after {
     position: absolute;
     top: 0;
     left: 0;
@@ -35,7 +38,7 @@
     transition: opacity 0.3s, height 0.3s;
 }
 
-.myreward a::after {
+.myreward .reward-trigger::after {
     top: 100%;
     opacity: 0;
     -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
@@ -47,13 +50,13 @@
     transform: translateY(-10px);
 }
 
-.myreward a span:first-child {
+.myreward .reward-trigger span:first-child {
     z-index: 2;
     display: block;
     font-weight: 300;
 }
 
-.myreward a span:last-child {
+.myreward .reward-trigger span:last-child {
     z-index: 1;
     display: block;
     padding: 8px 0 0 0;
@@ -72,22 +75,26 @@
     transform: translateY(-100%);
 }
 
-.myreward a:hover::before,
-.myreward a:focus::before {
+.myreward .reward-trigger:hover::before,
+.myreward .reward-trigger:focus::before,
+.myreward .reward-trigger:focus-visible::before {
     height: 6px;
 }
 
-.myreward a:hover::before,
-.myreward a:hover::after,
-.myreward a:focus::before,
-.myreward a:focus::after {
+.myreward .reward-trigger:hover::before,
+.myreward .reward-trigger:hover::after,
+.myreward .reward-trigger:focus::before,
+.myreward .reward-trigger:focus::after,
+.myreward .reward-trigger:focus-visible::before,
+.myreward .reward-trigger:focus-visible::after {
     opacity: 1;
     -webkit-transform: translateY(0px);
     transform: translateY(0px);
 }
 
-.myreward a:hover span:last-child,
-.myreward a:focus span:last-child {
+.myreward .reward-trigger:hover span:last-child,
+.myreward .reward-trigger:focus span:last-child,
+.myreward .reward-trigger:focus-visible span:last-child {
     opacity: 1;
     -webkit-transform: translateY(0%);
     transform: translateY(0%);
@@ -256,7 +263,7 @@
         margin-bottom: 7%;
         width: 100px;
         height: 50px;
-        a {
+        .reward-trigger {
             &:before {
                 display: none;
             }
