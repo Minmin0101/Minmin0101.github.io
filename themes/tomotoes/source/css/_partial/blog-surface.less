@@ -241,6 +241,9 @@ html.night-mode #main {
         justify-content: flex-start;
         overflow-y: auto;
         overflow-x: hidden;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;
         padding: 0 0 18px;
     }
     .nav {
@@ -1726,6 +1729,51 @@ html.night-mode {
     }
 }
 
+@media screen and (max-width:1240px) {
+    #menu {
+        overflow-y: auto;
+        overflow-x: hidden;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;
+        height: 100vh;
+        height: 100svh;
+        height: 100dvh;
+        max-height: 100vh;
+        max-height: 100svh;
+        max-height: 100dvh;
+    }
+    #menu .inner {
+        height: auto;
+        min-height: 100%;
+        min-height: 100svh;
+        min-height: 100dvh;
+    }
+    #menu .scroll-wrap {
+        flex: 0 0 auto;
+        min-height: auto;
+        overflow: visible;
+        padding-bottom: max(18px, env(safe-area-inset-bottom));
+    }
+}
+
+@media screen and (max-width:960px), screen and (hover:none) and (pointer:coarse) {
+    .post-detail-page #main.tocshow .container {
+        width: min(100%, calc(100% - 24px));
+    }
+    .post-detail-page .post-widget,
+    .post-detail-page .post-toc-wrap,
+    .post-detail-page .post-toc,
+    .post-detail-page #post-toc {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        max-height: 0 !important;
+        overflow: hidden !important;
+    }
+}
+
 @media screen and (max-width:760px) {
     .blog-shell .fade,
     .blog-shell .fade-scale {
@@ -1861,19 +1909,37 @@ html.night-mode {
     .post-detail-page .post-nav {
         display: block;
         gap: 0;
+        margin: 18px 0 0;
+        padding: 0;
         .prev,
         .next,
         .post-nav-link {
             width: 100%;
-            min-height: 82px;
+            min-height: 68px;
         }
         .prev {
             margin-bottom: 12px;
         }
+        .prev,
+        .next {
+            padding-left: 0;
+            border-radius: 18px;
+        }
+        .post-nav-link {
+            padding: 10px 14px;
+        }
         .title {
-            min-height: 42px;
+            min-height: 0;
             justify-content: flex-start;
             text-align: left;
+            letter-spacing: 1px;
+            font-size: 14px;
+            line-height: 1.55;
+        }
+        h4 {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.55;
         }
     }
     .gallery-grid {
@@ -1936,5 +2002,38 @@ html.night-mode {
         right: 86px;
         bottom: 24px;
         width: min(320px, calc(100vw - 92px));
+    }
+}
+
+@media screen and (max-width:960px), screen and (hover:none) and (pointer:coarse) {
+    .post-detail-page .post-nav {
+        display: block;
+        margin: 18px 0 0;
+        padding: 0;
+    }
+    .post-detail-page .post-nav .prev,
+    .post-detail-page .post-nav .next {
+        width: 100%;
+        min-height: 68px;
+        padding-left: 0;
+        border-radius: 18px;
+    }
+    .post-detail-page .post-nav .prev {
+        margin-bottom: 12px;
+    }
+    .post-detail-page .post-nav .post-nav-link {
+        min-height: 68px;
+        padding: 10px 14px;
+    }
+    .post-detail-page .post-nav .title {
+        min-height: 0;
+        font-size: 14px;
+        line-height: 1.55;
+        letter-spacing: 1px;
+    }
+    .post-detail-page .post-nav h4 {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.55;
     }
 }
