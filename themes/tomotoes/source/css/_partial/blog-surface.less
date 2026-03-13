@@ -1919,6 +1919,13 @@ html.night-mode {
     #menu .nav .custom-caret-left {
         display: none !important;
     }
+    #menu .nav-tool-item:before,
+    #menu .nav-tool-item:after {
+        display: none !important;
+        content: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
 }
 
 @media screen and (max-width:960px), screen and (hover:none) and (pointer:coarse) {
@@ -1935,6 +1942,13 @@ html.night-mode {
         pointer-events: none !important;
         max-height: 0 !important;
         overflow: hidden !important;
+    }
+    #menu .nav-tool-item:before,
+    #menu .nav-tool-item:after {
+        display: none !important;
+        content: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
     }
 }
 

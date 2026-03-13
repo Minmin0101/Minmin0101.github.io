@@ -369,6 +369,18 @@
 				},
 				{ passive: true }
 			)
+			this.$modal.addEventListener(
+				'touchend',
+				function(event) {
+					event.stopPropagation()
+				},
+				{ passive: true }
+			)
+			if (w.PointerEvent) {
+				this.$modal.addEventListener('pointerup', function(event) {
+					event.stopPropagation()
+				})
+			}
 			Blog.hideOnMask.push(this.hide)
 			if (this.$off) {
 				this.$off.addEventListener('click', function(event) {
@@ -417,6 +429,41 @@
 			if (!rewardBtn || !rewardCode) {
 				return
 			}
+			const bindPress = function(el, handler) {
+				let lastTouchTime = 0
+				const invoke = function(event) {
+					if (
+						event.type === 'click' &&
+						lastTouchTime &&
+						Date.now() - lastTouchTime < 480
+					) {
+						event.preventDefault()
+						return
+					}
+					if (
+						event.type === 'touchend' ||
+						(event.type === 'pointerup' && event.pointerType !== 'mouse')
+					) {
+						lastTouchTime = Date.now()
+					}
+					handler(event)
+				}
+				if (w.PointerEvent) {
+					el.addEventListener(
+						'pointerup',
+						function(event) {
+							if (event.pointerType === 'mouse') {
+								return
+							}
+							invoke(event)
+						},
+						false
+					)
+				} else {
+					el.addEventListener('touchend', invoke, false)
+				}
+				el.addEventListener('click', invoke, false)
+			}
 			const setRewardMethod = function(method) {
 				currentMethod = method || 'default'
 				rewardCode.src = rewardCode.dataset.img
@@ -443,25 +490,23 @@
 					caret.style.marginLeft = '20%'
 				}
 			}
-			rewardBtn.addEventListener(
-				'click',
+			bindPress(
+				rewardBtn,
 				function(event) {
 					event.preventDefault()
 					setRewardMethod(currentMethod)
 					modal.toggle()
-				},
-				false
+				}
 			)
 			if (methodButtons && methodButtons.length) {
 				forEach.call(methodButtons, function(button) {
-					button.addEventListener(
-						'click',
+					bindPress(
+						button,
 						function(event) {
 							event.preventDefault()
 							event.stopPropagation()
 							setRewardMethod(button.dataset.method)
-						},
-						false
+						}
 					)
 				})
 			}
@@ -714,14 +759,29 @@
 		if (!menu || !('ontouchstart' in w || (navigator.maxTouchPoints || 0) > 0)) {
 			return
 		}
+		const compactTouchViewport = !!(
+			(w.matchMedia &&
+				w.matchMedia('(hover: none) and (pointer: coarse)').matches) ||
+			w.innerWidth <= 1240
+		)
 		const touchTargets = $$(
 			'#menu .nav a, #menu .links-of-author-item a, #menu .statistics .total-link, #menu .nav-tool-item, #menu .avatar, #menu-off, #menu-toggle'
 		)
+		const toolItems = $$('#menu .nav-tool-item[data-title]')
 		const nav = menu.querySelector('.nav')
 		const slidingBar = nav && nav.querySelector('.sliding-bar')
 		let activeTouchEl = null
 		let clearTimer = 0
 		let touchStartPoint = null
+		if (compactTouchViewport && toolItems.length) {
+			forEach.call(toolItems, function(item) {
+				const title = item.getAttribute('data-title')
+				if (title && !item.getAttribute('aria-label')) {
+					item.setAttribute('aria-label', title)
+				}
+				item.removeAttribute('data-title')
+			})
+		}
 		const restoreSlidingBar = function() {
 			if (!slidingBar || !nav) {
 				return

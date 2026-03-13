@@ -154,6 +154,7 @@
     max-width: 100%;
     width: 360px;
     touch-action: manipulation;
+    overflow: hidden;
 }
 
 .reward-content {
@@ -237,9 +238,9 @@
 }
 
 #reward canvas {
-    z-index: -1 !important;
-    width: 100%;
-    height: 100%;
+    display: none !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
 }
 
 .icon-caret-up {
