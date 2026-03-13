@@ -538,8 +538,18 @@ html.night-mode {
         text-shadow: none;
         letter-spacing: 0;
         font-family: @font-custom;
+        .post-title-link,
         span {
             display: block;
+            color: inherit;
+        }
+        .post-title-link {
+            text-decoration: none;
+            transition: color .25s ease;
+            &:hover {
+                color: var(--theme-color);
+                animation: none;
+            }
         }
     }
     .post-meta {
@@ -1216,6 +1226,10 @@ body #landlord {
     z-index: 24;
 }
 
+.blog-shell:not(.post-detail-page) #landlord {
+    right: 108px !important;
+}
+
 body #landlord canvas#live2d {
     display: block !important;
     position: relative;
@@ -1654,6 +1668,7 @@ html.night-mode {
         background: linear-gradient(135deg, #0a1322 0%, #173059 100%);
     }
     .author-post-card .post-title,
+    .author-post-card .post-title .post-title-link,
     .post-detail-page .post-card-title,
     .weibo-entry h4,
     .blog-home-summary h2 {
@@ -1692,6 +1707,10 @@ html.night-mode {
         display: none;
     }
     .blog-home-page #landlord {
+        left: auto !important;
+        right: 24px !important;
+    }
+    .blog-shell:not(.post-detail-page) #landlord {
         left: auto !important;
         right: 24px !important;
     }
@@ -1784,15 +1803,62 @@ html.night-mode {
     #menu .nav a,
     #menu .nav .items span,
     #menu .nav .icon,
+    #menu .avatar,
+    #menu-off,
     #menu .links-of-author-item a,
     #menu .statistics .total-link,
     #menu .nav-tool-item {
-        transition: none !important;
+        transition: background .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease !important;
         animation: none !important;
-        transform: none !important;
-        -webkit-transform: none !important;
-        box-shadow: none !important;
         -webkit-tap-highlight-color: transparent;
+    }
+    #menu .nav a,
+    #menu .avatar,
+    #menu-off,
+    #menu .links-of-author-item a,
+    #menu .statistics .total-link,
+    #menu .nav-tool-item {
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        will-change: transform, box-shadow, background;
+    }
+    #menu .nav .items.active a {
+        background: rgba(82, 117, 176, .12);
+        box-shadow: 0 12px 28px rgba(82, 117, 176, .16);
+    }
+    #menu .nav .items a:active,
+    #menu .nav .items a.touch-active,
+    #menu .links-of-author-item a:active,
+    #menu .links-of-author-item a.touch-active,
+    #menu .statistics .total-link:active,
+    #menu .statistics .total-link.touch-active,
+    #menu .nav-tool-item:active,
+    #menu .nav-tool-item.touch-active,
+    #menu .avatar:active,
+    #menu .avatar.touch-active,
+    #menu-off:active,
+    #menu-off.touch-active {
+        transform: translateY(-1px) translateZ(0);
+        -webkit-transform: translateY(-1px) translateZ(0);
+        box-shadow: 0 12px 26px rgba(34, 52, 85, .18) !important;
+    }
+    #menu .nav .items a:active,
+    #menu .nav .items a.touch-active {
+        background: rgba(82, 117, 176, .14);
+    }
+    #menu .links-of-author-item a:active,
+    #menu .links-of-author-item a.touch-active,
+    #menu .statistics .total-link:active,
+    #menu .statistics .total-link.touch-active,
+    #menu .nav-tool-item:active,
+    #menu .nav-tool-item.touch-active,
+    #menu .avatar:active,
+    #menu .avatar.touch-active,
+    #menu-off:active,
+    #menu-off.touch-active {
+        background: rgba(82, 117, 176, .14);
     }
     #menu .nav .items:hover,
     #menu .nav .items:active,
@@ -1931,6 +1997,7 @@ html.night-mode {
         }
         .post-title {
             padding: 18px 18px 8px;
+            .post-title-link,
             span {
                 font-size: 20px;
             }

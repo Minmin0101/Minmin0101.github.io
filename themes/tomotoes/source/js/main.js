@@ -70,6 +70,12 @@
 			w.scrollTo(0, top)
 		}
 	}
+	const getGoTopThreshold = function() {
+		if (isPost) {
+			return Math.min(w.innerHeight / 2, 320)
+		}
+		return Math.min(Math.max(w.innerHeight * 0.18, 72), 140)
+	}
 	const Blog = {
 		goTop: function(end) {
 			const top = getScrollTop()
@@ -89,7 +95,7 @@
 			if (!gotop) {
 				return
 			}
-			if (top > w.innerHeight / 2) {
+			if (top > getGoTopThreshold()) {
 				gotop.classList.add('in')
 			} else {
 				gotop.classList.remove('in')
@@ -669,6 +675,59 @@
 		scrollTicking = true
 		animate(onScroll)
 	}
+	const initMenuTouchFeedback = function() {
+		if (!menu || !('ontouchstart' in w || (navigator.maxTouchPoints || 0) > 0)) {
+			return
+		}
+		const touchTargets = $$(
+			'#menu .nav a, #menu .links-of-author-item a, #menu .statistics .total-link, #menu .nav-tool-item, #menu .avatar, #menu-off, #menu-toggle'
+		)
+		let activeTouchEl = null
+		let clearTimer = 0
+		const clearTouchState = function() {
+			if (clearTimer) {
+				w.clearTimeout(clearTimer)
+				clearTimer = 0
+			}
+			if (activeTouchEl) {
+				activeTouchEl.classList.remove('touch-active')
+				activeTouchEl = null
+			}
+		}
+		forEach.call(touchTargets, function(el) {
+			el.addEventListener(
+				'touchstart',
+				function() {
+					clearTouchState()
+					activeTouchEl = el
+					el.classList.add('touch-active')
+				},
+				{ passive: true }
+			)
+			el.addEventListener(
+				'touchmove',
+				function() {
+					clearTouchState()
+				},
+				{ passive: true }
+			)
+			el.addEventListener(
+				'touchend',
+				function() {
+					clearTimer = w.setTimeout(clearTouchState, 140)
+				},
+				{ passive: true }
+			)
+			el.addEventListener(
+				'touchcancel',
+				function() {
+					clearTouchState()
+				},
+				{ passive: true }
+			)
+		})
+		menu.addEventListener('scroll', clearTouchState, { passive: true })
+	}
 	const scrollTarget =
 		body.scrollHeight > body.clientHeight ? body : d.scrollingElement || docEl || body
 	w.addEventListener('scroll', requestScrollSync, {
@@ -689,6 +748,7 @@
 	Blog.even = even
 	Blog.$ = $
 	Blog.$$ = $$
+	initMenuTouchFeedback()
 	Object.keys(Blog).reduce(function(g, e) {
 		g[e] = Blog[e]
 		return g

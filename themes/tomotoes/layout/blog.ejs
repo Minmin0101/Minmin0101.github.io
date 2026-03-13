@@ -95,7 +95,7 @@ const formatWordCount = function(total) {
                     <% } %>
                 </div>
                 <h3 class="post-title">
-                    <span><%- post.title %></span>
+                    <a href="<%- url_for(post.path) %>" class="post-title-link"><%- post.title %></a>
                 </h3>
                 <div class="post-meta">
                     <div class="post-meta-info">
