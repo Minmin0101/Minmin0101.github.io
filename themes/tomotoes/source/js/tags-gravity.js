@@ -26,6 +26,7 @@
         var engine = Engine.create({
             gravity: { x: 0, y: 1 }
         });
+        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         container.classList.add('physics-ready');
 
@@ -104,6 +105,17 @@
             items.push({ body: body, element: link });
             World.add(engine.world, body);
         });
+        var started = false;
+
+        function syncPositions() {
+            items.forEach(function(item) {
+                var body = item.body;
+                item.element.style.transform = 'translate(' +
+                    (body.position.x - item.element.offsetWidth / 2) + 'px, ' +
+                    (body.position.y - item.element.offsetHeight / 2) + 'px) rotate(' +
+                    (body.angle * (180 / Math.PI)) + 'deg)';
+            });
+        }
 
         var isPointerDown = false;
         var isDragging = false;
@@ -139,6 +151,7 @@
         }
 
         render.canvas.addEventListener('mousedown', function(event) {
+            startSimulation();
             updateMousePosition(event);
             isPointerDown = true;
             isDragging = false;
@@ -179,6 +192,7 @@
             if (!event.touches.length) {
                 return;
             }
+            startSimulation();
             updateMousePosition(event.touches[0]);
             isPointerDown = true;
             isDragging = false;
@@ -213,17 +227,11 @@
             event.preventDefault();
         }, { passive: false });
 
-        Runner.run(engine);
-        Render.run(render);
-
         function updatePositions() {
-            items.forEach(function(item) {
-                var body = item.body;
-                item.element.style.transform = 'translate(' +
-                    (body.position.x - item.element.offsetWidth / 2) + 'px, ' +
-                    (body.position.y - item.element.offsetHeight / 2) + 'px) rotate(' +
-                    (body.angle * (180 / Math.PI)) + 'deg)';
-            });
+            if (!started) {
+                return;
+            }
+            syncPositions();
             window.requestAnimationFrame(updatePositions);
         }
 
@@ -240,13 +248,46 @@
             mouse.pixelRatio = window.devicePixelRatio || 1;
         }
 
+        function startSimulation() {
+            if (started) {
+                return;
+            }
+            started = true;
+            container.classList.add('physics-running');
+            resize();
+            Runner.run(engine);
+            Render.run(render);
+            updatePositions();
+        }
+
+        function scheduleSimulation() {
+            if (reduceMotion || !('IntersectionObserver' in window)) {
+                startSimulation();
+                return;
+            }
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (!entry.isIntersecting) {
+                        return;
+                    }
+                    startSimulation();
+                    observer.disconnect();
+                });
+            }, {
+                rootMargin: '0px 0px -8% 0px',
+                threshold: 0.08
+            });
+            observer.observe(container);
+        }
+
         var resizeTimer = null;
         window.addEventListener('resize', function() {
             window.clearTimeout(resizeTimer);
             resizeTimer = window.setTimeout(resize, 250);
         });
 
-        updatePositions();
+        syncPositions();
+        scheduleSimulation();
     }
 
     if (document.readyState === 'loading') {

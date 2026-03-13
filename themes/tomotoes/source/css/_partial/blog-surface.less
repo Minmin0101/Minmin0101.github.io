@@ -481,6 +481,41 @@ html.night-mode {
     margin-bottom: 28px;
 }
 
+.scroll-push-item,
+.scroll-push-card,
+.scroll-push-block {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+.scroll-push-item.reveal-ready,
+.scroll-push-card.reveal-ready,
+.scroll-push-block.reveal-ready {
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+.scroll-push-item.reveal-ready {
+    transform: translate3d(0, 52px, 0);
+}
+
+.scroll-push-card.reveal-ready {
+    transform: translate3d(0, 58px, 0) scale(.985);
+}
+
+.scroll-push-block.reveal-ready {
+    transform: translate3d(0, 70px, 0);
+}
+
+.scroll-push-item.reveal-in,
+.scroll-push-card.reveal-in,
+.scroll-push-block.reveal-in {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    transition: opacity .72s cubic-bezier(.22, 1, .36, 1), transform .72s cubic-bezier(.22, 1, .36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+}
+
 .author-post-card {
     overflow: hidden;
     border-radius: 26px;
@@ -1797,7 +1832,9 @@ html.night-mode {
         padding-bottom: max(18px, env(safe-area-inset-bottom));
     }
     #menu .sliding-bar {
-        display: none;
+        display: block;
+        opacity: .92;
+        transition: transform .18s ease, opacity .18s ease, background .18s ease, box-shadow .18s ease;
     }
     #menu .nav .items,
     #menu .nav a,
@@ -1818,11 +1855,41 @@ html.night-mode {
     #menu .links-of-author-item a,
     #menu .statistics .total-link,
     #menu .nav-tool-item {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
         transform: translateZ(0);
         -webkit-transform: translateZ(0);
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
         will-change: transform, box-shadow, background;
+    }
+    #menu .nav a:after,
+    #menu .avatar:after,
+    #menu-off:after,
+    #menu .links-of-author-item a:after,
+    #menu .statistics .total-link:after,
+    #menu .nav-tool-item:after {
+        content: '';
+        position: absolute;
+        inset: -44%;
+        border-radius: inherit;
+        pointer-events: none;
+        opacity: 0;
+        background: radial-gradient(circle at var(--touch-x, 50%) var(--touch-y, 50%), rgba(255, 255, 255, .48) 0%, rgba(192, 214, 245, .34) 18%, rgba(82, 117, 176, .2) 36%, rgba(82, 117, 176, 0) 66%);
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        transition: opacity .16s linear;
+        z-index: 0;
+    }
+    #menu .nav a > *,
+    #menu .avatar > *,
+    #menu-off > *,
+    #menu .links-of-author-item a > *,
+    #menu .statistics .total-link > *,
+    #menu .nav-tool-item > * {
+        position: relative;
+        z-index: 1;
     }
     #menu .nav .items.active a {
         background: rgba(82, 117, 176, .12);
@@ -1843,6 +1910,20 @@ html.night-mode {
         transform: translateY(-1px) translateZ(0);
         -webkit-transform: translateY(-1px) translateZ(0);
         box-shadow: 0 12px 26px rgba(34, 52, 85, .18) !important;
+    }
+    #menu .nav .items a:active:after,
+    #menu .nav .items a.touch-active:after,
+    #menu .links-of-author-item a:active:after,
+    #menu .links-of-author-item a.touch-active:after,
+    #menu .statistics .total-link:active:after,
+    #menu .statistics .total-link.touch-active:after,
+    #menu .nav-tool-item:active:after,
+    #menu .nav-tool-item.touch-active:after,
+    #menu .avatar:active:after,
+    #menu .avatar.touch-active:after,
+    #menu-off:active:after,
+    #menu-off.touch-active:after {
+        opacity: 1;
     }
     #menu .nav .items a:active,
     #menu .nav .items a.touch-active {
@@ -1899,6 +1980,13 @@ html.night-mode {
     .blog-shell .fade-scale {
         opacity: 1;
         transform: none;
+    }
+    .scroll-push-item.reveal-ready {
+        transform: translate3d(0, 34px, 0);
+    }
+    .scroll-push-card.reveal-ready,
+    .scroll-push-block.reveal-ready {
+        transform: translate3d(0, 40px, 0);
     }
 
     .blog-shell .header-title {
@@ -2123,6 +2211,16 @@ html.night-mode {
         right: 86px;
         bottom: 24px;
         width: min(320px, calc(100vw - 92px));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scroll-push-item,
+    .scroll-push-card,
+    .scroll-push-block {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
     }
 }
 

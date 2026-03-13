@@ -682,32 +682,109 @@
 		const touchTargets = $$(
 			'#menu .nav a, #menu .links-of-author-item a, #menu .statistics .total-link, #menu .nav-tool-item, #menu .avatar, #menu-off, #menu-toggle'
 		)
+		const nav = menu.querySelector('.nav')
+		const slidingBar = nav && nav.querySelector('.sliding-bar')
 		let activeTouchEl = null
 		let clearTimer = 0
+		let frame = 0
+		let pendingPoint = null
+		const setTouchPoint = function(el, point) {
+			if (!el || !point || !el.getBoundingClientRect) {
+				return
+			}
+			const rect = el.getBoundingClientRect()
+			if (!rect.width || !rect.height) {
+				return
+			}
+			const x = Math.max(0, Math.min(rect.width, point.clientX - rect.left))
+			const y = Math.max(0, Math.min(rect.height, point.clientY - rect.top))
+			el.style.setProperty('--touch-x', `${x}px`)
+			el.style.setProperty('--touch-y', `${y}px`)
+		}
+		const syncTouchPoint = function() {
+			frame = 0
+			if (activeTouchEl && pendingPoint) {
+				setTouchPoint(activeTouchEl, pendingPoint)
+				pendingPoint = null
+			}
+		}
+		const queueTouchPoint = function(el, point) {
+			if (!el) {
+				return
+			}
+			if (!point) {
+				const rect = el.getBoundingClientRect()
+				point = {
+					clientX: rect.left + rect.width / 2,
+					clientY: rect.top + rect.height / 2
+				}
+			}
+			pendingPoint = point
+			if (!frame) {
+				frame = animate(syncTouchPoint)
+			}
+		}
+		const restoreSlidingBar = function() {
+			if (!slidingBar || !nav) {
+				return
+			}
+			const current = nav.querySelector('.items.active')
+			if (current) {
+				slidingBar.style.opacity = '1'
+				slidingBar.style.transform = `translateY(${current.offsetTop}px)`
+			} else {
+				slidingBar.style.opacity = '0'
+				slidingBar.style.transform = 'none'
+			}
+		}
+		const syncSlidingBar = function(el) {
+			if (!slidingBar || !nav || !el || !el.closest) {
+				return
+			}
+			const item = el.closest('.items')
+			if (!item) {
+				return
+			}
+			slidingBar.style.opacity = '1'
+			slidingBar.style.transform = `translateY(${item.offsetTop}px)`
+		}
 		const clearTouchState = function() {
 			if (clearTimer) {
 				w.clearTimeout(clearTimer)
 				clearTimer = 0
 			}
+			if (frame) {
+				w.cancelAnimationFrame(frame)
+				frame = 0
+			}
+			pendingPoint = null
 			if (activeTouchEl) {
 				activeTouchEl.classList.remove('touch-active')
 				activeTouchEl = null
 			}
+			restoreSlidingBar()
 		}
 		forEach.call(touchTargets, function(el) {
 			el.addEventListener(
 				'touchstart',
-				function() {
+				function(event) {
 					clearTouchState()
 					activeTouchEl = el
 					el.classList.add('touch-active')
+					queueTouchPoint(el, event.touches && event.touches[0])
+					syncSlidingBar(el)
 				},
 				{ passive: true }
 			)
 			el.addEventListener(
 				'touchmove',
-				function() {
-					clearTouchState()
+				function(event) {
+					if (!activeTouchEl) {
+						activeTouchEl = el
+						el.classList.add('touch-active')
+					}
+					queueTouchPoint(activeTouchEl, event.touches && event.touches[0])
+					syncSlidingBar(activeTouchEl)
 				},
 				{ passive: true }
 			)
@@ -727,6 +804,7 @@
 			)
 		})
 		menu.addEventListener('scroll', clearTouchState, { passive: true })
+		restoreSlidingBar()
 	}
 	const scrollTarget =
 		body.scrollHeight > body.clientHeight ? body : d.scrollingElement || docEl || body
