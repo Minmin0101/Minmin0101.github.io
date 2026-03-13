@@ -594,6 +594,7 @@
         }
         var gotop = document.getElementById('gotop');
         var widget = document.querySelector('.post-widget');
+        var tocList = widget ? widget.querySelector('.post-toc') : null;
         var postCard = document.querySelector('.post-card');
         var landlord = document.getElementById('landlord');
         var resizeFrame = 0;
@@ -613,8 +614,13 @@
         function clearDesktopRail() {
             gotop.classList.remove('post-origin-hidden');
             gotop.style.display = '';
+            gotop.style.left = '';
+            gotop.style.right = '';
             widget.style.top = '';
             widget.style.maxHeight = '';
+            if (tocList) {
+                tocList.style.maxHeight = '';
+            }
         }
 
         function syncPlacement() {
@@ -628,25 +634,47 @@
                 ? Math.round(postCard.getBoundingClientRect().top + getScrollTop())
                 : fallbackTop;
             var widgetTop = Math.max(getHeaderOffset() + 8, articleTop);
+            var gotopSize = Math.max(gotop.offsetWidth || 56, 56);
+            var gotopGap = 22;
             var live2dGap = 34;
             var safeBottom = 20;
             var landlordRect = landlord ? landlord.getBoundingClientRect() : null;
             var fallbackLandlordTop = window.innerHeight - 260;
+            var fallbackLandlordWidth = 196;
+            var fallbackLandlordRight = 108;
             var landlordTop = landlordRect &&
                 landlordRect.height >= 160 &&
                 landlordRect.top > 0 &&
                 landlordRect.top < window.innerHeight - 40
                 ? landlordRect.top
                 : fallbackLandlordTop;
+            var landlordWidth = landlordRect &&
+                landlordRect.width >= 120 &&
+                landlordRect.left < window.innerWidth - 40
+                ? landlordRect.width
+                : fallbackLandlordWidth;
+            var landlordRight = landlordRect &&
+                landlordRect.width >= 120 &&
+                landlordRect.right > 0 &&
+                landlordRect.right <= window.innerWidth + 40
+                ? Math.max(window.innerWidth - landlordRect.right, 0)
+                : fallbackLandlordRight;
             var availableHeight = Math.floor(
                 landlordTop - widgetTop - live2dGap - safeBottom
             );
             var dockHeight = Math.max(360, Math.min(availableHeight, 620));
+            var tocScrollHeight = Math.max(220, dockHeight - 34);
+            var gotopRight = Math.round(landlordRight + landlordWidth + gotopGap);
 
             gotop.classList.remove('post-origin-hidden');
             gotop.style.display = '';
+            gotop.style.left = 'auto';
+            gotop.style.right = gotopRight + 'px';
             widget.style.top = widgetTop + 'px';
             widget.style.maxHeight = dockHeight + 'px';
+            if (tocList) {
+                tocList.style.maxHeight = tocScrollHeight + 'px';
+            }
         }
 
         function requestSync() {
@@ -978,7 +1006,7 @@
                     }
                 }
             });
-            setActive(activeLink, false);
+            setActive(activeLink, true);
             if (gotop) {
                 gotop.classList.toggle('in', scrollTop > 320);
             }
