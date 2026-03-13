@@ -709,6 +709,11 @@
 
     function initScrollReveal() {
         var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var compactTouchViewport = !!(
+            (window.matchMedia &&
+                window.matchMedia('(hover: none) and (pointer: coarse)').matches) ||
+            window.innerWidth <= 760
+        );
         var groups = [
             {
                 selector: '.rich-post-list .post-list-item',
@@ -769,8 +774,8 @@
                 observer.unobserve(entry.target);
             });
         }, {
-            rootMargin: '0px 0px -10% 0px',
-            threshold: 0.14
+            rootMargin: compactTouchViewport ? '0px 0px -4% 0px' : '0px 0px -10% 0px',
+            threshold: compactTouchViewport ? 0.06 : 0.14
         });
 
         targets.forEach(function(target) {
