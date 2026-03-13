@@ -116,7 +116,7 @@ var statItems = [
     <div class="scroll-wrap flex-col">
       <ul class="nav fade">
         <% for (var i in theme.menu) { var menuItem = theme.menu[i]; %>
-          <li class="items waves-block waves-effect<% if(isActive(menuItem)){ %> active<% } %>">
+          <li class="items<% if(isActive(menuItem)){ %> active<% } %>">
             <a href="<%- url_for(menuItem.url) %>" <% if(menuItem.target){ %>target="_blank"<% } %>>
               <i class="icon icon-lg icon-<%= i %>"></i>
               <span><%= menuItem.text || _.startCase(i) %></span>

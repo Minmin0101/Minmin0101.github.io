@@ -47,6 +47,19 @@
     }
 
     function initMenuBar() {
+        var compactTouchViewport = !!(
+            window.matchMedia &&
+            window.matchMedia('(hover: none) and (pointer: coarse)').matches
+        );
+        var nav = document.querySelector('#menu .nav');
+        var bar = nav && nav.querySelector('.sliding-bar');
+        if (compactTouchViewport) {
+            if (bar) {
+                bar.style.opacity = '0';
+                bar.style.transform = 'none';
+            }
+            return;
+        }
         var activeItem = document.querySelector('#menu .nav .items.active');
         var items = document.querySelectorAll('#menu .nav .items');
         if (activeItem) {
@@ -57,7 +70,6 @@
                 setSlidingBar(item);
             });
         });
-        var nav = document.querySelector('#menu .nav');
         if (nav) {
             nav.addEventListener('mouseleave', function() {
                 var current = document.querySelector('#menu .nav .items.active');

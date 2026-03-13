@@ -1755,6 +1755,38 @@ html.night-mode {
         overflow: visible;
         padding-bottom: max(18px, env(safe-area-inset-bottom));
     }
+    #menu .sliding-bar {
+        display: none;
+    }
+    #menu .nav .items,
+    #menu .nav a,
+    #menu .nav .items span,
+    #menu .nav .icon,
+    #menu .links-of-author-item a,
+    #menu .statistics .total-link,
+    #menu .nav-tool-item {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+        -webkit-transform: none !important;
+        box-shadow: none !important;
+        -webkit-tap-highlight-color: transparent;
+    }
+    #menu .nav .items:hover,
+    #menu .nav .items:active,
+    #menu .nav .items.active:hover,
+    #menu .nav .items.active:active {
+        background: transparent;
+    }
+    #menu .nav .items:hover a,
+    #menu .nav .items:active a,
+    #menu .nav .items.active:hover a,
+    #menu .nav .items.active:active a {
+        color: #122033 !important;
+    }
+    #menu .nav .custom-caret-left {
+        display: none !important;
+    }
 }
 
 @media screen and (max-width:960px), screen and (hover:none) and (pointer:coarse) {
