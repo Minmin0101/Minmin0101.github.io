@@ -30,8 +30,6 @@ var BLOG = {
 <% } %>
 
 <% if (page.layout === 'tags') { %>
-<script src="<%- url_for('/vendor/matter/matter.min.js') %>?v=<%= theme_version() %>"></script>
-<script src="<%- url_for('/vendor/poly-decomp/decomp.min.js') %>?v=<%= theme_version() %>"></script>
 <script src="<%- url_for('/js/tags-gravity.js?v=' + theme_version()) %>"></script>
 <% } %>
 

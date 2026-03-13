@@ -1,5 +1,5 @@
 (function(window, document) {
-    function initTagPhysics() {
+    function initTagDrop() {
         var container = document.querySelector('.physics-container');
         if (!container || !document.querySelector('.tags-header')) {
             return;
@@ -13,59 +13,10 @@
         var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var coarsePointer = window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches;
         var isTouchDevice = coarsePointer || /Android|iPhone|iPad|iPod|iOS|Windows Phone/i.test(window.navigator.userAgent);
-        var Matter = window.Matter;
         var raf = window.requestAnimationFrame || function(callback) {
             return window.setTimeout(callback, 16);
         };
         var caf = window.cancelAnimationFrame || window.clearTimeout;
-
-        function destroyPhysics() {
-            var state = container.__tagPhysicsState;
-            if (!state) {
-                return;
-            }
-
-            if (state.frame) {
-                caf(state.frame);
-            }
-            if (state.resizeTimer) {
-                window.clearTimeout(state.resizeTimer);
-            }
-            if (state.onResize) {
-                window.removeEventListener('resize', state.onResize);
-            }
-            if (state.engine && Matter) {
-                Matter.Composite.clear(state.engine.world, false);
-                Matter.Engine.clear(state.engine);
-            }
-
-            tagLinks.forEach(function(link) {
-                link.style.transform = '';
-                link.style.width = '';
-                link.style.height = '';
-                link.style.pointerEvents = '';
-                link.style.zIndex = '';
-            });
-
-            container.classList.remove('physics-ready');
-            container.style.height = '';
-            container.__tagPhysicsState = null;
-        }
-
-        destroyPhysics();
-
-        if (reduceMotion || !Matter) {
-            return;
-        }
-
-        if (window.decomp && Matter.Common && Matter.Common.setDecomp) {
-            Matter.Common.setDecomp(window.decomp);
-        }
-
-        var Engine = Matter.Engine;
-        var Bodies = Matter.Bodies;
-        var Body = Matter.Body;
-        var Composite = Matter.Composite;
 
         function randomBetween(min, max) {
             return min + Math.random() * (max - min);
@@ -83,6 +34,45 @@
             };
         }
 
+        function shuffleMetrics(metrics) {
+            var clone = metrics.slice();
+            for (var i = clone.length - 1; i > 0; i--) {
+                var swapIndex = Math.floor(Math.random() * (i + 1));
+                var current = clone[i];
+                clone[i] = clone[swapIndex];
+                clone[swapIndex] = current;
+            }
+            return clone;
+        }
+
+        function destroyDrop() {
+            var state = container.__tagDropState;
+            if (state) {
+                if (state.frame) {
+                    caf(state.frame);
+                }
+                if (state.resizeTimer) {
+                    window.clearTimeout(state.resizeTimer);
+                }
+                if (state.onResize) {
+                    window.removeEventListener('resize', state.onResize);
+                }
+            }
+
+            tagLinks.forEach(function(link) {
+                link.classList.remove('drop-entered');
+                link.style.width = '';
+                link.style.height = '';
+                link.style.opacity = '';
+                link.style.transform = '';
+                link.style.transitionDelay = '';
+            });
+
+            container.classList.remove('physics-ready');
+            container.style.height = '';
+            container.__tagDropState = null;
+        }
+
         function measureTags() {
             return tagLinks.map(function(link) {
                 var card = link.querySelector('.card-card');
@@ -98,23 +88,24 @@
                 link.style.width = 'auto';
                 link.style.height = 'auto';
                 link.style.transform = 'none';
+
                 if (card) {
                     card.style.display = 'inline-flex';
                     card.style.width = 'auto';
-                    card.style.maxWidth = Math.min(container.clientWidth - 24, isTouchDevice ? 260 : 320) + 'px';
+                    card.style.maxWidth = Math.min(container.clientWidth - 24, isTouchDevice ? 268 : 320) + 'px';
                 }
 
-                var linkRect = link.getBoundingClientRect();
-                var cardRect = card ? card.getBoundingClientRect() : linkRect;
+                var rect = (card || link).getBoundingClientRect();
                 var metric = {
                     link: link,
-                    width: Math.ceil(Math.max(cardRect.width, 108)),
-                    height: Math.ceil(Math.max(cardRect.height, 46))
+                    width: Math.ceil(Math.max(rect.width, 108)),
+                    height: Math.ceil(Math.max(rect.height, 46))
                 };
 
                 link.style.width = previous.linkWidth;
                 link.style.height = previous.linkHeight;
                 link.style.transform = previous.linkTransform;
+
                 if (card) {
                     card.style.display = previous.cardDisplay;
                     card.style.width = previous.cardWidth;
@@ -125,130 +116,150 @@
             });
         }
 
-        function computeSceneHeight(metrics, sceneWidth) {
-            var totalArea = metrics.reduce(function(sum, metric) {
-                return sum + (metric.width + 28) * (metric.height + 24);
-            }, 0);
-            var viewportHeight = getViewportHeight();
-            var minHeight = isTouchDevice ? Math.max(520, viewportHeight * 0.88) : Math.max(620, viewportHeight * 0.92);
-            var flowHeight = totalArea / Math.max(sceneWidth, 280);
-            var topDropZone = isTouchDevice ? 240 : 320;
-            return Math.ceil(Math.max(minHeight, flowHeight * (isTouchDevice ? 2.2 : 1.85) + topDropZone));
-        }
-
-        function buildPhysicsScene() {
-            var metrics = measureTags();
+        function buildLayout(metrics) {
             var padding = getContainerPadding();
-            var sceneWidth = Math.max(container.clientWidth, 320);
-            var usableWidth = Math.max(sceneWidth - padding.left - padding.right, 240);
-            var sceneHeight = computeSceneHeight(metrics, usableWidth);
-            var wallThickness = 120;
+            var containerWidth = Math.max(container.clientWidth, 320);
+            var usableWidth = Math.max(containerWidth - padding.left - padding.right, 220);
+            var baseGap = isTouchDevice ? 10 : 14;
+            var rowGap = isTouchDevice ? 14 : 18;
+            var baseHeight = isTouchDevice ? Math.max(420, getViewportHeight() * 0.62) : Math.max(520, getViewportHeight() * 0.72);
+            var shuffled = shuffleMetrics(metrics);
+            var rows = [];
+            var currentRow = [];
+            var currentWidth = 0;
+            var currentHeight = 0;
 
-            container.style.height = sceneHeight + 'px';
-            container.classList.add('physics-ready');
-
-            var engine = Engine.create({
-                gravity: {
-                    x: 0,
-                    y: isTouchDevice ? 1.02 : 0.96
+            shuffled.forEach(function(metric) {
+                metric.width = Math.min(metric.width, usableWidth);
+                var nextWidth = currentRow.length ? currentWidth + baseGap + metric.width : metric.width;
+                if (currentRow.length && nextWidth > usableWidth) {
+                    rows.push({
+                        items: currentRow.slice(),
+                        height: currentHeight
+                    });
+                    currentRow = [];
+                    currentWidth = 0;
+                    currentHeight = 0;
                 }
+
+                currentWidth = currentRow.length ? currentWidth + baseGap + metric.width : metric.width;
+                currentHeight = Math.max(currentHeight, metric.height);
+                currentRow.push(metric);
             });
 
-            Composite.add(engine.world, [
-                Bodies.rectangle(sceneWidth / 2, sceneHeight + wallThickness / 2, sceneWidth + wallThickness * 2, wallThickness, {
-                    isStatic: true
-                }),
-                Bodies.rectangle(-wallThickness / 2, sceneHeight / 2, wallThickness, sceneHeight * 2, {
-                    isStatic: true
-                }),
-                Bodies.rectangle(sceneWidth + wallThickness / 2, sceneHeight / 2, wallThickness, sceneHeight * 2, {
-                    isStatic: true
-                })
-            ]);
+            if (currentRow.length) {
+                rows.push({
+                    items: currentRow.slice(),
+                    height: currentHeight
+                });
+            }
 
-            metrics.forEach(function(metric, index) {
-                var minX = padding.left + metric.width / 2;
-                var maxX = sceneWidth - padding.right - metric.width / 2;
-                var startX = randomBetween(minX, Math.max(minX + 1, maxX));
-                var startY = -randomBetween(metric.height + index * 18, sceneHeight * 0.42 + metric.height + index * 10);
-                var body = Bodies.rectangle(startX, startY, metric.width, metric.height, {
-                    restitution: randomBetween(0.08, 0.18),
-                    friction: randomBetween(0.18, 0.32),
-                    frictionAir: randomBetween(isTouchDevice ? 0.022 : 0.015, isTouchDevice ? 0.03 : 0.022),
-                    chamfer: {
-                        radius: Math.min(22, Math.round(metric.height / 2))
-                    }
+            var cursorY = isTouchDevice ? 26 : 32;
+
+            rows.forEach(function(row, rowIndex) {
+                var contentWidth = row.items.reduce(function(sum, item) {
+                    return sum + item.width;
+                }, 0);
+                var fixedGapWidth = baseGap * Math.max(row.items.length - 1, 0);
+                var freeSpace = Math.max(0, usableWidth - contentWidth - fixedGapWidth);
+                var slots = row.items.length + 1;
+                var weights = [];
+                var weightTotal = 0;
+
+                for (var i = 0; i < slots; i++) {
+                    var weight = 0.55 + Math.random();
+                    weights.push(weight);
+                    weightTotal += weight;
+                }
+
+                var extraSpacing = weights.map(function(weight) {
+                    return freeSpace * (weight / weightTotal);
                 });
 
-                Body.setAngle(body, randomBetween(-0.18, 0.18));
-                Body.setVelocity(body, {
-                    x: randomBetween(-1.45, 1.45) * (isTouchDevice ? 0.8 : 1.15),
-                    y: randomBetween(0.15, 1.3)
+                var cursorX = padding.left + extraSpacing[0];
+
+                row.items.forEach(function(item, itemIndex) {
+                    var verticalSlack = Math.max((row.height - item.height) / 2, 0);
+                    var yJitter = Math.min(isTouchDevice ? 4 : 7, verticalSlack);
+                    var finalX = Math.max(padding.left, Math.min(cursorX, containerWidth - padding.right - item.width));
+                    var finalY = cursorY + verticalSlack + randomBetween(-yJitter, yJitter);
+
+                    item.finalX = finalX;
+                    item.finalY = finalY;
+                    item.finalRotation = randomBetween(-4.5, 4.5);
+                    item.startX = Math.max(padding.left, Math.min(randomBetween(padding.left - 16, containerWidth - padding.right - item.width + 16), containerWidth - padding.right - item.width));
+                    item.startY = -randomBetween(item.height + 48, baseHeight * 0.58 + rowIndex * 24);
+                    item.startRotation = randomBetween(-18, 18);
+                    item.delay = Math.round(randomBetween(20, 280) + rowIndex * 95 + itemIndex * 30);
+
+                    cursorX += item.width + baseGap + extraSpacing[itemIndex + 1];
                 });
-                Body.setAngularVelocity(body, randomBetween(-0.04, 0.04));
 
-                metric.body = body;
-                metric.link.style.width = metric.width + 'px';
-                metric.link.style.height = metric.height + 'px';
-                metric.link.style.pointerEvents = 'auto';
-                metric.link.style.zIndex = '2';
-
-                Composite.add(engine.world, body);
+                cursorY += row.height + rowGap;
             });
+
+            var contentHeight = cursorY + (isTouchDevice ? 22 : 30);
 
             return {
-                engine: engine,
+                height: Math.ceil(Math.max(baseHeight, contentHeight)),
                 metrics: metrics
             };
         }
 
-        var scene = buildPhysicsScene();
-        var settleFrames = 0;
-        var lastTime = window.performance && typeof window.performance.now === 'function' ? window.performance.now() : Date.now();
+        function applyLayout(layout) {
+            container.classList.add('physics-ready');
+            container.style.height = layout.height + 'px';
 
-        function tick(now) {
-            var current = now || (window.performance && typeof window.performance.now === 'function' ? window.performance.now() : Date.now());
-            var delta = Math.min(current - lastTime, 32);
-            lastTime = current;
-
-            Matter.Engine.update(scene.engine, delta);
-
-            var allSettled = true;
-
-            scene.metrics.forEach(function(metric) {
-                var body = metric.body;
-                var x = body.position.x - metric.width / 2;
-                var y = body.position.y - metric.height / 2;
-                metric.link.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0) rotate(' + body.angle + 'rad)';
-
-                if (allSettled && (Math.abs(body.velocity.x) > 0.04 || Math.abs(body.velocity.y) > 0.04 || Math.abs(body.angularVelocity) > 0.01)) {
-                    allSettled = false;
-                }
+            layout.metrics.forEach(function(metric) {
+                var link = metric.link;
+                link.classList.remove('drop-entered');
+                link.style.width = metric.width + 'px';
+                link.style.height = metric.height + 'px';
+                link.style.opacity = reduceMotion ? '1' : '0';
+                link.style.transitionDelay = reduceMotion ? '0ms' : metric.delay + 'ms';
+                link.style.transform = reduceMotion ?
+                    'translate3d(' + metric.finalX + 'px, ' + metric.finalY + 'px, 0) rotate(' + metric.finalRotation + 'deg)' :
+                    'translate3d(' + metric.startX + 'px, ' + metric.startY + 'px, 0) rotate(' + metric.startRotation + 'deg)';
             });
 
-            settleFrames = allSettled ? settleFrames + 1 : 0;
-
-            if (settleFrames < 90) {
-                container.__tagPhysicsState.frame = raf(tick);
-            } else {
-                container.__tagPhysicsState.frame = null;
+            if (reduceMotion) {
+                layout.metrics.forEach(function(metric) {
+                    metric.link.classList.add('drop-entered');
+                });
+                return;
             }
+
+            container.__tagDropState.frame = raf(function() {
+                container.__tagDropState.frame = raf(function() {
+                    layout.metrics.forEach(function(metric) {
+                        var link = metric.link;
+                        link.style.opacity = '1';
+                        link.style.transform = 'translate3d(' + metric.finalX + 'px, ' + metric.finalY + 'px, 0) rotate(' + metric.finalRotation + 'deg)';
+                        link.classList.add('drop-entered');
+                    });
+                });
+            });
         }
 
+        destroyDrop();
+
+        var layout = buildLayout(measureTags());
+
         function onResize() {
-            window.clearTimeout(container.__tagPhysicsState.resizeTimer);
-            container.__tagPhysicsState.resizeTimer = window.setTimeout(function() {
-                destroyPhysics();
-                initTagPhysics();
+            window.clearTimeout(container.__tagDropState.resizeTimer);
+            container.__tagDropState.resizeTimer = window.setTimeout(function() {
+                destroyDrop();
+                initTagDrop();
             }, 220);
         }
 
-        container.__tagPhysicsState = {
-            engine: scene.engine,
-            frame: raf(tick),
-            onResize: onResize,
-            resizeTimer: null
+        container.__tagDropState = {
+            frame: null,
+            resizeTimer: null,
+            onResize: onResize
         };
+
+        applyLayout(layout);
 
         window.addEventListener('resize', onResize, {
             passive: true
@@ -256,8 +267,8 @@
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initTagPhysics);
+        document.addEventListener('DOMContentLoaded', initTagDrop);
     } else {
-        initTagPhysics();
+        initTagDrop();
     }
 }(window, document));

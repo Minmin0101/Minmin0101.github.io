@@ -96,6 +96,12 @@
     max-width: min(320px, calc(100% - 20px));
     pointer-events: auto;
     z-index: 2;
+    opacity: 0;
+    transition: transform .88s cubic-bezier(.18, 1, .22, 1), opacity .42s ease;
+}
+
+.physics-container.physics-ready .tag-link.drop-entered {
+    opacity: 1;
 }
 
 .physics-container.physics-ready .card-card {
@@ -193,6 +199,8 @@
 
     .physics-container.physics-ready .tag-link {
         position: relative;
+        opacity: 1 !important;
+        transition: none !important;
         transform: none !important;
     }
 }
