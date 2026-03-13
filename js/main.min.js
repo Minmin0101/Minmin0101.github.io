@@ -686,44 +686,7 @@
 		const slidingBar = nav && nav.querySelector('.sliding-bar')
 		let activeTouchEl = null
 		let clearTimer = 0
-		let frame = 0
-		let pendingPoint = null
-		const setTouchPoint = function(el, point) {
-			if (!el || !point || !el.getBoundingClientRect) {
-				return
-			}
-			const rect = el.getBoundingClientRect()
-			if (!rect.width || !rect.height) {
-				return
-			}
-			const x = Math.max(0, Math.min(rect.width, point.clientX - rect.left))
-			const y = Math.max(0, Math.min(rect.height, point.clientY - rect.top))
-			el.style.setProperty('--touch-x', `${x}px`)
-			el.style.setProperty('--touch-y', `${y}px`)
-		}
-		const syncTouchPoint = function() {
-			frame = 0
-			if (activeTouchEl && pendingPoint) {
-				setTouchPoint(activeTouchEl, pendingPoint)
-				pendingPoint = null
-			}
-		}
-		const queueTouchPoint = function(el, point) {
-			if (!el) {
-				return
-			}
-			if (!point) {
-				const rect = el.getBoundingClientRect()
-				point = {
-					clientX: rect.left + rect.width / 2,
-					clientY: rect.top + rect.height / 2
-				}
-			}
-			pendingPoint = point
-			if (!frame) {
-				frame = animate(syncTouchPoint)
-			}
-		}
+		let touchStartPoint = null
 		const restoreSlidingBar = function() {
 			if (!slidingBar || !nav) {
 				return
@@ -753,11 +716,7 @@
 				w.clearTimeout(clearTimer)
 				clearTimer = 0
 			}
-			if (frame) {
-				w.cancelAnimationFrame(frame)
-				frame = 0
-			}
-			pendingPoint = null
+			touchStartPoint = null
 			if (activeTouchEl) {
 				activeTouchEl.classList.remove('touch-active')
 				activeTouchEl = null
@@ -771,7 +730,12 @@
 					clearTouchState()
 					activeTouchEl = el
 					el.classList.add('touch-active')
-					queueTouchPoint(el, event.touches && event.touches[0])
+					touchStartPoint = event.touches && event.touches[0]
+						? {
+							x: event.touches[0].clientX,
+							y: event.touches[0].clientY
+						}
+						: null
 					syncSlidingBar(el)
 				},
 				{ passive: true }
@@ -779,21 +743,31 @@
 			el.addEventListener(
 				'touchmove',
 				function(event) {
-					if (!activeTouchEl) {
-						activeTouchEl = el
-						el.classList.add('touch-active')
+					if (!touchStartPoint || !event.touches || !event.touches[0]) {
+						clearTouchState()
+						return
 					}
-					queueTouchPoint(activeTouchEl, event.touches && event.touches[0])
-					syncSlidingBar(activeTouchEl)
+					const deltaX = Math.abs(event.touches[0].clientX - touchStartPoint.x)
+					const deltaY = Math.abs(event.touches[0].clientY - touchStartPoint.y)
+					if (deltaX > 8 || deltaY > 8) {
+						clearTouchState()
+					}
 				},
 				{ passive: true }
 			)
 			el.addEventListener(
 				'touchend',
 				function() {
-					clearTimer = w.setTimeout(clearTouchState, 140)
+					clearTimer = w.setTimeout(clearTouchState, 72)
 				},
 				{ passive: true }
+			)
+			el.addEventListener(
+				'click',
+				function() {
+					clearTouchState()
+				},
+				true
 			)
 			el.addEventListener(
 				'touchcancel',
@@ -804,6 +778,12 @@
 			)
 		})
 		menu.addEventListener('scroll', clearTouchState, { passive: true })
+		w.addEventListener('pagehide', clearTouchState, { passive: true })
+		d.addEventListener('visibilitychange', function() {
+			if (d.hidden) {
+				clearTouchState()
+			}
+		})
 		restoreSlidingBar()
 	}
 	const scrollTarget =
