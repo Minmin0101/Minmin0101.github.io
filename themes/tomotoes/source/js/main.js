@@ -315,6 +315,14 @@
 		hideOnMask: [],
 		modal: function(target) {
 			this.$modal = $(target)
+			if (!this.$modal) {
+				this.$off = null
+				this.show = noop
+				this.hide = noop
+				this.toggle = noop
+				this.onHide = noop
+				return
+			}
 			this.$off = this.$modal.querySelector('.close')
 			const mythis = this
 			this.show = function() {
@@ -351,9 +359,22 @@
 					? mythis.hide()
 					: mythis.show()
 			}
+			this.$modal.addEventListener('click', function(event) {
+				event.stopPropagation()
+			})
+			this.$modal.addEventListener(
+				'touchstart',
+				function(event) {
+					event.stopPropagation()
+				},
+				{ passive: true }
+			)
 			Blog.hideOnMask.push(this.hide)
 			if (this.$off) {
-				this.$off.addEventListener(even, this.hide)
+				this.$off.addEventListener('click', function(event) {
+					event.preventDefault()
+					mythis.hide()
+				})
 			}
 		},
 		share: function() {
@@ -386,51 +407,65 @@
 		},
 		reward: function() {
 			const modal = new this.modal('#reward')
-			const $rewardCode = $('#rewardCode')
-			const $rewardToggle = $('#rewardToggle')
-			let tipFirstt = false,
-				tipPosition = -1
-			const wechatPay = $('.wechatPay')
-			const alipayPay = $('.alipayPay')
-			const caret = $('.icon-caret-up')
-			$('#rewardBtn').addEventListener(even, function() {
-				if (tipPosition === -1) {
-					$rewardCode.src = $rewardCode.dataset.img
-				} else if (tipPosition === 1) {
-					$rewardCode.src = $rewardToggle.dataset.alipay
-				} else if (tipPosition === 0) {
-					$rewardCode.src = $rewardToggle.dataset.wechat
+			const rewardBtn = $('#rewardBtn')
+			const rewardCode = modal.$modal && modal.$modal.querySelector('#rewardCode')
+			const methodButtons =
+				modal.$modal &&
+				modal.$modal.querySelectorAll('.reward-toggle-button[data-method]')
+			const caret = modal.$modal && modal.$modal.querySelector('.icon-caret-up')
+			let currentMethod = 'default'
+			if (!rewardBtn || !rewardCode) {
+				return
+			}
+			const setRewardMethod = function(method) {
+				currentMethod = method || 'default'
+				rewardCode.src = rewardCode.dataset.img
+				if (caret) {
+					caret.style.marginLeft = '0'
 				}
-				modal.toggle()
-			})
-
-			wechatPay.addEventListener('click', function() {
-				tipFirstt = true
-			})
-			if ($rewardToggle) {
-				$rewardToggle.addEventListener('change', function() {
-					if (!this.checked) {
-						$rewardCode.src = this.dataset.alipay
-						alipayPay.classList.add('show')
-						wechatPay.classList.remove('show')
-						caret.style = 'margin-left:20%;'
-						tipPosition = 1
-					} else if (!tipFirstt) {
-						$rewardCode.src = this.dataset.alipay
-						alipayPay.classList.add('show')
-						wechatPay.classList.remove('show')
-						caret.style = 'margin-left:20%;'
-						this.checked = false
-						tipPosition = 1
-					} else {
-						$rewardCode.src = this.dataset.wechat
-						alipayPay.classList.remove('show')
-						wechatPay.classList.add('show')
-						caret.style = 'margin-left:-20%;'
-						tipPosition = 0
+				if (!methodButtons || !methodButtons.length) {
+					return
+				}
+				forEach.call(methodButtons, function(button) {
+					const active = button.dataset.method === currentMethod
+					button.classList.toggle('show', active)
+					button.setAttribute('aria-pressed', active ? 'true' : 'false')
+					if (active && button.dataset.img) {
+						rewardCode.src = button.dataset.img
 					}
 				})
+				if (!caret) {
+					return
+				}
+				if (currentMethod === 'wechat') {
+					caret.style.marginLeft = '-20%'
+				} else if (currentMethod === 'alipay') {
+					caret.style.marginLeft = '20%'
+				}
 			}
+			rewardBtn.addEventListener(
+				'click',
+				function(event) {
+					event.preventDefault()
+					setRewardMethod(currentMethod)
+					modal.toggle()
+				},
+				false
+			)
+			if (methodButtons && methodButtons.length) {
+				forEach.call(methodButtons, function(button) {
+					button.addEventListener(
+						'click',
+						function(event) {
+							event.preventDefault()
+							event.stopPropagation()
+							setRewardMethod(button.dataset.method)
+						},
+						false
+					)
+				})
+			}
+			setRewardMethod('default')
 		},
 		tabBar: function(el) {
 			el.parentNode.parentNode.classList.toggle('expand')

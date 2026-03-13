@@ -153,80 +153,86 @@
     height: 420px;
     max-width: 100%;
     width: 360px;
+    touch-action: manipulation;
 }
 
 .reward-content {
     margin: 20px 0;
+    position: relative;
+    z-index: 1;
 }
 
 .reward-code {
     width: 200px;
     margin: 0 auto;
+    img {
+        display: block;
+        width: 100%;
+        border-radius: 18px;
+        box-shadow: 0 18px 36px rgba(15, 23, 42, .12);
+    }
 }
 
 .reward-toggle {
     position: relative;
-    display: block;
+    display: flex;
+    align-items: stretch;
     width: 200px;
     overflow: hidden;
     margin: 40px auto 0;
-    border-radius: 3px;
+    padding: 0;
+    border: 0;
+    background: #eee;
+    border-radius: 999px;
     .boxShadow();
-    &-check {
-        position: absolute;
-        visibility: hidden;
-    }
-    &-ctrol {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        width: 200px;
-        height: 30px;
-        line-height: 30px;
-        background: #eee;
-        border-radius: 3px;
-        overflow: hidden;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        .transition(.1s)
-    }
     &-item,
     &-label {
         height: 100%;
     }
     &-item {
+        -webkit-appearance: none;
+        appearance: none;
+        border: 0;
+        padding: 0;
         position: relative;
         z-index: 2;
         text-align: center;
         color: #fff;
         font-size: 12px;
+        min-height: 36px;
+        line-height: 36px;
+        cursor: pointer;
+        flex: 1 1 50%;
         -webkit-box-shadow: inset 0 0 15px rgba(0, 0, 0, .3);
         box-shadow: inset 0 0 15px rgba(0, 0, 0, .3);
-        .transition(.1s);
+        .transition(.16s);
+        -webkit-tap-highlight-color: transparent;
+        &:focus-visible {
+            outline: none;
+            box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .85), inset 0 0 15px rgba(0, 0, 0, .3);
+        }
+        &:active {
+            filter: brightness(.97);
+        }
     }
     .alipayPay {
-        -webkit-box-flex: 1;
-        -ms-flex-positive: 1;
-        flex-grow: 1;
         background: #1e88e5;
         &.show {
             -webkit-box-flex: 4;
             -ms-flex-positive: 4;
-            flex-grow: 4;
+            flex: 4 1 0;
         }
     }
     .wechatPay {
-        -webkit-box-flex: 1;
-        -ms-flex-positive: 1;
-        flex-grow: 1;
         background: #4caf50;
         &.show {
             -webkit-box-flex: 4;
             -ms-flex-positive: 4;
-            flex-grow: 4;
+            flex: 4 1 0;
         }
+    }
+    .reward-toggle-button + .reward-toggle-button {
+        border-left: 1px solid rgba(255, 255, 255, .14);
     }
 }
 
@@ -237,6 +243,8 @@
 }
 
 .icon-caret-up {
+    display: inline-block;
+    margin-top: 12px;
     .transition(.1s);
 }
 
