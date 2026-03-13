@@ -1,6 +1,7 @@
 <%
 const blogPosts = site.posts.sort('date', -1).toArray();
 const excerptLimit = theme.excerpt_length || 175;
+const latestPosts = blogPosts.slice(0, 6);
 const toneClasses = ['tone-a', 'tone-b', 'tone-c', 'tone-d'];
 const coverVideoExts = ['mp4', 'webm', 'ogg', 'mov', 'm4v'];
 const resolveCover = function(post) {
@@ -38,12 +39,48 @@ const formatWordCount = function(total) {
     hdClass: 'index-header blog-home-header'
 }) %>
 <div class="container body-wrap blog-home">
-    <aside class="blog-home-rail fade">
-        <a href="#blog-top">顶部</a>
-        <a href="#post-list-start">最新</a>
-        <a href="<%- url_for('/tags/') %>">标签</a>
-        <a href="<%- url_for('/archives/') %>">归档</a>
+    <aside class="blog-home-rail fade" aria-label="博客快捷入口">
+        <button type="button" class="blog-home-rail-control" data-rail-action="refresh">刷新</button>
+        <button
+            type="button"
+            class="blog-home-rail-control"
+            data-rail-action="latest"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+            aria-controls="latest-posts-popover"
+        >
+            最新
+        </button>
+        <a class="blog-home-rail-link" href="<%- url_for('/tags/') %>">标签</a>
+        <a class="blog-home-rail-link" href="<%- url_for('/archives/') %>">归档</a>
     </aside>
+    <div class="latest-posts-popover" id="latest-posts-popover" aria-hidden="true">
+        <div class="latest-posts-popover-card" role="dialog" aria-label="最新博客文章">
+            <div class="latest-posts-popover-head">
+                <div>
+                    <strong>最新文章</strong>
+                    <span>按发布时间倒序展示</span>
+                </div>
+                <button type="button" class="latest-posts-close" data-latest-close aria-label="关闭最新文章面板">
+                    <i class="icon icon-close"></i>
+                </button>
+            </div>
+            <% if (latestPosts.length) { %>
+            <ol class="latest-posts-list">
+                <% latestPosts.forEach(function(post){ %>
+                <li class="latest-posts-item">
+                    <a class="latest-posts-link" href="<%- url_for(post.path) %>">
+                        <time datetime="<%= post.date.toISOString() %>"><%= date(post.date, 'MM-DD') %></time>
+                        <span><%- post.title %></span>
+                    </a>
+                </li>
+                <% }) %>
+            </ol>
+            <% } else { %>
+            <p class="latest-posts-empty">这里还没有可以展示的文章。</p>
+            <% } %>
+        </div>
+    </div>
     <section class="blog-home-summary fade" id="blog-top">
         <div>
             <small>Blog Index</small>

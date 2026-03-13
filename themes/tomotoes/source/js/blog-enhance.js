@@ -375,37 +375,57 @@
         if (!rail) {
             return;
         }
-        var links = rail.querySelectorAll('a[href^="#"]');
+        var refreshButton = rail.querySelector('[data-rail-action="refresh"]');
+        var latestButton = rail.querySelector('[data-rail-action="latest"]');
+        var latestPopover = document.getElementById('latest-posts-popover');
+        var latestClose = latestPopover && latestPopover.querySelector('[data-latest-close]');
 
-        function activate() {
-            var postStart = document.getElementById('post-list-start');
-            var scrollTop = getScrollTop();
-            Array.prototype.forEach.call(links, function(link) {
-                link.classList.remove('active');
-            });
-            if (postStart && scrollTop + 120 >= postStart.offsetTop) {
-                rail.querySelector('a[href="#post-list-start"]').classList.add('active');
-            } else if (rail.querySelector('a[href="#blog-top"]')) {
-                rail.querySelector('a[href="#blog-top"]').classList.add('active');
+        function setPopoverOpen(open) {
+            if (!latestPopover || !latestButton) {
+                return;
             }
+            latestPopover.classList.toggle('in', open);
+            latestPopover.setAttribute('aria-hidden', open ? 'false' : 'true');
+            latestButton.setAttribute('aria-expanded', open ? 'true' : 'false');
         }
 
-        Array.prototype.forEach.call(links, function(link) {
-            link.addEventListener('click', function(event) {
-                var target = document.querySelector(link.getAttribute('href'));
-                if (!target) {
-                    return;
-                }
+        if (refreshButton) {
+            refreshButton.addEventListener('click', function(event) {
                 event.preventDefault();
-                window.scrollTo({
-                    top: Math.max(target.offsetTop - 80, 0),
-                    behavior: 'smooth'
-                });
+                setPopoverOpen(false);
+                window.location.reload();
             });
-        });
+        }
 
-        window.addEventListener('scroll', activate, { passive: true });
-        activate();
+        if (latestButton && latestPopover) {
+            latestButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                setPopoverOpen(!latestPopover.classList.contains('in'));
+            });
+
+            if (latestClose) {
+                latestClose.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    setPopoverOpen(false);
+                });
+            }
+
+            document.addEventListener('click', function(event) {
+                if (
+                    latestPopover.classList.contains('in') &&
+                    !latestPopover.contains(event.target) &&
+                    !latestButton.contains(event.target)
+                ) {
+                    setPopoverOpen(false);
+                }
+            });
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    setPopoverOpen(false);
+                }
+            });
+        }
     }
 
     function initScrollReveal() {
