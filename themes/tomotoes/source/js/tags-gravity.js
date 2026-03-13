@@ -12,6 +12,9 @@
 
         var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         container.classList.add('tag-scroll-ready');
+        var raf = window.requestAnimationFrame || function(callback) {
+            return window.setTimeout(callback, 16);
+        };
 
         function getColumns() {
             if (window.innerWidth <= 767) {
@@ -45,12 +48,34 @@
             }
         }
 
-        function reveal(link) {
-            link.classList.remove('reveal-ready');
-            link.classList.add('reveal-in');
+        function isNearViewport(link) {
+            var rect = link.getBoundingClientRect();
+            var viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+            return rect.bottom >= 0 && rect.top <= viewportHeight * 0.92;
         }
 
-        tagLinks.forEach(function(link, index) {
+        function reveal(link) {
+            if (!link || link.dataset.tagRevealState === 'done' || link.dataset.tagRevealState === 'queued') {
+                return;
+            }
+            link.dataset.tagRevealState = 'queued';
+            raf(function() {
+                link.getBoundingClientRect();
+                link.classList.remove('reveal-ready');
+                link.classList.add('reveal-in');
+                link.dataset.tagRevealState = 'done';
+            });
+        }
+
+        function armReveal(link) {
+            link.dataset.tagRevealState = 'ready';
+            link.classList.remove('reveal-ready');
+            link.classList.remove('reveal-in');
+            link.getBoundingClientRect();
+            link.classList.add('reveal-ready');
+        }
+
+        tagLinks.forEach(function(link) {
             link.classList.add('tag-drop-item');
             link.addEventListener('click', function() {
                 openLink(link);
@@ -63,7 +88,7 @@
                 openLink(link);
             });
             if (!reduceMotion) {
-                link.classList.add('reveal-ready');
+                armReveal(link);
             } else {
                 link.classList.add('reveal-in');
             }
@@ -81,22 +106,29 @@
             return;
         }
 
-        var observer = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (!entry.isIntersecting) {
-                    return;
-                }
-                reveal(entry.target);
-                observer.unobserve(entry.target);
-            });
-        }, {
-            root: null,
-            rootMargin: '0px 0px -10% 0px',
-            threshold: 0.1
-        });
+        raf(function() {
+            raf(function() {
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (!entry.isIntersecting) {
+                            return;
+                        }
+                        reveal(entry.target);
+                        observer.unobserve(entry.target);
+                    });
+                }, {
+                    root: null,
+                    rootMargin: '0px 0px -8% 0px',
+                    threshold: 0.08
+                });
 
-        tagLinks.forEach(function(link) {
-            observer.observe(link);
+                tagLinks.forEach(function(link) {
+                    if (isNearViewport(link)) {
+                        reveal(link);
+                    }
+                    observer.observe(link);
+                });
+            });
         });
     }
 
