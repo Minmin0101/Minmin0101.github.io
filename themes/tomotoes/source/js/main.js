@@ -525,6 +525,67 @@
 			}
 			setRewardMethod('default')
 		},
+		avatarPreview: function() {
+			const modal = new this.modal('#avatarPreview')
+			const triggers = $$('.avatar-preview-trigger')
+			if (!modal.$modal || !triggers.length) {
+				return
+			}
+			const bindPress = function(el, handler) {
+				let lastTouchTime = 0
+				const invoke = function(event) {
+					if (
+						event.type === 'click' &&
+						lastTouchTime &&
+						Date.now() - lastTouchTime < 480
+					) {
+						event.preventDefault()
+						return
+					}
+					if (
+						event.type === 'touchend' ||
+						(event.type === 'pointerup' && event.pointerType !== 'mouse')
+					) {
+						lastTouchTime = Date.now()
+					}
+					handler(event)
+				}
+				if (w.PointerEvent) {
+					el.addEventListener(
+						'pointerup',
+						function(event) {
+							if (event.pointerType === 'mouse') {
+								return
+							}
+							invoke(event)
+						},
+						false
+					)
+				} else {
+					el.addEventListener('touchend', invoke, false)
+				}
+				el.addEventListener('click', invoke, false)
+			}
+			forEach.call(triggers, function(trigger) {
+				bindPress(
+					trigger,
+					function(event) {
+						event.preventDefault()
+						event.stopPropagation()
+						modal.show()
+					}
+				)
+			})
+			d.addEventListener(
+				'keydown',
+				function(event) {
+					if (event.key === 'Escape' && modal.$modal.classList.contains('in')) {
+						modal.hide()
+					}
+				},
+				false
+			)
+		},
 		tabBar: function(el) {
 			el.parentNode.parentNode.classList.toggle('expand')
 		},
@@ -910,6 +971,7 @@
 	if (w.BLOG.REWARD) {
 		Blog.reward()
 	}
+	Blog.avatarPreview()
 	Blog.noop = noop
 	Blog.even = even
 	Blog.$ = $

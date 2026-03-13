@@ -78,9 +78,15 @@ var statItems = [
     </a>
     <div class="brand-wrap">
       <div class="brand fade">
-        <a href="<%- url_for(theme.avatar_link) %>" class="avatar waves-effect waves-circle waves-light">
-          <img src="<%- url_for(theme.avatar) %>" alt="avatar">
-        </a>
+        <button
+          type="button"
+          class="avatar avatar-preview-trigger waves-effect waves-circle waves-light"
+          aria-label="查看放大头像"
+          aria-controls="avatarPreview"
+          aria-haspopup="dialog"
+        >
+          <img src="<%- url_for(theme.avatar) %>" alt="<%- config.author %> avatar">
+        </button>
         <div class="introduce">
           <h5 class="nickname" id="name"><%- config.author %></h5>
           <div class="links-of-author fade">
