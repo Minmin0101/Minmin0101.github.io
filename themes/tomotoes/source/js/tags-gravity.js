@@ -34,6 +34,15 @@
         );
     }
 
+    function rotatedBounds(width, height, angle) {
+        var sin = Math.abs(Math.sin(angle));
+        var cos = Math.abs(Math.cos(angle));
+        return {
+            width: width * cos + height * sin,
+            height: width * sin + height * cos
+        };
+    }
+
     function getProfile() {
         var width = Math.max(window.innerWidth || 0, document.documentElement.clientWidth || 0);
         var touch = !!(
@@ -43,19 +52,21 @@
 
         if (width <= 767 || touch) {
             return {
-                baseHeight: 660,
-                spawnBand: 190,
+                baseHeight: 700,
+                spawnBand: 180,
+                spawnZones: 2,
+                spawnRows: 3,
                 sideInset: 12,
                 topSafe: 18,
                 bottomInset: 24,
-                minGap: -12,
-                maxGap: 10,
-                rowSlack: 14,
-                rowStep: 0.56,
-                minStep: 26,
-                xJitter: 8,
-                yJitter: 6,
-                tilt: 0.18,
+                minGap: 10,
+                maxGap: 18,
+                rowGapMin: 8,
+                rowGapMax: 18,
+                rowWidthMin: 0.44,
+                rowWidthMax: 0.82,
+                rowShiftFactor: 0.46,
+                tilt: 0.12,
                 spawnTilt: 0.32,
                 delayMin: 120,
                 delayMax: 1180,
@@ -67,19 +78,21 @@
 
         if (width <= 1180) {
             return {
-                baseHeight: 700,
-                spawnBand: 220,
+                baseHeight: 760,
+                spawnBand: 208,
+                spawnZones: 3,
+                spawnRows: 4,
                 sideInset: 18,
                 topSafe: 22,
                 bottomInset: 28,
-                minGap: -16,
-                maxGap: 14,
-                rowSlack: 20,
-                rowStep: 0.58,
-                minStep: 30,
-                xJitter: 12,
-                yJitter: 8,
-                tilt: 0.22,
+                minGap: 12,
+                maxGap: 20,
+                rowGapMin: 10,
+                rowGapMax: 20,
+                rowWidthMin: 0.42,
+                rowWidthMax: 0.8,
+                rowShiftFactor: 0.42,
+                tilt: 0.14,
                 spawnTilt: 0.38,
                 delayMin: 100,
                 delayMax: 1320,
@@ -90,19 +103,21 @@
         }
 
         return {
-            baseHeight: 760,
-            spawnBand: 248,
+            baseHeight: 820,
+            spawnBand: 220,
+            spawnZones: 4,
+            spawnRows: 4,
             sideInset: 20,
             topSafe: 24,
             bottomInset: 30,
-            minGap: -18,
-            maxGap: 16,
-            rowSlack: 24,
-            rowStep: 0.62,
-            minStep: 34,
-            xJitter: 16,
-            yJitter: 10,
-            tilt: 0.26,
+            minGap: 14,
+            maxGap: 22,
+            rowGapMin: 12,
+            rowGapMax: 24,
+            rowWidthMin: 0.4,
+            rowWidthMax: 0.76,
+            rowShiftFactor: 0.38,
+            tilt: 0.16,
             spawnTilt: 0.42,
             delayMin: 90,
             delayMax: 1440,
@@ -197,45 +212,66 @@
             var row = [];
             var width = 0;
             var height = 0;
+            var rowTarget = usableWidth * rand(profile.rowWidthMin, profile.rowWidthMax);
 
             function pushRow() {
                 if (!row.length) {
                     return;
                 }
-                rows.push({ items: row.slice(), width: width, height: height });
+                rows.push({
+                    items: row.slice(),
+                    width: width,
+                    height: height,
+                    stackGap: Math.round(rand(profile.rowGapMin, profile.rowGapMax))
+                });
                 row = [];
                 width = 0;
                 height = 0;
+                rowTarget = usableWidth * rand(profile.rowWidthMin, profile.rowWidthMax);
             }
 
             shuffled.forEach(function(item) {
+                var angle = rand(-profile.tilt, profile.tilt);
+                var footprint = rotatedBounds(item.width, item.height, angle);
+                var footprintWidth = Math.ceil(footprint.width);
+                var footprintHeight = Math.ceil(footprint.height);
                 var gap = row.length ? Math.round(rand(profile.minGap, profile.maxGap)) : 0;
-                var next = row.length ? width + gap + item.width : item.width;
-                var limit = Math.max(usableWidth * 0.68, usableWidth - rand(0, profile.rowSlack));
+                var next = row.length ? width + gap + footprintWidth : footprintWidth;
+                var limit = Math.max(footprintWidth, rowTarget);
 
                 if (row.length && next > limit) {
                     pushRow();
                     gap = 0;
-                    next = item.width;
+                    next = footprintWidth;
                 }
 
                 row.push({
                     item: item,
                     gapBefore: row.length > 1 ? gap : 0,
-                    angle: rand(-profile.tilt, profile.tilt)
+                    angle: angle,
+                    footprintWidth: footprintWidth,
+                    footprintHeight: footprintHeight
                 });
-                width = row.length === 1 ? item.width : width + gap + item.width;
-                height = Math.max(height, item.height);
+                width = row.length === 1
+                    ? footprintWidth
+                    : width + gap + footprintWidth;
+                height = Math.max(height, footprintHeight);
             });
 
             pushRow();
+            rows.sort(function(a, b) {
+                return b.width - a.width;
+            });
             return rows;
         }
 
         function estimateHeight(rows, padding, profile) {
             var pile = 0;
             rows.forEach(function(row, index) {
-                pile += index === 0 ? row.height : Math.max(profile.minStep, row.height * profile.rowStep);
+                pile += row.height;
+                if (index !== rows.length - 1) {
+                    pile += row.stackGap;
+                }
             });
             return Math.max(
                 profile.baseHeight,
@@ -258,9 +294,18 @@
                 var currentBottom = innerHeight - profile.bottomInset;
                 var placements = [];
                 var minTop = Infinity;
+                var maxBottom = 0;
 
                 rows.forEach(function(row) {
-                    var rowLeft = padding.left + profile.sideInset + rand(0, Math.max(0, innerWidth - profile.sideInset * 2 - row.width));
+                    var minLeft = padding.left + profile.sideInset;
+                    var maxLeft = padding.left + innerWidth - profile.sideInset - row.width;
+                    var centerLeft = minLeft + Math.max(0, maxLeft - minLeft) / 2;
+                    var rowShift = Math.max(0, maxLeft - minLeft) * profile.rowShiftFactor;
+                    var rowLeft = clamp(
+                        centerLeft + rand(-rowShift, rowShift),
+                        minLeft,
+                        Math.max(minLeft, maxLeft)
+                    );
                     var rowTop = currentBottom - row.height;
                     var cursorX = rowLeft;
 
@@ -269,18 +314,21 @@
                             cursorX += entry.gapBefore;
                         }
 
+                        var footprintOffsetX = (entry.footprintWidth - entry.item.width) / 2;
+                        var footprintOffsetY = (entry.footprintHeight - entry.item.height) / 2;
                         var x = clamp(
-                            cursorX + rand(-profile.xJitter, profile.xJitter),
+                            cursorX + footprintOffsetX,
                             padding.left + profile.sideInset,
                             padding.left + innerWidth - profile.sideInset - entry.item.width
                         );
                         var y = clamp(
-                            padding.top + rowTop + (row.height - entry.item.height) + rand(-profile.yJitter, profile.yJitter),
+                            padding.top + rowTop + (row.height - entry.footprintHeight) + footprintOffsetY,
                             padding.top + profile.topSafe,
                             padding.top + innerHeight - profile.bottomInset - entry.item.height
                         );
 
                         minTop = Math.min(minTop, y);
+                        maxBottom = Math.max(maxBottom, y + entry.item.height);
                         placements.push({
                             link: entry.item.link,
                             width: entry.item.width,
@@ -290,13 +338,17 @@
                             angle: entry.angle,
                             zIndex: String(10 + Math.round(y))
                         });
-                        cursorX += entry.item.width;
+                        cursorX += entry.footprintWidth;
                     });
 
-                    currentBottom = rowTop + Math.max(profile.minStep, row.height * profile.rowStep);
+                    currentBottom = rowTop - row.stackGap;
                 });
 
-                if (minTop >= padding.top + profile.topSafe || attempt === 3) {
+                if (
+                    (minTop >= padding.top + profile.topSafe &&
+                        maxBottom <= padding.top + innerHeight - profile.bottomInset) ||
+                    attempt === 3
+                ) {
                     layout = {
                         padding: padding,
                         innerWidth: innerWidth,
@@ -320,17 +372,44 @@
             container.style.height = layout.containerHeight + 'px';
 
             var maxEnd = 0;
+            var zoneOffset = Math.floor(rand(0, Math.max(1, profile.spawnZones || 1)));
+            var zoneCount = Math.max(1, profile.spawnZones || 1);
+            var spawnRows = Math.max(2, profile.spawnRows || 3);
+            var spawnOrder = shuffle(layout.placements.map(function(_, index) {
+                return index;
+            }));
+            var delayOrder = shuffle(layout.placements.map(function(_, index) {
+                return index;
+            }));
 
             layout.placements.forEach(function(entry, index) {
-                var spawnX = clamp(
-                    rand(layout.padding.left + profile.sideInset, layout.padding.left + layout.innerWidth - profile.sideInset - entry.width),
-                    layout.padding.left + profile.sideInset,
-                    layout.padding.left + layout.innerWidth - profile.sideInset - entry.width
+                var zoneWidth = Math.max(
+                    entry.width + 12,
+                    (layout.innerWidth - profile.sideInset * 2) / zoneCount
                 );
-                var spawnY = layout.padding.top - entry.height - rand(20, profile.spawnBand);
+                var slot = spawnOrder[index];
+                var zoneIndex = (slot + zoneOffset) % zoneCount;
+                var spawnRow = Math.floor(slot / zoneCount) % spawnRows;
+                var zoneMin = layout.padding.left + profile.sideInset + zoneIndex * zoneWidth;
+                var zoneMax = zoneMin + zoneWidth - entry.width;
+                var globalMin = layout.padding.left + profile.sideInset;
+                var globalMax = layout.padding.left + layout.innerWidth - profile.sideInset - entry.width;
+                var rowBand = Math.max(entry.height + 8, profile.spawnBand / spawnRows);
+                var spawnX = clamp(
+                    rand(zoneMin, Math.max(zoneMin, zoneMax)),
+                    globalMin,
+                    globalMax
+                );
+                var spawnY = layout.padding.top +
+                    spawnRow * rowBand +
+                    rand(0, Math.max(6, rowBand - entry.height - 4));
                 var spawnAngle = rand(-profile.spawnTilt, profile.spawnTilt);
                 var duration = Math.round(rand(profile.durationMin, profile.durationMax));
-                var delay = Math.round(rand(profile.delayMin, profile.delayMax) + index * rand(8, 24));
+                var delayRank = delayOrder[index];
+                var delay = Math.round(
+                    rand(profile.delayMin, Math.min(profile.delayMin + 120, profile.delayMax)) +
+                    delayRank * rand(90, 150)
+                );
 
                 maxEnd = Math.max(maxEnd, delay + duration);
 
