@@ -73,9 +73,9 @@
 .physics-container {
     position: relative;
     width: 100%;
-    min-height: 312px;
+    min-height: 760px;
     margin-bottom: 40px;
-    padding: 20px 22px 18px;
+    padding: 24px 24px 22px;
     overflow: hidden;
     border-radius: 28px;
     border: 1px solid rgba(172, 191, 221, .38);
@@ -83,7 +83,7 @@
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .75), 0 20px 48px rgba(15, 23, 42, .08);
     isolation: isolate;
     contain: layout paint;
-    touch-action: pan-y;
+    touch-action: pan-y pinch-zoom;
 }
 
 .physics-container .tag-link {
@@ -94,7 +94,7 @@
     z-index: 2;
     filter: blur(6px);
     transform: translate3d(-9999px, -9999px, 0);
-    transition: opacity .42s ease, filter .48s ease;
+    transition: opacity .26s ease, filter .34s ease;
     transform-origin: center center;
     pointer-events: none;
 }
@@ -105,19 +105,23 @@
     pointer-events: auto;
 }
 
+.physics-container.physics-fallback .tag-link {
+    transition: none !important;
+}
+
 @media screen and (max-width: 991px) {
     .tag-tip {
         font-size: 18px;
     }
 
     .physics-container {
-        min-height: 300px;
-        padding: 16px 18px;
+        min-height: 700px;
+        padding: 20px 20px 18px;
         border-radius: 24px;
     }
 
     .tag-link {
-        max-width: min(280px, calc(100% - 16px));
+        max-width: min(200px, calc(50% - 14px));
     }
 
     .card-card {
@@ -136,13 +140,13 @@
 
 @media screen and (max-width: 767px) {
     .physics-container {
-        min-height: 286px;
-        padding: 14px 14px 12px;
+        min-height: 660px;
+        padding: 16px 16px 14px;
         border-radius: 22px;
     }
 
     .tag-link {
-        max-width: calc(100% - 10px);
+        max-width: min(160px, calc(50% - 12px));
     }
 
     .card-card {

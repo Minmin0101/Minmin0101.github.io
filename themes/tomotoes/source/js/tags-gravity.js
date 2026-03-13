@@ -1,173 +1,115 @@
 (function(window, document) {
-    function randomBetween(min, max) {
+    var raf = window.requestAnimationFrame || function(callback) {
+        return window.setTimeout(callback, 16);
+    };
+
+    function rand(min, max) {
         return min + Math.random() * (max - min);
     }
 
-    function readNumber(value) {
+    function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+    }
+
+    function num(value) {
         var parsed = parseFloat(value || '0');
         return Number.isFinite(parsed) ? parsed : 0;
     }
 
-    function shuffle(list) {
-        var copy = list.slice();
-        for (var index = copy.length - 1; index > 0; index--) {
-            var swapIndex = Math.floor(Math.random() * (index + 1));
-            var current = copy[index];
-            copy[index] = copy[swapIndex];
-            copy[swapIndex] = current;
+    function shuffle(items) {
+        var list = items.slice();
+        for (var i = list.length - 1; i > 0; i -= 1) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = list[i];
+            list[i] = list[j];
+            list[j] = temp;
         }
-        return copy;
+        return list;
+    }
+
+    function prefersReducedMotion() {
+        return !!(
+            window.matchMedia &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        );
     }
 
     function getProfile() {
-        var viewportWidth = Math.max(window.innerWidth || 0, document.documentElement.clientWidth || 0);
-        var coarsePointer = window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches;
+        var width = Math.max(window.innerWidth || 0, document.documentElement.clientWidth || 0);
+        var touch = !!(
+            window.matchMedia &&
+            window.matchMedia('(hover: none), (pointer: coarse)').matches
+        );
 
-        if (viewportWidth <= 767 || coarsePointer) {
+        if (width <= 767 || touch) {
             return {
-                baseHeight: 296,
-                gapX: 10,
-                gapY: 12,
-                spawnBand: 82,
-                scatterX: 38,
-                rowDelay: 95,
-                itemDelay: 55,
-                minDuration: 960,
-                maxDuration: 1380,
-                maxTilt: 10,
-                safePadding: 8,
+                baseHeight: 660,
+                spawnBand: 190,
+                sideInset: 12,
+                topSafe: 18,
+                bottomInset: 24,
+                minGap: -12,
+                maxGap: 10,
+                rowSlack: 14,
+                rowStep: 0.56,
+                minStep: 26,
+                xJitter: 8,
+                yJitter: 6,
+                tilt: 0.18,
+                spawnTilt: 0.32,
+                delayMin: 120,
+                delayMax: 1180,
+                durationMin: 1800,
+                durationMax: 2900,
                 resizeDebounce: 180
             };
         }
 
-        if (viewportWidth <= 1180) {
+        if (width <= 1180) {
             return {
-                baseHeight: 284,
-                gapX: 14,
-                gapY: 14,
-                spawnBand: 92,
-                scatterX: 46,
-                rowDelay: 105,
-                itemDelay: 64,
-                minDuration: 1000,
-                maxDuration: 1440,
-                maxTilt: 11,
-                safePadding: 10,
-                resizeDebounce: 180
+                baseHeight: 700,
+                spawnBand: 220,
+                sideInset: 18,
+                topSafe: 22,
+                bottomInset: 28,
+                minGap: -16,
+                maxGap: 14,
+                rowSlack: 20,
+                rowStep: 0.58,
+                minStep: 30,
+                xJitter: 12,
+                yJitter: 8,
+                tilt: 0.22,
+                spawnTilt: 0.38,
+                delayMin: 100,
+                delayMax: 1320,
+                durationMin: 1860,
+                durationMax: 3040,
+                resizeDebounce: 190
             };
         }
 
         return {
-            baseHeight: 272,
-            gapX: 18,
-            gapY: 16,
-            spawnBand: 108,
-            scatterX: 58,
-            rowDelay: 115,
-            itemDelay: 72,
-            minDuration: 1080,
-            maxDuration: 1520,
-            maxTilt: 12,
-            safePadding: 12,
+            baseHeight: 760,
+            spawnBand: 248,
+            sideInset: 20,
+            topSafe: 24,
+            bottomInset: 30,
+            minGap: -18,
+            maxGap: 16,
+            rowSlack: 24,
+            rowStep: 0.62,
+            minStep: 34,
+            xJitter: 16,
+            yJitter: 10,
+            tilt: 0.26,
+            spawnTilt: 0.42,
+            delayMin: 90,
+            delayMax: 1440,
+            durationMin: 1920,
+            durationMax: 3180,
             resizeDebounce: 200
         };
-    }
-
-    function buildRows(items, boundsWidth, gapX) {
-        var rows = [];
-        var currentRow = [];
-        var currentWidth = 0;
-        var rowHeight = 0;
-
-        items.forEach(function(item) {
-            var nextWidth = currentRow.length
-                ? currentWidth + gapX + item.width
-                : item.width;
-
-            if (currentRow.length && nextWidth > boundsWidth) {
-                rows.push({
-                    items: currentRow,
-                    width: currentWidth,
-                    height: rowHeight
-                });
-                currentRow = [];
-                currentWidth = 0;
-                rowHeight = 0;
-            }
-
-            currentRow.push(item);
-            currentWidth = currentRow.length === 1 ? item.width : currentWidth + gapX + item.width;
-            rowHeight = Math.max(rowHeight, item.height);
-        });
-
-        if (currentRow.length) {
-            rows.push({
-                items: currentRow,
-                width: currentWidth,
-                height: rowHeight
-            });
-        }
-
-        return rows;
-    }
-
-    function applyRowOffsets(rows, boundsWidth, gapX) {
-        rows.forEach(function(row) {
-            var remaining = Math.max(0, boundsWidth - row.width);
-            var segments = [];
-            var segmentCount = row.items.length + 1;
-            var totalWeight = 0;
-
-            for (var segmentIndex = 0; segmentIndex < segmentCount; segmentIndex++) {
-                var weight = Math.random();
-                segments.push(weight);
-                totalWeight += weight;
-            }
-
-            var normalized = segments.map(function(weight) {
-                return totalWeight > 0 ? (weight / totalWeight) * remaining : 0;
-            });
-
-            var cursor = normalized[0] || 0;
-
-            row.items.forEach(function(item, itemIndex) {
-                item.left = cursor;
-                cursor += item.width;
-
-                if (itemIndex !== row.items.length - 1) {
-                    cursor += gapX + (normalized[itemIndex + 1] || 0);
-                }
-            });
-        });
-    }
-
-    function placeRows(rows, padding, profile) {
-        var totalRowsHeight = rows.reduce(function(sum, row) {
-            return sum + row.height;
-        }, 0);
-        var totalGapHeight = Math.max(0, rows.length - 1) * profile.gapY;
-        var requiredHeight = Math.ceil(
-            padding.top +
-            padding.bottom +
-            totalRowsHeight +
-            totalGapHeight +
-            22
-        );
-        var containerHeight = Math.max(profile.baseHeight, requiredHeight);
-        var cursorY = containerHeight - padding.bottom;
-
-        rows.forEach(function(row) {
-            cursorY -= row.height;
-            row.top = cursorY;
-
-            row.items.forEach(function(item) {
-                item.top = row.top + Math.max(0, row.height - item.height);
-            });
-
-            cursorY -= profile.gapY;
-        });
-
-        return containerHeight;
     }
 
     function initTagDrop() {
@@ -176,35 +118,41 @@
             return;
         }
 
-        var tagLinks = Array.prototype.slice.call(container.querySelectorAll('.tag-link'));
-        if (!tagLinks.length) {
+        var links = Array.prototype.slice.call(container.querySelectorAll('.tag-link'));
+        if (!links.length) {
             return;
         }
 
-        var previousState = container.__tagDropState;
-        if (previousState && typeof previousState.destroy === 'function') {
-            previousState.destroy();
+        var previous = container.__tagDropState;
+        if (previous && typeof previous.destroy === 'function') {
+            previous.destroy();
         }
 
         var state = {
-            revealTimers: [],
-            resizeTimer: 0
+            resizeTimer: 0,
+            unlockTimer: 0,
+            revealFrame: 0
         };
 
-        function resetStyles() {
-            while (state.revealTimers.length) {
-                window.clearTimeout(state.revealTimers.pop());
-            }
-
+        function clearTimers() {
             if (state.resizeTimer) {
                 window.clearTimeout(state.resizeTimer);
                 state.resizeTimer = 0;
             }
+            if (state.unlockTimer) {
+                window.clearTimeout(state.unlockTimer);
+                state.unlockTimer = 0;
+            }
+            if (state.revealFrame) {
+                window.cancelAnimationFrame(state.revealFrame);
+                state.revealFrame = 0;
+            }
+        }
 
-            container.classList.remove('physics-initialized');
+        function resetStyles() {
+            container.classList.remove('physics-ready', 'physics-fallback');
             container.style.height = '';
-
-            tagLinks.forEach(function(link) {
+            links.forEach(function(link) {
                 link.classList.remove('is-visible');
                 link.style.position = '';
                 link.style.left = '';
@@ -215,154 +163,270 @@
                 link.style.filter = '';
                 link.style.transform = '';
                 link.style.transition = '';
-                link.style.transitionDelay = '';
                 link.style.pointerEvents = '';
                 link.style.margin = '';
+                link.style.zIndex = '';
+                link.style.visibility = '';
                 link.style.willChange = '';
             });
         }
 
-        function measureTags() {
-            return tagLinks.map(function(link) {
-                link.style.position = 'absolute';
-                link.style.left = '0px';
-                link.style.top = '0px';
-                link.style.margin = '0';
+        function measure() {
+            return links.map(function(link) {
+                link.style.position = 'static';
+                link.style.visibility = 'hidden';
                 link.style.opacity = '0';
+                link.style.transform = 'none';
                 link.style.filter = 'none';
-                link.style.transform = 'translate3d(0, 0, 0)';
                 link.style.pointerEvents = 'none';
+                link.style.transition = 'none';
+                link.style.margin = '0';
                 link.style.willChange = 'transform, opacity';
-
                 var rect = link.getBoundingClientRect();
                 return {
                     link: link,
                     width: Math.ceil(rect.width || link.offsetWidth || 140),
-                    height: Math.ceil(rect.height || link.offsetHeight || 46)
+                    height: Math.ceil(rect.height || link.offsetHeight || 48)
                 };
             });
         }
 
+        function buildRows(items, usableWidth, profile) {
+            var shuffled = shuffle(items);
+            var rows = [];
+            var row = [];
+            var width = 0;
+            var height = 0;
+
+            function pushRow() {
+                if (!row.length) {
+                    return;
+                }
+                rows.push({ items: row.slice(), width: width, height: height });
+                row = [];
+                width = 0;
+                height = 0;
+            }
+
+            shuffled.forEach(function(item) {
+                var gap = row.length ? Math.round(rand(profile.minGap, profile.maxGap)) : 0;
+                var next = row.length ? width + gap + item.width : item.width;
+                var limit = Math.max(usableWidth * 0.68, usableWidth - rand(0, profile.rowSlack));
+
+                if (row.length && next > limit) {
+                    pushRow();
+                    gap = 0;
+                    next = item.width;
+                }
+
+                row.push({
+                    item: item,
+                    gapBefore: row.length > 1 ? gap : 0,
+                    angle: rand(-profile.tilt, profile.tilt)
+                });
+                width = row.length === 1 ? item.width : width + gap + item.width;
+                height = Math.max(height, item.height);
+            });
+
+            pushRow();
+            return rows;
+        }
+
+        function estimateHeight(rows, padding, profile) {
+            var pile = 0;
+            rows.forEach(function(row, index) {
+                pile += index === 0 ? row.height : Math.max(profile.minStep, row.height * profile.rowStep);
+            });
+            return Math.max(
+                profile.baseHeight,
+                Math.ceil(padding.top + padding.bottom + profile.spawnBand + pile + profile.bottomInset + profile.topSafe + 40)
+            );
+        }
+
+        function buildLayout(items, padding, profile) {
+            var innerWidth = Math.max(0, container.clientWidth - padding.left - padding.right);
+            if (!innerWidth) {
+                return null;
+            }
+
+            var rows = buildRows(items, Math.max(40, innerWidth - profile.sideInset * 2), profile);
+            var containerHeight = estimateHeight(rows, padding, profile);
+            var layout = null;
+
+            for (var attempt = 0; attempt < 4; attempt += 1) {
+                var innerHeight = containerHeight - padding.top - padding.bottom;
+                var currentBottom = innerHeight - profile.bottomInset;
+                var placements = [];
+                var minTop = Infinity;
+
+                rows.forEach(function(row) {
+                    var rowLeft = padding.left + profile.sideInset + rand(0, Math.max(0, innerWidth - profile.sideInset * 2 - row.width));
+                    var rowTop = currentBottom - row.height;
+                    var cursorX = rowLeft;
+
+                    row.items.forEach(function(entry, entryIndex) {
+                        if (entryIndex) {
+                            cursorX += entry.gapBefore;
+                        }
+
+                        var x = clamp(
+                            cursorX + rand(-profile.xJitter, profile.xJitter),
+                            padding.left + profile.sideInset,
+                            padding.left + innerWidth - profile.sideInset - entry.item.width
+                        );
+                        var y = clamp(
+                            padding.top + rowTop + (row.height - entry.item.height) + rand(-profile.yJitter, profile.yJitter),
+                            padding.top + profile.topSafe,
+                            padding.top + innerHeight - profile.bottomInset - entry.item.height
+                        );
+
+                        minTop = Math.min(minTop, y);
+                        placements.push({
+                            link: entry.item.link,
+                            width: entry.item.width,
+                            height: entry.item.height,
+                            x: x,
+                            y: y,
+                            angle: entry.angle,
+                            zIndex: String(10 + Math.round(y))
+                        });
+                        cursorX += entry.item.width;
+                    });
+
+                    currentBottom = rowTop + Math.max(profile.minStep, row.height * profile.rowStep);
+                });
+
+                if (minTop >= padding.top + profile.topSafe || attempt === 3) {
+                    layout = {
+                        padding: padding,
+                        innerWidth: innerWidth,
+                        containerHeight: containerHeight,
+                        placements: placements
+                    };
+                    break;
+                }
+
+                containerHeight += Math.ceil(padding.top + profile.topSafe - minTop + 12);
+            }
+
+            return layout;
+        }
+
+        function render(layout, profile) {
+            container.classList.add('physics-ready');
+            if (prefersReducedMotion()) {
+                container.classList.add('physics-fallback');
+            }
+            container.style.height = layout.containerHeight + 'px';
+
+            var maxEnd = 0;
+
+            layout.placements.forEach(function(entry, index) {
+                var spawnX = clamp(
+                    rand(layout.padding.left + profile.sideInset, layout.padding.left + layout.innerWidth - profile.sideInset - entry.width),
+                    layout.padding.left + profile.sideInset,
+                    layout.padding.left + layout.innerWidth - profile.sideInset - entry.width
+                );
+                var spawnY = layout.padding.top - entry.height - rand(20, profile.spawnBand);
+                var spawnAngle = rand(-profile.spawnTilt, profile.spawnTilt);
+                var duration = Math.round(rand(profile.durationMin, profile.durationMax));
+                var delay = Math.round(rand(profile.delayMin, profile.delayMax) + index * rand(8, 24));
+
+                maxEnd = Math.max(maxEnd, delay + duration);
+
+                entry.link.style.position = 'absolute';
+                entry.link.style.left = '0';
+                entry.link.style.top = '0';
+                entry.link.style.width = entry.width + 'px';
+                entry.link.style.height = entry.height + 'px';
+                entry.link.style.visibility = 'visible';
+                entry.link.style.opacity = prefersReducedMotion() ? '1' : '0';
+                entry.link.style.filter = prefersReducedMotion() ? 'none' : 'blur(8px)';
+                entry.link.style.pointerEvents = 'none';
+                entry.link.style.zIndex = entry.zIndex;
+                entry.link.style.transform =
+                    'translate3d(' + spawnX.toFixed(2) + 'px, ' + spawnY.toFixed(2) + 'px, 0) rotate(' + spawnAngle.toFixed(4) + 'rad)';
+
+                if (prefersReducedMotion()) {
+                    entry.link.classList.add('is-visible');
+                    entry.link.style.pointerEvents = 'auto';
+                    entry.link.style.transform =
+                        'translate3d(' + entry.x.toFixed(2) + 'px, ' + entry.y.toFixed(2) + 'px, 0) rotate(' + entry.angle.toFixed(4) + 'rad)';
+                    return;
+                }
+
+                entry.link.style.transition =
+                    'transform ' + duration + 'ms cubic-bezier(.22,.96,.28,1) ' + delay + 'ms,' +
+                    ' opacity 360ms ease ' + delay + 'ms,' +
+                    ' filter 520ms ease ' + delay + 'ms';
+            });
+
+            if (prefersReducedMotion()) {
+                return;
+            }
+
+            state.revealFrame = raf(function() {
+                state.revealFrame = 0;
+                layout.placements.forEach(function(entry) {
+                    entry.link.classList.add('is-visible');
+                    entry.link.style.opacity = '1';
+                    entry.link.style.filter = 'none';
+                    entry.link.style.transform =
+                        'translate3d(' + entry.x.toFixed(2) + 'px, ' + entry.y.toFixed(2) + 'px, 0) rotate(' + entry.angle.toFixed(4) + 'rad)';
+                });
+            });
+
+            state.unlockTimer = window.setTimeout(function() {
+                layout.placements.forEach(function(entry) {
+                    entry.link.style.pointerEvents = 'auto';
+                });
+            }, maxEnd + 80);
+        }
+
         function layoutTags() {
+            clearTimers();
             resetStyles();
 
             var profile = getProfile();
-            var containerStyle = window.getComputedStyle(container);
+            var style = window.getComputedStyle(container);
             var padding = {
-                top: readNumber(containerStyle.paddingTop),
-                right: readNumber(containerStyle.paddingRight),
-                bottom: readNumber(containerStyle.paddingBottom),
-                left: readNumber(containerStyle.paddingLeft)
+                top: num(style.paddingTop),
+                right: num(style.paddingRight),
+                bottom: num(style.paddingBottom),
+                left: num(style.paddingLeft)
             };
-            var boundsWidth = Math.max(0, container.clientWidth - padding.left - padding.right);
-
-            if (!boundsWidth) {
-                return;
+            var layout = buildLayout(measure(), padding, profile);
+            if (layout) {
+                render(layout, profile);
             }
-
-            var measured = shuffle(measureTags());
-            var rows = buildRows(measured, boundsWidth, profile.gapX);
-
-            if (!rows.length) {
-                return;
-            }
-
-            applyRowOffsets(rows, boundsWidth, profile.gapX);
-            var containerHeight = placeRows(rows, padding, profile);
-
-            container.style.height = containerHeight + 'px';
-            container.classList.add('physics-initialized');
-
-            rows.forEach(function(row, rowIndex) {
-                row.items.forEach(function(item, itemIndex) {
-                    var finalTilt = randomBetween(-profile.maxTilt * 0.32, profile.maxTilt * 0.32);
-                    var startTilt = randomBetween(-profile.maxTilt, profile.maxTilt);
-                    var startX = Math.max(
-                        0,
-                        Math.min(
-                            boundsWidth - item.width,
-                            item.left + randomBetween(-profile.scatterX, profile.scatterX)
-                        )
-                    );
-                    var startY = Math.max(
-                        0,
-                        randomBetween(0, Math.max(12, profile.spawnBand - item.height * 0.15))
-                    );
-                    var offsetX = Math.round(startX - item.left);
-                    var offsetY = Math.round(startY - item.top);
-                    var delay = Math.round(
-                        randomBetween(50, 180) +
-                        rowIndex * profile.rowDelay +
-                        itemIndex * profile.itemDelay
-                    );
-                    var duration = Math.round(randomBetween(profile.minDuration, profile.maxDuration));
-
-                    item.link.style.position = 'absolute';
-                    item.link.style.left = Math.round(padding.left + item.left) + 'px';
-                    item.link.style.top = Math.round(item.top) + 'px';
-                    item.link.style.width = item.width + 'px';
-                    item.link.style.height = item.height + 'px';
-                    item.link.style.opacity = '0';
-                    item.link.style.filter = 'blur(6px)';
-                    item.link.style.pointerEvents = 'none';
-                    item.link.style.transition =
-                        'transform ' +
-                        duration +
-                        'ms cubic-bezier(.18,.88,.24,1), opacity 420ms ease, filter 620ms ease';
-                    item.link.style.transitionDelay = delay + 'ms';
-                    item.link.style.transform =
-                        'translate3d(' +
-                        offsetX +
-                        'px, ' +
-                        offsetY +
-                        'px, 0) scale(0.92) rotate(' +
-                        startTilt.toFixed(2) +
-                        'deg)';
-
-                    state.revealTimers.push(window.setTimeout(function(link, tilt) {
-                        return function() {
-                            link.classList.add('is-visible');
-                            link.style.opacity = '1';
-                            link.style.filter = 'none';
-                            link.style.pointerEvents = 'auto';
-                            link.style.transform =
-                                'translate3d(0, 0, 0) scale(1) rotate(' +
-                                tilt.toFixed(2) +
-                                'deg)';
-                        };
-                    }(item.link, finalTilt), 34));
-                });
-            });
         }
 
         function scheduleLayout() {
             if (state.resizeTimer) {
                 window.clearTimeout(state.resizeTimer);
             }
-
-            state.resizeTimer = window.setTimeout(function() {
-                layoutTags();
-            }, getProfile().resizeDebounce);
+            state.resizeTimer = window.setTimeout(layoutTags, getProfile().resizeDebounce);
         }
 
-        state.onResize = scheduleLayout;
-        state.onOrientationChange = scheduleLayout;
         state.destroy = function() {
-            resetStyles();
+            clearTimers();
             window.removeEventListener('resize', state.onResize);
             window.removeEventListener('orientationchange', state.onOrientationChange);
             if (container.__tagDropState === state) {
                 container.__tagDropState = null;
             }
+            resetStyles();
         };
 
+        state.onResize = scheduleLayout;
+        state.onOrientationChange = scheduleLayout;
         container.__tagDropState = state;
 
         window.addEventListener('resize', state.onResize, { passive: true });
         window.addEventListener('orientationchange', state.onOrientationChange, { passive: true });
 
         if (document.fonts && document.fonts.ready) {
-            document.fonts.ready.then(scheduleLayout).catch(function() {});
+            document.fonts.ready.then(scheduleLayout).catch(layoutTags);
         }
 
         layoutTags();
