@@ -121,8 +121,10 @@
             var containerWidth = Math.max(container.clientWidth, 320);
             var usableWidth = Math.max(containerWidth - padding.left - padding.right, 220);
             var baseGap = isTouchDevice ? 10 : 14;
-            var rowGap = isTouchDevice ? 14 : 18;
-            var baseHeight = isTouchDevice ? Math.max(420, getViewportHeight() * 0.62) : Math.max(520, getViewportHeight() * 0.72);
+            var rowGap = isTouchDevice ? 12 : 16;
+            var topPadding = isTouchDevice ? 20 : 24;
+            var bottomPadding = isTouchDevice ? 18 : 22;
+            var baseHeight = isTouchDevice ? Math.max(300, getViewportHeight() * 0.42) : Math.max(360, getViewportHeight() * 0.5);
             var shuffled = shuffleMetrics(metrics);
             var rows = [];
             var currentRow = [];
@@ -154,9 +156,14 @@
                 });
             }
 
-            var cursorY = isTouchDevice ? 26 : 32;
+            var contentHeight = rows.reduce(function(sum, row) {
+                return sum + row.height;
+            }, 0) + rowGap * Math.max(rows.length - 1, 0);
+            var containerHeight = Math.ceil(Math.max(baseHeight, contentHeight + topPadding + bottomPadding));
+            var cursorBottom = containerHeight - bottomPadding;
 
-            rows.forEach(function(row, rowIndex) {
+            for (var rowIndex = rows.length - 1; rowIndex >= 0; rowIndex--) {
+                var row = rows[rowIndex];
                 var contentWidth = row.items.reduce(function(sum, item) {
                     return sum + item.width;
                 }, 0);
@@ -176,32 +183,32 @@
                     return freeSpace * (weight / weightTotal);
                 });
 
+                var rowTop = cursorBottom - row.height;
                 var cursorX = padding.left + extraSpacing[0];
 
                 row.items.forEach(function(item, itemIndex) {
                     var verticalSlack = Math.max((row.height - item.height) / 2, 0);
-                    var yJitter = Math.min(isTouchDevice ? 4 : 7, verticalSlack);
+                    var yJitter = Math.min(isTouchDevice ? 3 : 5, verticalSlack);
                     var finalX = Math.max(padding.left, Math.min(cursorX, containerWidth - padding.right - item.width));
-                    var finalY = cursorY + verticalSlack + randomBetween(-yJitter, yJitter);
+                    var finalY = rowTop + verticalSlack + randomBetween(-yJitter, yJitter);
+                    var topDropLimit = Math.min(containerHeight * (isTouchDevice ? 0.48 : 0.58), isTouchDevice ? 180 : 240);
 
                     item.finalX = finalX;
                     item.finalY = finalY;
                     item.finalRotation = randomBetween(-4.5, 4.5);
-                    item.startX = Math.max(padding.left, Math.min(randomBetween(padding.left - 16, containerWidth - padding.right - item.width + 16), containerWidth - padding.right - item.width));
-                    item.startY = -randomBetween(item.height + 48, baseHeight * 0.58 + rowIndex * 24);
+                    item.startX = randomBetween(padding.left, containerWidth - padding.right - item.width);
+                    item.startY = -randomBetween(item.height + 28, topDropLimit + rowIndex * 18);
                     item.startRotation = randomBetween(-18, 18);
                     item.delay = Math.round(randomBetween(20, 280) + rowIndex * 95 + itemIndex * 30);
 
                     cursorX += item.width + baseGap + extraSpacing[itemIndex + 1];
                 });
 
-                cursorY += row.height + rowGap;
-            });
-
-            var contentHeight = cursorY + (isTouchDevice ? 22 : 30);
+                cursorBottom = rowTop - rowGap;
+            }
 
             return {
-                height: Math.ceil(Math.max(baseHeight, contentHeight)),
+                height: containerHeight,
                 metrics: metrics
             };
         }
