@@ -599,7 +599,7 @@
         var landlord = document.getElementById('landlord');
         var resizeFrame = 0;
 
-        if (!gotop || !widget) {
+        if (!gotop) {
             return;
         }
 
@@ -616,8 +616,10 @@
             gotop.style.display = '';
             gotop.style.left = '';
             gotop.style.right = '';
-            widget.style.top = '';
-            widget.style.maxHeight = '';
+            if (widget) {
+                widget.style.top = '';
+                widget.style.maxHeight = '';
+            }
             if (tocList) {
                 tocList.style.maxHeight = '';
             }
@@ -629,11 +631,6 @@
                 return;
             }
 
-            var fallbackTop = parseFloat(window.getComputedStyle(widget).top) || 224;
-            var articleTop = postCard
-                ? Math.round(postCard.getBoundingClientRect().top + getScrollTop())
-                : fallbackTop;
-            var widgetTop = Math.max(getHeaderOffset() + 8, articleTop);
             var gotopSize = Math.max(gotop.offsetWidth || 56, 56);
             var gotopGap = 22;
             var live2dGap = 34;
@@ -670,10 +667,24 @@
             gotop.style.display = '';
             gotop.style.left = 'auto';
             gotop.style.right = gotopRight + 'px';
-            widget.style.top = widgetTop + 'px';
-            widget.style.maxHeight = dockHeight + 'px';
-            if (tocList) {
-                tocList.style.maxHeight = tocScrollHeight + 'px';
+
+            if (widget) {
+                var fallbackTop = parseFloat(window.getComputedStyle(widget).top) || 224;
+                var articleTop = postCard
+                    ? Math.round(postCard.getBoundingClientRect().top + getScrollTop())
+                    : fallbackTop;
+                var widgetTop = Math.max(getHeaderOffset() + 8, articleTop);
+                var availableHeight = Math.floor(
+                    landlordTop - widgetTop - live2dGap - safeBottom
+                );
+                var dockHeight = Math.max(360, Math.min(availableHeight, 620));
+                var tocScrollHeight = Math.max(220, dockHeight - 34);
+
+                widget.style.top = widgetTop + 'px';
+                widget.style.maxHeight = dockHeight + 'px';
+                if (tocList) {
+                    tocList.style.maxHeight = tocScrollHeight + 'px';
+                }
             }
         }
 
