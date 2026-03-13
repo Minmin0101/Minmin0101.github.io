@@ -2,6 +2,30 @@
 const blogPosts = site.posts.sort('date', -1).toArray();
 const excerptLimit = theme.excerpt_length || 175;
 const toneClasses = ['tone-a', 'tone-b', 'tone-c', 'tone-d'];
+const coverVideoExts = ['mp4', 'webm', 'ogg', 'mov', 'm4v'];
+const resolveCover = function(post) {
+    const coverPath = post.cover || post.banner || post.poster;
+    if (!coverPath) {
+        return null;
+    }
+    const normalizedPath = String(coverPath).trim();
+    const cleanPath = normalizedPath.split('?')[0].split('#')[0];
+    const extMatch = cleanPath.match(/\.([^.\/]+)$/);
+    const ext = extMatch ? extMatch[1].toLowerCase() : '';
+    let type = String(post.cover_type || '').toLowerCase();
+    if (!type) {
+        type = coverVideoExts.indexOf(ext) > -1 ? 'video' : 'image';
+    }
+    if (type === 'gif') {
+        type = 'image';
+    }
+    return {
+        type: type,
+        url: url_for(normalizedPath),
+        alt: post.cover_alt || post.title || 'post cover',
+        poster: post.cover_poster ? url_for(post.cover_poster) : ''
+    };
+};
 const formatWordCount = function(total) {
     if (total >= 1000) {
         return (total / 1000).toFixed(1).replace(/\.0$/, '') + 'k 字';
@@ -38,14 +62,40 @@ const formatWordCount = function(total) {
             const wordCount = contentSource.length || excerptSource.replace(/\s+/g, '').length || 1;
             const readMinutes = Math.max(1, Math.ceil(wordCount / 420));
             const toneClass = toneClasses[index % toneClasses.length];
+            const cover = resolveCover(post);
         %>
         <li class="post-list-item fade">
             <article class="article-card article-type-post author-post-card <%= toneClass %>" itemprop="blogPost">
-                <a class="post-cover" href="<%- url_for(post.path) %>" aria-label="<%- post.title %>">
-                    <canvas class="canvas-cover" data-post-id="<%= post.slug %>" data-tone="<%= toneClass %>"></canvas>
-                </a>
+                <div class="post-cover" aria-hidden="true">
+                    <% if (cover) { %>
+                        <% if (cover.type === 'video') { %>
+                            <video
+                                class="post-cover-media post-cover-video"
+                                src="<%- cover.url %>"
+                                <% if (cover.poster) { %>poster="<%- cover.poster %>"<% } %>
+                                autoplay
+                                muted
+                                loop
+                                playsinline
+                                webkit-playsinline="true"
+                                preload="metadata"
+                                disablepictureinpicture
+                            ></video>
+                        <% } else { %>
+                            <img
+                                class="post-cover-media"
+                                src="<%- cover.url %>"
+                                alt="<%- cover.alt %>"
+                                loading="lazy"
+                                decoding="async"
+                            >
+                        <% } %>
+                    <% } else { %>
+                        <canvas class="canvas-cover" data-post-id="<%= post.slug %>" data-tone="<%= toneClass %>"></canvas>
+                    <% } %>
+                </div>
                 <h3 class="post-title">
-                    <a href="<%- url_for(post.path) %>"><%- post.title %></a>
+                    <span><%- post.title %></span>
                 </h3>
                 <div class="post-meta">
                     <div class="post-meta-info">

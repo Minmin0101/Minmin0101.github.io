@@ -451,9 +451,13 @@
         }
     }
 
+    function getLatestPostHref() {
+        var latestLink = document.querySelector('.author-post-card .post-more');
+        return latestLink ? latestLink.getAttribute('href') : '/blog/';
+    }
+
     function createAssistantReply(message) {
-        var latestLink = document.querySelector('.author-post-card .post-title a');
-        var latestHref = latestLink ? latestLink.getAttribute('href') : '/blog/';
+        var latestHref = getLatestPostHref();
         var lower = message.toLowerCase();
         if (/最新|文章|blog|博客/.test(lower)) {
             return '最新文章在这里：' + formatLink('去看看', latestHref);
@@ -494,8 +498,7 @@
         var actionButtons = document.querySelectorAll('.assistant-quick-actions button');
         var actions = {
             latest: function() {
-                var latest = document.querySelector('.author-post-card .post-title a');
-                window.location.href = latest ? latest.getAttribute('href') : '/blog/';
+                window.location.href = getLatestPostHref();
             },
             tags: function() {
                 window.location.href = '/tags/';

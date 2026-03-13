@@ -1,6 +1,8 @@
 ---
 title: Markdown 内容渲染示例
 date: 2026-03-12 21:20:00
+cover: /media/markdown-demo-loader.gif
+cover_alt: Markdown demo cover
 tags:
   - Markdown
   - 数学公式

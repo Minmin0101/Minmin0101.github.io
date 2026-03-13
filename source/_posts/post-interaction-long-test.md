@@ -1,6 +1,8 @@
 ---
 title: 文章页目录与返回顶部长文测试
 date: 2026-03-12 23:25:00
+cover: /img/avatar.jpg
+cover_alt: Long post cover
 categories:
   - 前端笔记
 tags:

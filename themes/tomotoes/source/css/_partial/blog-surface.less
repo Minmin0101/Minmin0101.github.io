@@ -494,30 +494,52 @@ html.night-mode {
         box-shadow: 0 32px 70px rgba(15, 23, 42, .18);
     }
     .post-cover {
+        position: relative;
         display: block;
         height: 220px;
         overflow: hidden;
         background: linear-gradient(135deg, #12203d 0%, #2e4f75 100%);
+        cursor: default;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
     }
     .canvas-cover {
         width: 100%;
         height: 100%;
         display: block;
     }
+    .post-cover-media {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        pointer-events: none;
+        user-select: none;
+        -webkit-user-drag: none;
+        -webkit-touch-callout: none;
+        transition: transform .45s ease, filter .35s ease;
+    }
+    .post-cover-video {
+        background: #0b1220;
+    }
+    &:hover {
+        .post-cover-media {
+            transform: scale(1.03);
+            filter: saturate(1.04);
+        }
+    }
     .post-title {
         margin: 0;
         padding: 24px 28px 10px;
-        a {
-            color: var(--text-main);
-            font-size: 28px;
-            line-height: 1.35;
-            text-shadow: none;
-            letter-spacing: 0;
-            font-family: @font-custom;
-            &:hover {
-                color: var(--theme-color);
-                animation: none;
-            }
+        color: var(--text-main);
+        font-size: 28px;
+        line-height: 1.35;
+        text-shadow: none;
+        letter-spacing: 0;
+        font-family: @font-custom;
+        span {
+            display: block;
         }
     }
     .post-meta {
@@ -1631,7 +1653,7 @@ html.night-mode {
     .author-post-card .post-cover {
         background: linear-gradient(135deg, #0a1322 0%, #173059 100%);
     }
-    .author-post-card .post-title a,
+    .author-post-card .post-title,
     .post-detail-page .post-card-title,
     .weibo-entry h4,
     .blog-home-summary h2 {
@@ -1909,7 +1931,7 @@ html.night-mode {
         }
         .post-title {
             padding: 18px 18px 8px;
-            a {
+            span {
                 font-size: 20px;
             }
         }

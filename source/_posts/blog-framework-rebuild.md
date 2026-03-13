@@ -1,6 +1,8 @@
 ---
 title: 博客框架重构记录
 date: 2026-03-12 20:20:00
+cover: /img/markdown-demo-figure.svg
+cover_alt: Blog rebuild cover
 tags:
   - Hexo
   - 主题改造
