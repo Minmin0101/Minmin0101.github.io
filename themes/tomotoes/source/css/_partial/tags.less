@@ -22,18 +22,22 @@
     outline: none;
     border-radius: 18px;
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    filter: none;
+    will-change: transform, opacity, filter;
 }
 
 .tag-link.reveal-ready {
     opacity: 0;
-    transform: translate3d(0, 34px, 0);
+    transform: translate3d(0, calc(-44px - var(--tag-drop-distance, 0px)), 0) scale(.92) rotate(var(--tag-drop-tilt, -3deg));
+    filter: blur(2px);
 }
 
 .tag-link.reveal-in {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
-    transition: opacity .56s cubic-bezier(.22, 1, .36, 1), transform .56s cubic-bezier(.22, 1, .36, 1);
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    filter: none;
+    transition: opacity .58s cubic-bezier(.22, 1, .36, 1), transform .82s cubic-bezier(.18, 1, .22, 1), filter .58s ease;
     transition-delay: var(--tag-drop-delay, 0ms);
 }
 
@@ -86,36 +90,19 @@
     position: relative;
     width: 100%;
     min-height: 0;
-    max-height: min(54vh, 320px);
     margin-bottom: 40px;
-    padding: 8px 10px 8px 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
-    border-radius: 24px;
+    padding: 14px;
+    overflow: visible;
+    border-radius: 28px;
     border: 1px solid rgba(172, 191, 221, .38);
     background: linear-gradient(180deg, rgba(255, 255, 255, .62), rgba(240, 246, 255, .74));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .75);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .75), 0 20px 48px rgba(15, 23, 42, .08);
     transition: opacity .72s cubic-bezier(.22, 1, .36, 1), transform .72s cubic-bezier(.22, 1, .36, 1);
-}
-
-.physics-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.physics-container::-webkit-scrollbar-track {
-    border-radius: 999px;
-    background: rgba(82, 117, 176, .08);
-}
-
-.physics-container::-webkit-scrollbar-thumb {
-    border-radius: 999px;
-    background: rgba(82, 117, 176, .28);
+    touch-action: pan-y;
 }
 
 .physics-container.tag-scroll-ready {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
 }
 
 @media screen and (max-width: 991px) {
@@ -128,9 +115,8 @@
     }
 
     .physics-container {
-        max-height: min(52vh, 300px);
         max-width: 100%;
-        padding-right: 6px;
+        padding: 12px;
     }
 
     .card-card {
@@ -157,8 +143,7 @@
     }
 
     .physics-container {
-        max-height: min(48vh, 280px);
-        padding-right: 4px;
+        padding: 10px;
     }
 }
 
