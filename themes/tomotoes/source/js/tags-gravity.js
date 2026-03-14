@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.documentElement.style.overflowY = 'auto';
     document.body.style.height = 'auto';
     document.body.style.minHeight = '100%';
-    document.body.style.overflowY = 'visible';
+    document.body.style.overflowY = 'auto';
 
     try {
         setTimeout(function() {
@@ -30,6 +30,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
+            var pixelRatio = isTouchDevice ? 1 : window.devicePixelRatio || 1;
+
             var engine = Engine.create({
                 gravity: {
                     x: 0,
@@ -45,23 +47,36 @@ document.addEventListener('DOMContentLoaded', function() {
                     height: container.offsetHeight,
                     wireframes: false,
                     background: 'transparent',
-                    pixelRatio: window.devicePixelRatio || 1
+                    pixelRatio: pixelRatio
                 }
             });
 
-            var mouse = Mouse.create(render.canvas);
-            mouse.pixelRatio = window.devicePixelRatio || 1;
-            render.canvas.style.touchAction = 'pan-y pinch-zoom';
+            render.options.pixelRatio = pixelRatio;
+            render.canvas.style.touchAction = isTouchDevice ? 'pan-y' : 'pan-y pinch-zoom';
+            render.canvas.style.webkitTapHighlightColor = 'transparent';
+            render.canvas.style.webkitBackfaceVisibility = 'hidden';
+            render.canvas.style.backfaceVisibility = 'hidden';
 
-            var mouseConstraint = MouseConstraint.create(engine, {
-                mouse: mouse,
-                constraint: {
-                    stiffness: 0.3,
-                    render: {
-                        visible: false
+            var mouse = null;
+            var mouseConstraint = null;
+
+            if (isTouchDevice) {
+                container.classList.add('physics-container-touch');
+                render.canvas.style.pointerEvents = 'none';
+            } else {
+                mouse = Mouse.create(render.canvas);
+                mouse.pixelRatio = pixelRatio;
+
+                mouseConstraint = MouseConstraint.create(engine, {
+                    mouse: mouse,
+                    constraint: {
+                        stiffness: 0.3,
+                        render: {
+                            visible: false
+                        }
                     }
-                }
-            });
+                });
+            }
 
             var walls = [
                 Bodies.rectangle(
@@ -103,7 +118,9 @@ document.addEventListener('DOMContentLoaded', function() {
             ];
 
             World.add(engine.world, walls);
-            World.add(engine.world, mouseConstraint);
+            if (mouseConstraint) {
+                World.add(engine.world, mouseConstraint);
+            }
 
             var tags = Array.from(container.querySelectorAll('.tag-link'));
 
@@ -114,38 +131,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
             var tagBodies = [];
 
+            function openTag(tag) {
+                var href = tag && tag.getAttribute('data-href');
+                if (href) {
+                    window.location.href = href;
+                }
+            }
+
             tags.forEach(function(tag, index) {
                 try {
                     tag.style.position = 'absolute';
                     tag.style.margin = '0';
                     tag.style.transform = 'none';
-                    tag.style.pointerEvents = 'none';
+                    tag.style.pointerEvents = isTouchDevice ? 'auto' : 'none';
                     tag.style.zIndex = '10';
+                    tag.style.webkitTapHighlightColor = 'transparent';
 
                     var card = tag.querySelector('.card-card');
                     if (card) {
                         card.style.animation = 'none';
                         card.style.margin = '0';
                         card.style.display = 'block';
+                    }
 
-                        card.addEventListener('click', function(event) {
+                    if (isTouchDevice) {
+                        tag.addEventListener('click', function(event) {
+                            event.preventDefault();
                             event.stopPropagation();
-                            var href = tag.getAttribute('data-href');
-                            if (!href) {
-                                return false;
-                            }
-                            window.location.href = href;
-                            return false;
+                            openTag(tag);
                         });
 
-                        card.addEventListener('touchend', function(event) {
-                            event.stopPropagation();
-                            var href = tag.getAttribute('data-href');
-                            if (!href) {
-                                return false;
+                        tag.addEventListener('keydown', function(event) {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                                event.preventDefault();
+                                openTag(tag);
                             }
-                            window.location.href = href;
-                            return false;
                         });
                     }
 
@@ -181,13 +201,6 @@ document.addEventListener('DOMContentLoaded', function() {
             var isDragging = false;
             var hasMoved = false;
             var dragStartTime;
-            var activeTouchBody = null;
-            var touchScrollState = {
-                active: false,
-                lastY: 0,
-                lastX: 0,
-                scrollingPage: false
-            };
             var startPos = {
                 x: 0,
                 y: 0
@@ -195,220 +208,94 @@ document.addEventListener('DOMContentLoaded', function() {
 
             container.style.cursor = 'default';
 
-            render.canvas.addEventListener('wheel', function(event) {
-                if (!event.deltaY) {
-                    return;
-                }
+            if (!isTouchDevice) {
+                render.canvas.addEventListener('wheel', function(event) {
+                    if (!event.deltaY) {
+                        return;
+                    }
 
-                window.scrollBy({
-                    top: event.deltaY,
-                    left: 0,
-                    behavior: 'auto'
+                    window.scrollBy({
+                        top: event.deltaY,
+                        left: 0,
+                        behavior: 'auto'
+                    });
+                    event.preventDefault();
+                }, {
+                    passive: false
                 });
-                event.preventDefault();
-            }, {
-                passive: false
-            });
 
-            render.canvas.addEventListener('mousedown', function(event) {
-                var rect = render.canvas.getBoundingClientRect();
-                mouse.position.x = event.clientX - rect.left;
-                mouse.position.y = event.clientY - rect.top;
-                isDragging = true;
-                dragStartTime = Date.now();
-                startPos = {
-                    x: mouse.position.x,
-                    y: mouse.position.y
-                };
+                render.canvas.addEventListener('mousedown', function(event) {
+                    var rect = render.canvas.getBoundingClientRect();
+                    mouse.position.x = event.clientX - rect.left;
+                    mouse.position.y = event.clientY - rect.top;
+                    isDragging = true;
+                    dragStartTime = Date.now();
+                    startPos = {
+                        x: mouse.position.x,
+                        y: mouse.position.y
+                    };
 
-                var hasBody = Query.point(engine.world.bodies, mouse.position).length > 0;
-                container.style.cursor = hasBody ? 'grabbing' : 'default';
-                event.preventDefault();
-            });
+                    var hasBody = Query.point(engine.world.bodies, mouse.position).length > 0;
+                    container.style.cursor = hasBody ? 'grabbing' : 'default';
+                    event.preventDefault();
+                });
 
-            render.canvas.addEventListener('mousemove', function(event) {
-                var rect = render.canvas.getBoundingClientRect();
-                mouse.position.x = event.clientX - rect.left;
-                mouse.position.y = event.clientY - rect.top;
+                render.canvas.addEventListener('mousemove', function(event) {
+                    var rect = render.canvas.getBoundingClientRect();
+                    mouse.position.x = event.clientX - rect.left;
+                    mouse.position.y = event.clientY - rect.top;
 
-                if (isDragging) {
-                    if (Math.sqrt(
+                    if (isDragging) {
+                        if (Math.sqrt(
+                            Math.pow(mouse.position.x - startPos.x, 2) +
+                            Math.pow(mouse.position.y - startPos.y, 2)
+                        ) > 5) {
+                            hasMoved = true;
+                        }
+                        event.preventDefault();
+                    }
+
+                    var hasBody = Query.point(engine.world.bodies, mouse.position).length > 0;
+                    if (!isDragging) {
+                        container.style.cursor = hasBody ? 'grab' : 'default';
+                    }
+                });
+
+                render.canvas.addEventListener('mouseup', function(event) {
+                    var rect = render.canvas.getBoundingClientRect();
+                    mouse.position.x = event.clientX - rect.left;
+                    mouse.position.y = event.clientY - rect.top;
+
+                    var distance = Math.sqrt(
                         Math.pow(mouse.position.x - startPos.x, 2) +
                         Math.pow(mouse.position.y - startPos.y, 2)
-                    ) > 5) {
-                        hasMoved = true;
-                    }
-                    event.preventDefault();
-                }
+                    );
+                    var duration = Date.now() - dragStartTime;
 
-                var hasBody = Query.point(engine.world.bodies, mouse.position).length > 0;
-                if (!isDragging) {
-                    container.style.cursor = hasBody ? 'grab' : 'default';
-                }
-            });
-
-            render.canvas.addEventListener('mouseup', function(event) {
-                var rect = render.canvas.getBoundingClientRect();
-                mouse.position.x = event.clientX - rect.left;
-                mouse.position.y = event.clientY - rect.top;
-
-                var distance = Math.sqrt(
-                    Math.pow(mouse.position.x - startPos.x, 2) +
-                    Math.pow(mouse.position.y - startPos.y, 2)
-                );
-                var duration = Date.now() - dragStartTime;
-
-                if (!hasMoved && distance < 5 && duration < 300) {
-                    var clickedBodies = Query.point(engine.world.bodies, mouse.position);
-                    if (clickedBodies.length > 0) {
-                        var nonStatic = clickedBodies.filter(function(body) {
-                            return !body.isStatic;
-                        });
-
-                        if (nonStatic.length > 0) {
-                            var tagData = tagBodies.find(function(entry) {
-                                return entry.body === nonStatic[0];
+                    if (!hasMoved && distance < 5 && duration < 300) {
+                        var clickedBodies = Query.point(engine.world.bodies, mouse.position);
+                        if (clickedBodies.length > 0) {
+                            var nonStatic = clickedBodies.filter(function(body) {
+                                return !body.isStatic;
                             });
-                            if (tagData) {
-                                var href = tagData.element.getAttribute('data-href');
-                                if (href) {
-                                    window.location.href = href;
+
+                            if (nonStatic.length > 0) {
+                                var tagData = tagBodies.find(function(entry) {
+                                    return entry.body === nonStatic[0];
+                                });
+                                if (tagData) {
+                                    openTag(tagData.element);
                                 }
                             }
                         }
                     }
-                }
 
-                hasMoved = false;
-                isDragging = false;
-                var hasBody = Query.point(engine.world.bodies, mouse.position).length > 0;
-                container.style.cursor = hasBody ? 'grab' : 'default';
-            });
-
-            render.canvas.addEventListener('touchstart', function(event) {
-                if (!event.touches.length) {
-                    return;
-                }
-
-                var touch = event.touches[0];
-                var rect = render.canvas.getBoundingClientRect();
-                mouse.position.x = touch.clientX - rect.left;
-                mouse.position.y = touch.clientY - rect.top;
-                isDragging = true;
-                hasMoved = false;
-                dragStartTime = Date.now();
-                startPos = {
-                    x: mouse.position.x,
-                    y: mouse.position.y
-                };
-                touchScrollState.active = true;
-                touchScrollState.lastY = touch.clientY;
-                touchScrollState.lastX = touch.clientX;
-                touchScrollState.scrollingPage = false;
-                activeTouchBody = Query.point(engine.world.bodies, mouse.position).filter(function(body) {
-                    return !body.isStatic;
-                })[0] || null;
-            }, {
-                passive: false
-            });
-
-            render.canvas.addEventListener('touchmove', function(event) {
-                if (!event.touches.length) {
-                    return;
-                }
-
-                var touch = event.touches[0];
-                var rect = render.canvas.getBoundingClientRect();
-                mouse.position.x = touch.clientX - rect.left;
-                mouse.position.y = touch.clientY - rect.top;
-                var deltaX = touch.clientX - touchScrollState.lastX;
-                var deltaY = touch.clientY - touchScrollState.lastY;
-                var totalMoveX = touch.clientX - (rect.left + startPos.x);
-                var totalMoveY = touch.clientY - (rect.top + startPos.y);
-
-                if (
-                    !touchScrollState.scrollingPage &&
-                    Math.abs(totalMoveY) > 8 &&
-                    Math.abs(totalMoveY) > Math.abs(totalMoveX)
-                ) {
-                    touchScrollState.scrollingPage = true;
-                }
-
-                if (touchScrollState.scrollingPage) {
-                    hasMoved = true;
-                    activeTouchBody = null;
-                    if (deltaY) {
-                        window.scrollBy({
-                            top: -deltaY,
-                            left: 0,
-                            behavior: 'auto'
-                        });
-                    }
-                    touchScrollState.lastY = touch.clientY;
-                    touchScrollState.lastX = touch.clientX;
-                    event.preventDefault();
-                    return;
-                }
-
-                if (isDragging && Math.sqrt(
-                    Math.pow(mouse.position.x - startPos.x, 2) +
-                    Math.pow(mouse.position.y - startPos.y, 2)
-                ) > 10) {
-                    hasMoved = true;
-                }
-
-                touchScrollState.lastY = touch.clientY;
-                touchScrollState.lastX = touch.clientX;
-            }, {
-                passive: false
-            });
-
-            render.canvas.addEventListener('touchend', function(event) {
-                var distance = Math.sqrt(
-                    Math.pow(mouse.position.x - startPos.x, 2) +
-                    Math.pow(mouse.position.y - startPos.y, 2)
-                );
-                var duration = Date.now() - dragStartTime;
-                var isTap = !hasMoved && distance < 15 && duration < 300;
-
-                if (touchScrollState.scrollingPage) {
-                    isTap = false;
-                }
-
-                if (isTap && activeTouchBody) {
-                    var tagData = tagBodies.find(function(entry) {
-                        return entry.body === activeTouchBody;
-                    });
-                    if (tagData) {
-                        var href = tagData.element.getAttribute('data-href');
-                        if (href) {
-                            window.location.href = href;
-                        }
-                    }
-                }
-
-                hasMoved = false;
-                isDragging = false;
-                activeTouchBody = null;
-                touchScrollState.active = false;
-                touchScrollState.scrollingPage = false;
-
-                if (isTap) {
-                    event.preventDefault();
-                }
-            }, {
-                passive: false
-            });
-
-            render.canvas.addEventListener('touchcancel', function() {
-                hasMoved = false;
-                isDragging = false;
-                activeTouchBody = null;
-                touchScrollState.active = false;
-                touchScrollState.scrollingPage = false;
-            }, {
-                passive: true
-            });
+                    hasMoved = false;
+                    isDragging = false;
+                    var hasBody = Query.point(engine.world.bodies, mouse.position).length > 0;
+                    container.style.cursor = hasBody ? 'grab' : 'default';
+                });
+            }
 
             Runner.run(engine);
             Render.run(render);
@@ -457,11 +344,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             x: container.offsetWidth + 50,
                             y: container.offsetHeight / 2
                         });
-                        Render.setPixelRatio(render, window.devicePixelRatio || 1);
-                        mouse.pixelRatio = window.devicePixelRatio || 1;
-                        if (isTouchDevice) {
-                            container.style.cursor = 'default';
+                        Render.setPixelRatio(render, pixelRatio);
+                        if (mouse) {
+                            mouse.pixelRatio = pixelRatio;
                         }
+                        container.style.cursor = isTouchDevice ? 'default' : container.style.cursor;
                     } catch (error) {
                         console.error('Error during resize', error);
                     }

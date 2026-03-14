@@ -114,8 +114,12 @@ body.tags-page-scroll {
     overflow: hidden;
     border-radius: 4px;
     border: 1px dashed #ccc;
-    touch-action: pan-y pinch-zoom;
+    touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .physics-container canvas {
@@ -125,7 +129,12 @@ body.tags-page-scroll {
     inset: 0;
     width: 100%;
     height: 100%;
-    touch-action: pan-y pinch-zoom;
+    touch-action: pan-y;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform;
 }
 
 .physics-container .tag-link {
@@ -138,6 +147,10 @@ body.tags-page-scroll {
     top: 0;
     max-width: 100%;
     touch-action: manipulation;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .physics-container .tag-link .card-card {
@@ -148,6 +161,8 @@ body.tags-page-scroll {
     word-wrap: break-word;
     overflow: hidden;
     transition: all .3s ease;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .physics-container .tag-link .card-card:hover {
@@ -171,6 +186,18 @@ body.tags-page-scroll {
     .physics-container {
         min-height: 550px;
         max-width: 95%;
+    }
+
+    .physics-container.physics-container-touch {
+        touch-action: pan-y;
+    }
+
+    .physics-container.physics-container-touch canvas {
+        pointer-events: none;
+    }
+
+    .physics-container.physics-container-touch .tag-link {
+        pointer-events: auto;
     }
 
     .physics-container .tag-link {
@@ -213,6 +240,10 @@ body.tags-page-scroll {
         max-width: 100%;
     }
 
+    .physics-container.physics-container-touch {
+        min-height: 520px;
+    }
+
     .physics-container .tag-link {
         max-width: 80%;
     }
@@ -225,5 +256,15 @@ body.tags-page-scroll {
 
     .tag-tip {
         font-size: 18px;
+    }
+}
+
+@media screen and (hover: none) and (pointer: coarse) {
+    .physics-container.physics-container-touch canvas {
+        pointer-events: none;
+    }
+
+    .physics-container.physics-container-touch .tag-link {
+        pointer-events: auto;
     }
 }
