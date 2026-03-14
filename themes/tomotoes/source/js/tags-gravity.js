@@ -130,12 +130,174 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             var tagBodies = [];
+            var touchTagState = null;
+            var suppressTouchClickUntil = 0;
 
             function openTag(tag) {
                 var href = tag && tag.getAttribute('data-href');
                 if (href) {
                     window.location.href = href;
                 }
+            }
+
+            function getTagEntry(target) {
+                var tag = target && target.closest ? target.closest('.tag-link') : null;
+                if (!tag) {
+                    return null;
+                }
+
+                return tagBodies.find(function(entry) {
+                    return entry.element === tag;
+                }) || null;
+            }
+
+            function clamp(value, min, max) {
+                return Math.max(min, Math.min(max, value));
+            }
+
+            function clearTouchTagState() {
+                if (!touchTagState) {
+                    return;
+                }
+
+                if (touchTagState.entry && touchTagState.entry.element) {
+                    touchTagState.entry.element.classList.remove('touch-dragging');
+                }
+                touchTagState = null;
+            }
+
+            function bindTouchTagInteractions(entry) {
+                var tag = entry.element;
+                var startThreshold = 8;
+
+                tag.addEventListener('click', function(event) {
+                    if (Date.now() < suppressTouchClickUntil) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        return;
+                    }
+
+                    event.preventDefault();
+                    event.stopPropagation();
+                    openTag(tag);
+                });
+
+                tag.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        openTag(tag);
+                    }
+                });
+
+                tag.addEventListener('touchstart', function(event) {
+                    if (!event.touches.length) {
+                        return;
+                    }
+
+                    var touch = event.touches[0];
+                    var rect = container.getBoundingClientRect();
+
+                    clearTouchTagState();
+                    touchTagState = {
+                        entry: entry,
+                        startX: touch.clientX,
+                        startY: touch.clientY,
+                        lastX: touch.clientX,
+                        lastY: touch.clientY,
+                        lastTime: Date.now(),
+                        dragging: false,
+                        moved: false,
+                        startTime: Date.now(),
+                        offsetX: touch.clientX - rect.left - entry.body.position.x,
+                        offsetY: touch.clientY - rect.top - entry.body.position.y
+                    };
+                }, {
+                    passive: true
+                });
+
+                tag.addEventListener('touchmove', function(event) {
+                    if (!touchTagState || touchTagState.entry !== entry || !event.touches.length) {
+                        return;
+                    }
+
+                    var touch = event.touches[0];
+                    var deltaX = touch.clientX - touchTagState.startX;
+                    var deltaY = touch.clientY - touchTagState.startY;
+                    var distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+                    if (!touchTagState.dragging && distance > startThreshold) {
+                        touchTagState.dragging = true;
+                        touchTagState.entry.element.classList.add('touch-dragging');
+                    }
+
+                    if (!touchTagState.dragging) {
+                        return;
+                    }
+
+                    var rect = container.getBoundingClientRect();
+                    var halfWidth = entry.element.offsetWidth / 2;
+                    var halfHeight = entry.element.offsetHeight / 2;
+                    var nextX = clamp(
+                        touch.clientX - rect.left - touchTagState.offsetX,
+                        halfWidth,
+                        container.offsetWidth - halfWidth
+                    );
+                    var nextY = clamp(
+                        touch.clientY - rect.top - touchTagState.offsetY,
+                        halfHeight,
+                        container.offsetHeight - halfHeight
+                    );
+
+                    touchTagState.moved = true;
+                    touchTagState.lastX = touch.clientX;
+                    touchTagState.lastY = touch.clientY;
+                    touchTagState.lastTime = Date.now();
+
+                    Body.setPosition(entry.body, {
+                        x: nextX,
+                        y: nextY
+                    });
+                    Body.setVelocity(entry.body, {
+                        x: 0,
+                        y: 0
+                    });
+                    Body.setAngularVelocity(entry.body, 0);
+                    event.preventDefault();
+                }, {
+                    passive: false
+                });
+
+                tag.addEventListener('touchend', function(event) {
+                    if (!touchTagState || touchTagState.entry !== entry) {
+                        return;
+                    }
+
+                    var duration = Date.now() - touchTagState.startTime;
+                    var tapDistance = Math.sqrt(
+                        Math.pow(touchTagState.lastX - touchTagState.startX, 2) +
+                        Math.pow(touchTagState.lastY - touchTagState.startY, 2)
+                    );
+                    var isTap = !touchTagState.dragging && !touchTagState.moved && tapDistance < startThreshold && duration < 320;
+
+                    if (isTap) {
+                        suppressTouchClickUntil = Date.now() + 400;
+                        event.preventDefault();
+                        openTag(tag);
+                    } else if (touchTagState.dragging) {
+                        suppressTouchClickUntil = Date.now() + 250;
+                        event.preventDefault();
+                    }
+
+                    clearTouchTagState();
+                }, {
+                    passive: false
+                });
+
+                tag.addEventListener('touchcancel', function() {
+                    clearTouchTagState();
+                }, {
+                    passive: true
+                });
             }
 
             tags.forEach(function(tag, index) {
@@ -152,21 +314,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         card.style.animation = 'none';
                         card.style.margin = '0';
                         card.style.display = 'block';
-                    }
-
-                    if (isTouchDevice) {
-                        tag.addEventListener('click', function(event) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                            openTag(tag);
-                        });
-
-                        tag.addEventListener('keydown', function(event) {
-                            if (event.key === 'Enter' || event.key === ' ') {
-                                event.preventDefault();
-                                openTag(tag);
-                            }
-                        });
                     }
 
                     var width = tag.offsetWidth || 180;
@@ -193,6 +340,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         element: tag
                     });
                     World.add(engine.world, body);
+
+                    if (isTouchDevice) {
+                        bindTouchTagInteractions(tagBodies[tagBodies.length - 1]);
+                    }
                 } catch (error) {
                     console.error('Error creating tag body', error);
                 }

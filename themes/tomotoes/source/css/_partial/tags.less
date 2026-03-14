@@ -170,6 +170,16 @@ body.tags-page-scroll {
     background: linear-gradient(135deg, #fff, #f1f3f5);
 }
 
+.physics-container.physics-container-touch .tag-link.touch-dragging {
+    z-index: 12;
+}
+
+.physics-container.physics-container-touch .tag-link.touch-dragging .card-card {
+    box-shadow: 0 10px 24px rgba(82, 117, 176, .24);
+    transform: scale(1.03);
+    background: linear-gradient(135deg, #fff, #f5f8ff);
+}
+
 @media screen and (max-width: 991px) {
     .card-card {
         width: auto;
