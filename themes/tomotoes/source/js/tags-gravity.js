@@ -3,6 +3,15 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+    document.documentElement.classList.add('tags-page-scroll');
+    document.body.classList.add('tags-page-scroll');
+    document.documentElement.style.height = 'auto';
+    document.documentElement.style.minHeight = '100%';
+    document.documentElement.style.overflowY = 'auto';
+    document.body.style.height = 'auto';
+    document.body.style.minHeight = '100%';
+    document.body.style.overflowY = 'visible';
+
     try {
         setTimeout(function() {
             var Engine = Matter.Engine;
@@ -173,12 +182,33 @@ document.addEventListener('DOMContentLoaded', function() {
             var hasMoved = false;
             var dragStartTime;
             var activeTouchBody = null;
+            var touchScrollState = {
+                active: false,
+                lastY: 0,
+                lastX: 0,
+                scrollingPage: false
+            };
             var startPos = {
                 x: 0,
                 y: 0
             };
 
             container.style.cursor = 'default';
+
+            render.canvas.addEventListener('wheel', function(event) {
+                if (!event.deltaY) {
+                    return;
+                }
+
+                window.scrollBy({
+                    top: event.deltaY,
+                    left: 0,
+                    behavior: 'auto'
+                });
+                event.preventDefault();
+            }, {
+                passive: false
+            });
 
             render.canvas.addEventListener('mousedown', function(event) {
                 var rect = render.canvas.getBoundingClientRect();
@@ -271,6 +301,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     x: mouse.position.x,
                     y: mouse.position.y
                 };
+                touchScrollState.active = true;
+                touchScrollState.lastY = touch.clientY;
+                touchScrollState.lastX = touch.clientX;
+                touchScrollState.scrollingPage = false;
                 activeTouchBody = Query.point(engine.world.bodies, mouse.position).filter(function(body) {
                     return !body.isStatic;
                 })[0] || null;
@@ -287,6 +321,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 var rect = render.canvas.getBoundingClientRect();
                 mouse.position.x = touch.clientX - rect.left;
                 mouse.position.y = touch.clientY - rect.top;
+                var deltaX = touch.clientX - touchScrollState.lastX;
+                var deltaY = touch.clientY - touchScrollState.lastY;
+                var totalMoveX = touch.clientX - (rect.left + startPos.x);
+                var totalMoveY = touch.clientY - (rect.top + startPos.y);
+
+                if (
+                    !touchScrollState.scrollingPage &&
+                    Math.abs(totalMoveY) > 8 &&
+                    Math.abs(totalMoveY) > Math.abs(totalMoveX)
+                ) {
+                    touchScrollState.scrollingPage = true;
+                }
+
+                if (touchScrollState.scrollingPage) {
+                    hasMoved = true;
+                    activeTouchBody = null;
+                    if (deltaY) {
+                        window.scrollBy({
+                            top: -deltaY,
+                            left: 0,
+                            behavior: 'auto'
+                        });
+                    }
+                    touchScrollState.lastY = touch.clientY;
+                    touchScrollState.lastX = touch.clientX;
+                    event.preventDefault();
+                    return;
+                }
 
                 if (isDragging && Math.sqrt(
                     Math.pow(mouse.position.x - startPos.x, 2) +
@@ -294,6 +356,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 ) > 10) {
                     hasMoved = true;
                 }
+
+                touchScrollState.lastY = touch.clientY;
+                touchScrollState.lastX = touch.clientX;
             }, {
                 passive: false
             });
@@ -305,6 +370,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 );
                 var duration = Date.now() - dragStartTime;
                 var isTap = !hasMoved && distance < 15 && duration < 300;
+
+                if (touchScrollState.scrollingPage) {
+                    isTap = false;
+                }
 
                 if (isTap && activeTouchBody) {
                     var tagData = tagBodies.find(function(entry) {
@@ -321,6 +390,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 hasMoved = false;
                 isDragging = false;
                 activeTouchBody = null;
+                touchScrollState.active = false;
+                touchScrollState.scrollingPage = false;
 
                 if (isTap) {
                     event.preventDefault();
@@ -333,6 +404,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 hasMoved = false;
                 isDragging = false;
                 activeTouchBody = null;
+                touchScrollState.active = false;
+                touchScrollState.scrollingPage = false;
             }, {
                 passive: true
             });
