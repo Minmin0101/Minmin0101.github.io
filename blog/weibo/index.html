@@ -26,7 +26,7 @@
   <link rel="shortcut icon" href="/img/favicon1.ico">
   <link id="style" rel="stylesheet" href="/css/style.css?v=3.0.64">
   <link rel="stylesheet" href="/css/weibo-count-sync.css?v=20260319">
-  <link rel="stylesheet" href="/css/weibo-gwitter.css?v=20260318">
+  <link rel="stylesheet" href="/css/weibo-gwitter.css?v=20260319-direct">
   <script>window.lazyScripts=[]</script>
   <script>
     window.selectedColor = "";
@@ -335,7 +335,7 @@
     }
   </script>
   <script src="/vendor/opencc/full.js?v=3.0.64"></script>
-  <script src="/js/weibo-oauth-client.js?v=20260319"></script>
+  <script src="/js/weibo-oauth-client.js?v=20260319-direct"></script>
   <script src="/js/weibo-count-sync.js?v=20260319"></script>
   <script src="/js/blog-enhance.js?v=3.0.64"></script>
   <script defer>
@@ -374,7 +374,7 @@
         return;
       }
       window.__minminWeiboScriptsLoaded = true;
-      dynamicLoad.js("/js/weibo-gwitter.js?v=20260319-oauth", function () {
+      dynamicLoad.js("/js/weibo-gwitter.js?v=20260319-inline-actions", function () {
         dynamicLoad.js("/vendor/busuanzi/busuanzi.pure.mini.js?v=3.0.64");
       });
     }

@@ -81,6 +81,36 @@
     }
   }
 
+  function getToken() {
+    var storage = getLocalStorage();
+
+    if (!storage) {
+      return "";
+    }
+
+    try {
+      return storage.getItem(tokenKey) || "";
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function getUser() {
+    var storage = getLocalStorage();
+    var raw = "";
+
+    if (!storage) {
+      return normalizeUser({});
+    }
+
+    try {
+      raw = storage.getItem(userKey) || "";
+      return normalizeUser(raw ? JSON.parse(raw) : {});
+    } catch (error) {
+      return normalizeUser({});
+    }
+  }
+
   function saveSession(token, user) {
     var storage = getLocalStorage();
 
@@ -91,6 +121,22 @@
     try {
       storage.setItem(tokenKey, token);
       storage.setItem(userKey, JSON.stringify(normalizeUser(user)));
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function clearSession() {
+    var storage = getLocalStorage();
+
+    if (!storage) {
+      return false;
+    }
+
+    try {
+      storage.removeItem(tokenKey);
+      storage.removeItem(userKey);
       return true;
     } catch (error) {
       return false;
@@ -403,7 +449,10 @@
     install: install,
     getConfig: getConfig,
     hasSession: hasSession,
+    getToken: getToken,
+    getUser: getUser,
     saveSession: saveSession,
+    clearSession: clearSession,
     showSetup: showSetup,
     startLogin: startLogin,
     clearPending: clearPending,
