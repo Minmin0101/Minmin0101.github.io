@@ -1,0 +1,7 @@
+name = "minmin-weibo-github-oauth"
+main = "src/index.js"
+compatibility_date = "2026-03-19"
+
+[vars]
+ALLOWED_ORIGINS = "https://minmin0101.github.io,http://127.0.0.1:4000"
+ALLOWED_REDIRECT_URIS = "https://minmin0101.github.io/blog/weibo/oauth-callback/,http://127.0.0.1:4000/blog/weibo/oauth-callback/"

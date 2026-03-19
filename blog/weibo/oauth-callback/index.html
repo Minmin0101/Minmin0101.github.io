@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>GitHub 登录中 | 微博</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#77AAFF">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg-top: #f6f9ff;
+      --bg-bottom: #edf3ff;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(128, 180, 246, 0.22);
+      --text-strong: #20314b;
+      --text-muted: #60718a;
+      --accent: #77aaff;
+      --shadow: 0 24px 72px rgba(114, 139, 183, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", "Microsoft YaHei", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(119, 170, 255, 0.18), transparent 48%),
+        linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+      color: var(--text-strong);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding:
+        max(24px, calc(env(safe-area-inset-top) + 24px))
+        max(18px, calc(env(safe-area-inset-right) + 18px))
+        max(24px, calc(env(safe-area-inset-bottom) + 24px))
+        max(18px, calc(env(safe-area-inset-left) + 18px));
+    }
+
+    .oauth-card {
+      width: min(100%, 460px);
+      padding: 28px 24px;
+      border: 1px solid var(--card-border);
+      border-radius: 26px;
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      text-align: center;
+      backdrop-filter: blur(18px);
+    }
+
+    .oauth-mark {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 18px;
+      border-radius: 18px;
+      background: rgba(119, 170, 255, 0.14);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .oauth-title {
+      margin: 0 0 10px;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .oauth-detail {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .oauth-loader {
+      width: 42px;
+      height: 42px;
+      margin: 22px auto 0;
+      border: 3px solid rgba(119, 170, 255, 0.18);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    body[data-oauth-state="success"] .oauth-loader {
+      border-color: rgba(76, 191, 135, 0.16);
+      border-top-color: #4cbf87;
+    }
+
+    body[data-oauth-state="error"] .oauth-loader {
+      border-color: rgba(231, 91, 91, 0.16);
+      border-top-color: #e75b5b;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 520px) {
+      .oauth-card {
+        padding: 24px 20px;
+        border-radius: 22px;
+      }
+
+      .oauth-title {
+        font-size: 21px;
+      }
+    }
+  </style>
+</head>
+<body data-oauth-state="loading">
+  <main class="oauth-card" role="status" aria-live="polite">
+    <div class="oauth-mark">G</div>
+    <h1 class="oauth-title" id="oauth-status">正在完成 GitHub 登录</h1>
+    <p class="oauth-detail" id="oauth-detail">请稍等，授权结果会自动返回到微博页。</p>
+    <div class="oauth-loader" aria-hidden="true"></div>
+  </main>
+  <script src="/js/weibo-oauth-callback.js?v=20260319"></script>
+</body>
+</html>

@@ -124,6 +124,12 @@ body.weibo-gwitter-page #gwitter > .minmin-weibo-seed-list {
   gap: 18px;
 }
 
+body.weibo-gwitter-page #gwitter > .minmin-weibo-issue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
 body.weibo-gwitter-page #gwitter ::-webkit-scrollbar {
   width: 0 !important;
   height: 0 !important;
@@ -177,6 +183,31 @@ body.weibo-gwitter-page .gwitter-card {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(247, 250, 255, 0.72));
   box-shadow: 0 28px 84px rgba(99, 126, 167, 0.18);
   backdrop-filter: blur(16px);
+}
+
+body.weibo-gwitter-page .minmin-weibo-toolbar-card,
+body.weibo-gwitter-page .minmin-weibo-empty-card {
+  padding: 24px 26px;
+}
+
+body.weibo-gwitter-page .minmin-weibo-toolbar-copy strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #21314a;
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+body.weibo-gwitter-page .minmin-weibo-toolbar-copy p,
+body.weibo-gwitter-page .minmin-weibo-toolbar-tip {
+  margin: 0;
+  color: #6f8099;
+  line-height: 1.8;
+}
+
+body.weibo-gwitter-page .minmin-weibo-toolbar-tip {
+  margin-top: 14px;
+  font-size: 13px;
 }
 
 body.weibo-gwitter-page .minmin-weibo-seed {
@@ -266,7 +297,8 @@ body.weibo-gwitter-page .minmin-weibo-seed-actions {
   margin-top: 18px;
 }
 
-body.weibo-gwitter-page .minmin-weibo-seed-action-button {
+body.weibo-gwitter-page .minmin-weibo-seed-action-button,
+body.weibo-gwitter-page .minmin-weibo-action-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -278,13 +310,16 @@ body.weibo-gwitter-page .minmin-weibo-seed-action-button {
   color: var(--theme-color);
   font-size: 14px;
   cursor: pointer;
+  text-decoration: none;
   transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
   -webkit-appearance: none;
   appearance: none;
 }
 
 body.weibo-gwitter-page .minmin-weibo-seed-action-button:hover,
-body.weibo-gwitter-page .minmin-weibo-seed-action-button:focus-visible {
+body.weibo-gwitter-page .minmin-weibo-seed-action-button:focus-visible,
+body.weibo-gwitter-page .minmin-weibo-action-link:hover,
+body.weibo-gwitter-page .minmin-weibo-action-link:focus-visible {
   background: rgba(119, 170, 255, 0.2);
   box-shadow: 0 8px 18px rgba(119, 170, 255, 0.16);
   transform: translateY(-1px);
@@ -379,6 +414,12 @@ body.weibo-gwitter-page .minmin-weibo-seed-action-note {
   }
 
   body.weibo-gwitter-page .minmin-weibo-seed-action-button {
+    min-height: 40px;
+    padding: 0 14px;
+    font-size: 13px;
+  }
+
+  body.weibo-gwitter-page .minmin-weibo-action-link {
     min-height: 40px;
     padding: 0 14px;
     font-size: 13px;

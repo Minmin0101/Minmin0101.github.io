@@ -27,7 +27,6 @@
   <link id="style" rel="stylesheet" href="/css/style.css?v=3.0.64">
   <link rel="stylesheet" href="/css/weibo-count-sync.css?v=20260319">
   <link rel="stylesheet" href="/css/weibo-gwitter.css?v=20260318">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gwitter@1.0.9/dist/gwitter.min.css">
   <script>window.lazyScripts=[]</script>
   <script>
     window.selectedColor = "";
@@ -60,16 +59,16 @@
         // 正式站 callback 建议填这里：
         // https://minmin0101.github.io/blog/weibo/
         prod: {
-          clientID: "",
-          clientSecret: "",
-          callback: "https://minmin0101.github.io/blog/weibo/"
+          clientID: "Ov23lifminf9XNToEoeV",
+          exchangeURL: "https://minmin-weibo-github-oauth.minmin0101-weibo.workers.dev/oauth/github/exchange",
+          callback: "https://minmin0101.github.io/blog/weibo/oauth-callback/"
         },
         // 本地调试 callback 建议填这里：
         // http://127.0.0.1:4000/blog/weibo/
         dev: {
           clientID: "",
-          clientSecret: "",
-          callback: "http://127.0.0.1:4000/blog/weibo/"
+          exchangeURL: "http://127.0.0.1:8787/oauth/github/exchange",
+          callback: "http://127.0.0.1:4000/blog/weibo/oauth-callback/"
         }
       }
     };
@@ -335,14 +334,10 @@
       }, 0);
     }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js" crossorigin></script>
-  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://cdn.jsdelivr.net/npm/gwitter@1.0.9/dist/gwitter.min.js"></script>
   <script src="/vendor/opencc/full.js?v=3.0.64"></script>
-  <script src="/js/weibo-gwitter.js?v=20260318"></script>
+  <script src="/js/weibo-oauth-client.js?v=20260319"></script>
   <script src="/js/weibo-count-sync.js?v=20260319"></script>
   <script src="/js/blog-enhance.js?v=3.0.64"></script>
-  <script async src="/vendor/busuanzi/busuanzi.pure.mini.js?v=3.0.64"></script>
   <script defer>
     var dynamicLoad = window.dynamicLoad || {
       css: function (href) {
@@ -369,16 +364,36 @@
         return;
       }
       window.__authorLive2DLoaded = true;
-      dynamicLoad.css("https://cdn.jsdelivr.net/gh/SimonAKing/blog@7d04115230169/css/live2d-f1e3bae765.css");
-      dynamicLoad.js("https://cdn.jsdelivr.net/gh/SimonAKing/blog@7d04115230169/js/live2d/live2d-00d3feb260.js");
-      dynamicLoad.js("https://cdn.jsdelivr.net/gh/SimonAKing/blog@7d04115230169/js/live2d/live-7348bf1137.js");
+      dynamicLoad.css("/vendor/live2d/live2d-f1e3bae765.css?v=20260319");
+      dynamicLoad.js("/vendor/live2d/live2d-00d3feb260.js?v=20260319");
+      dynamicLoad.js("/vendor/live2d/live-7348bf1137.js?v=20260319");
+    }
+
+    function loadDeferredWeiboScripts() {
+      if (window.__minminWeiboScriptsLoaded) {
+        return;
+      }
+      window.__minminWeiboScriptsLoaded = true;
+      dynamicLoad.js("/js/weibo-gwitter.js?v=20260319-oauth", function () {
+        dynamicLoad.js("/vendor/busuanzi/busuanzi.pure.mini.js?v=3.0.64");
+      });
     }
 
     window.dynamicLoad = dynamicLoad;
 
     var allowLive2D = !/Android|iOS|iPhone|iPad|iPod|Windows Phone|KFAPWI/i.test(navigator.userAgent) && window.innerWidth >= 960;
     if (allowLive2D && document.getElementById("landlord")) {
-      loadLive2DResources();
+      window.addEventListener("load", function () {
+        window.setTimeout(loadLive2DResources, 0);
+      }, { once: true });
+    }
+
+    if (document.readyState === "complete") {
+      window.setTimeout(loadDeferredWeiboScripts, 0);
+    } else {
+      window.addEventListener("load", function () {
+        window.setTimeout(loadDeferredWeiboScripts, 0);
+      }, { once: true });
     }
   </script>
 </body>
