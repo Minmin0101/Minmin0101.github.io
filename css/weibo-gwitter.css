@@ -321,6 +321,17 @@ body.weibo-gwitter-page .minmin-weibo-seed-action-button.is-active {
   box-shadow: 0 10px 22px rgba(119, 170, 255, 0.18);
 }
 
+body.weibo-gwitter-page .minmin-weibo-seed-action-button.is-connected {
+  background: rgba(45, 70, 108, 0.12);
+  color: #2d466c;
+  box-shadow: 0 10px 22px rgba(45, 70, 108, 0.12);
+}
+
+body.weibo-gwitter-page .minmin-weibo-seed-action-button.is-danger {
+  background: rgba(255, 92, 120, 0.12);
+  color: #d84d69;
+}
+
 body.weibo-gwitter-page .minmin-weibo-seed-action-button.is-busy,
 body.weibo-gwitter-page .minmin-weibo-seed-action-button[disabled],
 body.weibo-gwitter-page .minmin-weibo-comment-submit[disabled] {
@@ -339,6 +350,18 @@ body.weibo-gwitter-page .minmin-weibo-action-link:focus-visible {
   transform: translateY(-1px);
 }
 
+body.weibo-gwitter-page .minmin-weibo-seed-action-button.is-connected:hover,
+body.weibo-gwitter-page .minmin-weibo-seed-action-button.is-connected:focus-visible {
+  background: rgba(45, 70, 108, 0.18);
+  box-shadow: 0 8px 18px rgba(45, 70, 108, 0.14);
+}
+
+body.weibo-gwitter-page .minmin-weibo-seed-action-button.is-danger:hover,
+body.weibo-gwitter-page .minmin-weibo-seed-action-button.is-danger:focus-visible {
+  background: rgba(255, 92, 120, 0.18);
+  box-shadow: 0 8px 18px rgba(216, 77, 105, 0.14);
+}
+
 body.weibo-gwitter-page .minmin-weibo-seed-action-icon {
   margin-right: 8px;
   font-size: 15px;
@@ -347,6 +370,13 @@ body.weibo-gwitter-page .minmin-weibo-seed-action-icon {
 
 body.weibo-gwitter-page .minmin-weibo-seed-action-text {
   line-height: 1;
+}
+
+body.weibo-gwitter-page .minmin-weibo-login-button .minmin-weibo-action-text {
+  max-width: 18ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 body.weibo-gwitter-page .minmin-weibo-seed-action-note {
@@ -600,6 +630,10 @@ body.weibo-gwitter-page .minmin-weibo-comment-submit:focus-visible {
     min-height: 40px;
     padding: 0 14px;
     font-size: 13px;
+  }
+
+  body.weibo-gwitter-page .minmin-weibo-login-button .minmin-weibo-action-text {
+    max-width: 13ch;
   }
 
   body.weibo-gwitter-page .minmin-weibo-seed-action-note {

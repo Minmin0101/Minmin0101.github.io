@@ -26,7 +26,7 @@
   <link rel="shortcut icon" href="/img/favicon1.ico">
   <link id="style" rel="stylesheet" href="/css/style.css?v=3.0.64">
   <link rel="stylesheet" href="/css/weibo-count-sync.css?v=20260319">
-  <link rel="stylesheet" href="/css/weibo-gwitter.css?v=20260319-direct">
+  <link rel="stylesheet" href="/css/weibo-gwitter.css?v=20260323-login-proxy">
   <script>window.lazyScripts=[]</script>
   <script>
     window.selectedColor = "";
@@ -57,14 +57,14 @@
       fallbackCount: 4,
       oauth: {
         // 正式站 callback 建议填这里：
-        // https://minmin0101.github.io/blog/weibo/
+        // https://minmin0101.github.io/blog/weibo/oauth-callback/
         prod: {
           clientID: "Ov23lifminf9XNToEoeV",
           exchangeURL: "https://minmin-weibo-github-oauth.minmin0101-weibo.workers.dev/oauth/github/exchange",
           callback: "https://minmin0101.github.io/blog/weibo/oauth-callback/"
         },
         // 本地调试 callback 建议填这里：
-        // http://127.0.0.1:4000/blog/weibo/
+        // http://127.0.0.1:4000/blog/weibo/oauth-callback/
         dev: {
           clientID: "",
           exchangeURL: "http://127.0.0.1:8787/oauth/github/exchange",
@@ -335,7 +335,7 @@
     }
   </script>
   <script src="/vendor/opencc/full.js?v=3.0.64"></script>
-  <script src="/js/weibo-oauth-client.js?v=20260319-direct"></script>
+  <script src="/js/weibo-oauth-client.js?v=20260323-return-fix-2"></script>
   <script src="/js/weibo-count-sync.js?v=20260319"></script>
   <script src="/js/blog-enhance.js?v=3.0.64"></script>
   <script defer>
@@ -374,7 +374,7 @@
         return;
       }
       window.__minminWeiboScriptsLoaded = true;
-      dynamicLoad.js("/js/weibo-gwitter.js?v=20260319-inline-actions", function () {
+      dynamicLoad.js("/js/weibo-gwitter.js?v=20260323-login-proxy-2", function () {
         dynamicLoad.js("/vendor/busuanzi/busuanzi.pure.mini.js?v=3.0.64");
       });
     }

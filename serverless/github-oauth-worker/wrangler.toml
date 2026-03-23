@@ -4,4 +4,4 @@ compatibility_date = "2026-03-19"
 
 [vars]
 ALLOWED_ORIGINS = "https://minmin0101.github.io,http://127.0.0.1:4000"
-ALLOWED_REDIRECT_URIS = "https://minmin0101.github.io/blog/weibo/oauth-callback/,http://127.0.0.1:4000/blog/weibo/oauth-callback/"
+ALLOWED_REDIRECT_URIS = "https://minmin0101.github.io/blog/weibo/,https://minmin0101.github.io/blog/weibo/oauth-callback/,http://127.0.0.1:4000/blog/weibo/,http://127.0.0.1:4000/blog/weibo/oauth-callback/"

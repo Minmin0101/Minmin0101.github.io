@@ -10,7 +10,7 @@ function splitList(value) {
 function createCorsHeaders(origin, allowedOrigins) {
   var headers = {
     "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Headers": "Content-Type, Accept, Authorization, X-GitHub-Api-Version",
     "Access-Control-Max-Age": "86400",
     Vary: "Origin"
   };
@@ -20,6 +20,15 @@ function createCorsHeaders(origin, allowedOrigins) {
   }
 
   return headers;
+}
+
+function createPublicCorsHeaders() {
+  return {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Accept, Authorization, X-GitHub-Api-Version",
+    "Access-Control-Max-Age": "86400"
+  };
 }
 
 function createJsonResponse(origin, allowedOrigins, status, payload) {
@@ -35,6 +44,48 @@ function createJsonResponse(origin, allowedOrigins, status, payload) {
   });
 }
 
+function createTextResponse(origin, allowedOrigins, status, payload, extraHeaders) {
+  return new Response(payload, {
+    status: status,
+    headers: Object.assign(
+      {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store"
+      },
+      createCorsHeaders(origin, allowedOrigins),
+      extraHeaders || {}
+    )
+  });
+}
+
+function createPublicJsonResponse(status, payload, extraHeaders) {
+  return new Response(JSON.stringify(payload), {
+    status: status,
+    headers: Object.assign(
+      {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store"
+      },
+      createPublicCorsHeaders(),
+      extraHeaders || {}
+    )
+  });
+}
+
+function createPublicTextResponse(status, payload, extraHeaders) {
+  return new Response(payload, {
+    status: status,
+    headers: Object.assign(
+      {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store"
+      },
+      createPublicCorsHeaders(),
+      extraHeaders || {}
+    )
+  });
+}
+
 function ensureAllowedOrigin(origin, allowedOrigins) {
   return !!(origin && allowedOrigins.indexOf(origin) !== -1);
 }
@@ -46,6 +97,107 @@ function getWorkerConfig(env) {
     allowedOrigins: splitList(env.ALLOWED_ORIGINS),
     allowedRedirectUris: splitList(env.ALLOWED_REDIRECT_URIS)
   };
+}
+
+function sanitizeRepoPart(value) {
+  return String(value || "").trim();
+}
+
+function buildGithubApiUrl(pathname, searchParams) {
+  var url = new URL("https://api.github.com" + pathname);
+
+  searchParams.forEach(function (value, key) {
+    if (value !== "") {
+      url.searchParams.set(key, value);
+    }
+  });
+
+  return url.toString();
+}
+
+async function fetchGithubPublic(url, acceptHeader) {
+  return fetch(url, {
+    headers: {
+      Accept: acceptHeader || "application/vnd.github+json",
+      "User-Agent": "minmin-weibo-oauth-worker"
+    },
+    cf: {
+      cacheEverything: true,
+      cacheTtl: 300
+    }
+  });
+}
+
+async function readGithubPayload(response) {
+  var text = await response.text().catch(function () {
+    return "";
+  });
+  var contentType = response.headers.get("Content-Type") || "";
+  var json = null;
+
+  if (text && contentType.indexOf("application/json") !== -1) {
+    try {
+      json = JSON.parse(text);
+    } catch (error) {
+      json = null;
+    }
+  }
+
+  return {
+    text: text,
+    json: json
+  };
+}
+
+async function handlePublicIssues(request, env, pathnameParts) {
+  var requestUrl = new URL(request.url);
+  var owner = sanitizeRepoPart(requestUrl.searchParams.get("owner"));
+  var repo = sanitizeRepoPart(requestUrl.searchParams.get("repo"));
+  var issueNumber = pathnameParts.length >= 5 ? sanitizeRepoPart(pathnameParts[4]) : "";
+  var upstreamParams = new URLSearchParams();
+  var apiPath = "";
+  var apiUrl = "";
+  var response;
+  var payload;
+  var headers;
+
+  if (!owner || !repo) {
+    return createPublicJsonResponse(400, {
+      error: "missing_owner_or_repo"
+    });
+  }
+
+  apiPath = "/repos/" + encodeURIComponent(owner) + "/" + encodeURIComponent(repo) + "/issues";
+  if (issueNumber && pathnameParts[5] === "comments") {
+    apiPath += "/" + encodeURIComponent(issueNumber) + "/comments";
+  }
+
+  if (requestUrl.searchParams.get("state")) {
+    upstreamParams.set("state", requestUrl.searchParams.get("state"));
+  }
+  if (requestUrl.searchParams.get("per_page")) {
+    upstreamParams.set("per_page", requestUrl.searchParams.get("per_page"));
+  }
+  if (requestUrl.searchParams.get("page")) {
+    upstreamParams.set("page", requestUrl.searchParams.get("page"));
+  }
+
+  apiUrl = buildGithubApiUrl(apiPath, upstreamParams);
+  response = await fetchGithubPublic(apiUrl, "application/vnd.github.html+json");
+  payload = await readGithubPayload(response);
+
+  if (!response.ok) {
+    return createPublicJsonResponse(response.status, payload.json || {
+      error: "github_public_fetch_failed",
+      message: payload.text || ""
+    });
+  }
+
+  headers = {
+    "Cache-Control": "public, max-age=60, s-maxage=300"
+  };
+
+  return createPublicTextResponse(200, payload.text || "[]", headers);
 }
 
 async function exchangeGithubCode(body, config) {
@@ -161,6 +313,34 @@ export default {
     var url = new URL(request.url);
     var config = getWorkerConfig(env);
     var origin = request.headers.get("Origin") || "";
+    var pathnameParts = url.pathname.split("/");
+    var isPublicIssuesRoute = request.method === "GET" && url.pathname === "/github/public/issues";
+    var isPublicCommentsRoute =
+      request.method === "GET" &&
+      pathnameParts.length === 6 &&
+      pathnameParts[1] === "github" &&
+      pathnameParts[2] === "public" &&
+      pathnameParts[3] === "issues" &&
+      pathnameParts[5] === "comments";
+    var isPublicOptionsRoute =
+      request.method === "OPTIONS" &&
+      (
+        url.pathname === "/github/public/issues" ||
+        (
+          pathnameParts.length === 6 &&
+          pathnameParts[1] === "github" &&
+          pathnameParts[2] === "public" &&
+          pathnameParts[3] === "issues" &&
+          pathnameParts[5] === "comments"
+        )
+      );
+
+    if (isPublicOptionsRoute) {
+      return new Response(null, {
+        status: 204,
+        headers: createPublicCorsHeaders()
+      });
+    }
 
     if (request.method === "OPTIONS") {
       return new Response(null, {
@@ -184,6 +364,14 @@ export default {
 
     if (request.method === "POST" && url.pathname === "/oauth/github/exchange") {
       return handleExchange(request, env);
+    }
+
+    if (isPublicIssuesRoute) {
+      return handlePublicIssues(request, env, pathnameParts);
+    }
+
+    if (isPublicCommentsRoute) {
+      return handlePublicIssues(request, env, pathnameParts);
     }
 
     return createJsonResponse(origin, config.allowedOrigins, 404, {

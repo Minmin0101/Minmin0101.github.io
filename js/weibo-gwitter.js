@@ -45,10 +45,22 @@
 
   function getOAuthConfig() {
     var oauth = config.oauth || {};
-    var scoped = isLocalMode() ? oauth.dev || {} : oauth.prod || {};
-    var clientID = scoped.clientID || config.clientID || "";
-    var exchangeURL = scoped.exchangeURL || config.exchangeURL || "";
-    var callback = scoped.callback || config.callback || window.location.origin + "/blog/weibo/oauth-callback/";
+    var dev = oauth.dev || {};
+    var prod = oauth.prod || {};
+    var scoped = isLocalMode() ? dev : prod;
+    var fallback = isLocalMode() ? prod : dev;
+    var effective = scoped;
+    var clientID = "";
+    var exchangeURL = "";
+    var callback = "";
+
+    if (!(scoped && scoped.clientID && scoped.exchangeURL && scoped.callback)) {
+      effective = fallback;
+    }
+
+    clientID = (effective && effective.clientID) || config.clientID || "";
+    exchangeURL = (effective && effective.exchangeURL) || config.exchangeURL || "";
+    callback = (effective && effective.callback) || config.callback || window.location.origin + "/blog/weibo/oauth-callback/";
 
     return {
       clientID: clientID,
@@ -209,12 +221,75 @@
     return getRepoUrl() + "/issues";
   }
 
+  function getPreferredExchangeUrl() {
+    var oauth = config.oauth || {};
+    var dev = oauth.dev || {};
+    var prod = oauth.prod || {};
+    var active = getOAuthConfig();
+
+    return active.exchangeURL || prod.exchangeURL || dev.exchangeURL || config.exchangeURL || "";
+  }
+
+  function getPublicProxyBaseUrl() {
+    var exchangeUrl = getPreferredExchangeUrl();
+
+    if (!exchangeUrl) {
+      return "";
+    }
+
+    try {
+      return new URL(exchangeUrl).origin + "/github/public";
+    } catch (error) {
+      return "";
+    }
+  }
+
   function getIssuesApiUrl() {
     return apiBase + "/issues?state=open&per_page=20";
   }
 
+  function getPublicIssuesApiUrl() {
+    var proxyBase = getPublicProxyBaseUrl();
+
+    if (!proxyBase) {
+      return "";
+    }
+
+    return (
+      proxyBase +
+      "/issues?owner=" + encodeURIComponent(repoOwner) +
+      "&repo=" + encodeURIComponent(repoName) +
+      "&state=open&per_page=20"
+    );
+  }
+
   function getIssueCommentsApiUrl(issueNumber) {
     return apiBase + "/issues/" + issueNumber + "/comments?per_page=100";
+  }
+
+  function getPublicIssueCommentsApiUrl(issueNumber) {
+    var proxyBase = getPublicProxyBaseUrl();
+    var normalizedNumber = normalizeCount(issueNumber);
+
+    if (!proxyBase || !normalizedNumber) {
+      return "";
+    }
+
+    return (
+      proxyBase +
+      "/issues/" + normalizedNumber +
+      "/comments?owner=" + encodeURIComponent(repoOwner) +
+      "&repo=" + encodeURIComponent(repoName) +
+      "&per_page=100"
+    );
+  }
+
+  function getIssuesSnapshotUrl() {
+    return "/blog/weibo/issues-cache.json?v=20260323";
+  }
+
+  function getCommentsSnapshotUrl() {
+    return "/blog/weibo/comments-cache.json?v=20260323";
   }
 
   function getIssueCommentsCreateUrl(issueNumber) {
@@ -277,6 +352,18 @@
   function resolveActionTargetUrl(button) {
     var card = button && button.closest ? button.closest(".minmin-weibo-issue-card") : null;
     return (card && card.getAttribute("data-issue-url")) || getIssuesUrl();
+  }
+
+  function resolveGithubActionUrl(element) {
+    if (!element || typeof element.getAttribute !== "function") {
+      return getIssuesUrl();
+    }
+
+    return element.getAttribute("data-github-url") || resolveActionTargetUrl(element);
+  }
+
+  function buildGithubGatewayHref(targetUrl) {
+    return buildGithubLoginUrl(targetUrl || getIssuesUrl());
   }
 
   function getLoginButtonMarkup() {
@@ -453,12 +540,34 @@
     return error;
   }
 
-  function createApiHeaders(options) {
+  function loadJsonSnapshot(url) {
+    return window.fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json"
+      }
+    }).then(function (response) {
+      if (!response.ok) {
+        throw createGithubError(response.status, { message: "snapshot_fetch_failed" });
+      }
+
+      return response.json();
+    });
+  }
+
+  function shouldAttachGithubApiVersion(url) {
+    return /^https:\/\/api\.github\.com\//i.test(String(url || ""));
+  }
+
+  function createApiHeaders(options, url) {
     var headers = {
-      Accept: options.accept || "application/vnd.github+json",
-      "X-GitHub-Api-Version": githubApiVersion
+      Accept: options.accept || "application/vnd.github+json"
     };
     var token = "";
+
+    if (shouldAttachGithubApiVersion(url)) {
+      headers["X-GitHub-Api-Version"] = githubApiVersion;
+    }
 
     if (options.body) {
       headers["Content-Type"] = "application/json";
@@ -480,7 +589,7 @@
     var headers = null;
 
     try {
-      headers = createApiHeaders(settings);
+      headers = createApiHeaders(settings, url);
     } catch (error) {
       return Promise.reject(error);
     }
@@ -781,20 +890,24 @@
     var loginButton = getLoginButton();
     var oauth = getOAuthConfig();
     var viewer = getGithubUser();
-    var text = "登录 GitHub";
-    var title = "登录 GitHub 后即可在微博页内点赞和评论";
+    var connected = hasOAuthSession();
+    var text = "\u767b\u5f55 GitHub";
+    var title = "\u767b\u5f55 GitHub \u540e\u4f1a\u56de\u5230\u5fae\u535a\u9875\uff0c\u4e4b\u540e\u5373\u53ef\u5728\u5f53\u524d\u9875\u9762\u70b9\u8d5e\u548c\u8bc4\u8bba";
 
     if (!loginButton) {
       return;
     }
 
-    if (hasOAuthSession()) {
-      text = viewer && viewer.login ? "已连接 @" + viewer.login : "已连接 GitHub";
-      title = "当前已连接 GitHub，可以直接在微博页内点赞和评论";
+    if (connected) {
+      text = "\u9000\u51fa GitHub";
+      title = viewer && viewer.login
+        ? "\u5f53\u524d\u5df2\u4ee5 @" + viewer.login + " \u767b\u5f55\uff0c\u70b9\u51fb\u5373\u53ef\u9000\u51fa"
+        : "\u5f53\u524d\u5df2\u8fde\u63a5 GitHub\uff0c\u70b9\u51fb\u5373\u53ef\u9000\u51fa";
     } else if (!oauth.configured) {
-      title = "当前还没有配置 OAuth，点击后会先跳转 GitHub 登录";
+      title = "\u5f53\u524d\u8fd8\u6ca1\u6709\u914d\u7f6e OAuth\uff0c\u70b9\u51fb\u540e\u4f1a\u6253\u5f00 GitHub \u914d\u7f6e";
     }
 
+    loginButton.classList.toggle("is-connected", connected);
     loginButton.setAttribute("title", title);
     loginButton.innerHTML = getLoginButtonMarkup() + '<span class="minmin-weibo-action-text">' + escapeHtml(text) + "</span>";
   }
@@ -856,6 +969,8 @@
 
   function loadComments(card, forceRefresh) {
     var state = getIssueStateFromCard(card);
+    var hasSession = hasOAuthSession();
+    var commentsUrl = hasSession ? getIssueCommentsApiUrl(state.issueNumber) : (getPublicIssueCommentsApiUrl(state.issueNumber) || getIssueCommentsApiUrl(state.issueNumber));
 
     if (!card) {
       return Promise.resolve([]);
@@ -874,8 +989,9 @@
     state.commentsError = "";
     renderCommentList(card);
 
-    return githubRequest(getIssueCommentsApiUrl(state.issueNumber), {
-      accept: "application/vnd.github.html+json"
+    return githubRequest(commentsUrl, {
+      accept: "application/vnd.github.html+json",
+      auth: hasSession
     })
       .then(function (comments) {
         state.comments = Array.isArray(comments) ? comments : [];
@@ -887,6 +1003,30 @@
         return state.comments;
       })
       .catch(function (error) {
+        if (!hasSession) {
+          return loadJsonSnapshot(getCommentsSnapshotUrl())
+            .then(function (snapshot) {
+              var snapshotComments = snapshot && snapshot[String(state.issueNumber)];
+
+              if (!Array.isArray(snapshotComments)) {
+                throw error;
+              }
+
+              state.comments = snapshotComments;
+              state.commentsLoaded = true;
+              state.commentsError = "";
+              state.commentsCount = state.comments.length;
+              renderCommentList(card);
+              updateCommentButton(card);
+              return state.comments;
+            })
+            .catch(function () {
+              state.commentsError = resolveGithubErrorMessage(error, "评论加载失败，请稍后再试。");
+              renderCommentList(card);
+              throw error;
+            });
+        }
+
         state.commentsError = resolveGithubErrorMessage(error, "评论加载失败，请稍后再试。");
         renderCommentList(card);
         throw error;
@@ -962,7 +1102,7 @@
       '<h3 class="minmin-weibo-seed-title">还没有可展示的微博</h3>' +
       '<div class="markdown-body minmin-weibo-seed-body"><p>' + escapeHtml(message || "请先发布一条 Open Issue，这里就会自动出现对应的图文微博卡片。") + "</p></div>" +
       '<div class="minmin-weibo-seed-actions">' +
-      '<a class="minmin-weibo-action-link" href="' + escapeAttribute(getIssuesUrl()) + '" target="_blank" rel="noopener noreferrer">发布第一条微博</a>' +
+      '<a class="minmin-weibo-action-link" data-action="open-issues" data-github-url="' + escapeAttribute(getIssuesUrl()) + '" href="' + escapeAttribute(buildGithubGatewayHref(getIssuesUrl())) + '" target="_blank" rel="noopener noreferrer">发布第一条微博</a>' +
       "</div>" +
       "</section>";
 
@@ -1018,7 +1158,7 @@
       '<span class="minmin-weibo-seed-action-icon" aria-hidden="true">✉</span>' +
       '<span class="minmin-weibo-action-text">评论 ' + normalizeCount(state.commentsCount) + "</span>" +
       "</button>" +
-      '<a class="minmin-weibo-action-link" href="' + escapeAttribute(state.issueUrl) + '" target="_blank" rel="noopener noreferrer">在 GitHub 中查看</a>' +
+      '<a class="minmin-weibo-action-link" data-action="view-issue" data-github-url="' + escapeAttribute(state.issueUrl) + '" href="' + escapeAttribute(buildGithubGatewayHref(state.issueUrl)) + '" target="_blank" rel="noopener noreferrer">在 GitHub 中查看</a>' +
       '<span class="minmin-weibo-seed-action-note">登录后可直接在微博页内点赞和评论。</span>' +
       "</div>" +
       createCommentPanelMarkup(state.issueNumber) +
@@ -1087,6 +1227,9 @@
   }
 
   function fetchIssues() {
+    var hasSession = hasOAuthSession();
+    var issuesUrl = hasSession ? getIssuesApiUrl() : (getPublicIssuesApiUrl() || getIssuesApiUrl());
+
     if (!window.fetch) {
       renderEmptyState("当前浏览器不支持 fetch，无法直接读取 GitHub Issues。");
       return;
@@ -1094,14 +1237,35 @@
 
     renderLoadingState();
 
-    githubRequest(getIssuesApiUrl(), {
-      accept: "application/vnd.github.html+json"
+    githubRequest(issuesUrl, {
+      accept: "application/vnd.github.html+json",
+      auth: hasSession
     })
       .then(function (payload) {
         renderIssues(normalizeIssues(payload));
       })
-      .catch(function () {
-        renderEmptyState("暂时没能从 GitHub 读取 Issues，你可以点下面的入口直接打开仓库 Issues 看看。");
+      .catch(function (error) {
+        if (!hasSession) {
+          return loadJsonSnapshot(getIssuesSnapshotUrl())
+            .then(function (snapshot) {
+              renderIssues(normalizeIssues(snapshot));
+            })
+            .catch(function () {
+              if (!hasOAuthSession() && error && error.status === 403) {
+                renderEmptyState("当前 GitHub 公共接口已达到匿名访问频率上限。登录 GitHub 后会自动回到微博页，并重新读取已经发布的微博。");
+                return;
+              }
+
+              renderEmptyState(resolveGithubErrorMessage(error, "暂时没能从 GitHub 读取 Issues，你可以点下面的入口直接打开仓库 Issues 看看。"));
+            });
+        }
+
+        if (!hasOAuthSession() && error && error.status === 403) {
+          renderEmptyState("当前 GitHub 公共接口已达到匿名访问频率上限。登录 GitHub 后会自动回到微博页，并重新读取已经发布的微博。");
+          return;
+        }
+
+        renderEmptyState(resolveGithubErrorMessage(error, "暂时没能从 GitHub 读取 Issues，你可以点下面的入口直接打开仓库 Issues 看看。"));
       });
   }
 
@@ -1119,10 +1283,10 @@
       "</div>" +
       '<div class="minmin-weibo-seed-actions">' +
       '<button type="button" class="minmin-weibo-login-button minmin-weibo-seed-action-button" data-action="login"></button>' +
-      '<a class="minmin-weibo-action-link" href="' + escapeAttribute(getIssuesUrl()) + '" target="_blank" rel="noopener noreferrer">打开 Issues</a>' +
-      '<a class="minmin-weibo-action-link" href="' + escapeAttribute(getRepoUrl()) + '" target="_blank" rel="noopener noreferrer">打开仓库</a>' +
+      '<a class="minmin-weibo-action-link" data-action="open-issues" data-github-url="' + escapeAttribute(getIssuesUrl()) + '" href="' + escapeAttribute(buildGithubGatewayHref(getIssuesUrl())) + '" target="_blank" rel="noopener noreferrer">打开 Issues</a>' +
+      '<a class="minmin-weibo-action-link" data-action="open-repo" data-github-url="' + escapeAttribute(getRepoUrl()) + '" href="' + escapeAttribute(buildGithubGatewayHref(getRepoUrl())) + '" target="_blank" rel="noopener noreferrer">打开仓库</a>' +
       "</div>" +
-      '<p class="minmin-weibo-toolbar-tip">点赞会直接写入 GitHub Reaction，评论会直接发布到对应 Issue，整个过程都留在微博页里完成。</p>' +
+      '<p class="minmin-weibo-toolbar-tip">登录 GitHub 后会回到当前微博页，之后就能在这里直接点赞和评论。只有打开 Issues、打开仓库和在 GitHub 中查看会先跳转 GitHub 登录。</p>' +
       "</section>" +
       '<div class="minmin-weibo-issue-list"></div>';
 
@@ -1144,12 +1308,38 @@
 
   function handleLoginButton(button) {
     if (hasOAuthSession()) {
-      applyLoginButtonState();
+      handleLogoutButton(button);
       return;
     }
 
     clearPendingInteraction();
     startGithubAuth("login", button);
+  }
+
+  function handleLogoutButton(button) {
+    if (window.MinminWeiboOAuth && typeof window.MinminWeiboOAuth.clearPending === "function") {
+      window.MinminWeiboOAuth.clearPending();
+    }
+
+    clearPendingInteraction();
+    clearOAuthSession();
+    refreshSessionBoundUi(true);
+
+    if (button && typeof button.blur === "function") {
+      button.blur();
+    }
+  }
+
+  function handleGithubGatewayAction(element) {
+    var targetUrl = resolveGithubActionUrl(element);
+    var loginUrl = buildGithubGatewayHref(targetUrl);
+
+    if (compactViewport) {
+      window.location.assign(loginUrl);
+      return;
+    }
+
+    window.open(loginUrl, "_blank", "noopener,noreferrer");
   }
 
   function toggleIssueLike(button) {
@@ -1378,35 +1568,45 @@
   }
 
   function bindActionButtons(scope) {
-    Array.prototype.forEach.call(scope.querySelectorAll("button[data-action]"), function (button) {
-      if (button.getAttribute("data-action-bound") === "1") {
+    Array.prototype.forEach.call(scope.querySelectorAll("[data-action]"), function (element) {
+      if (element.getAttribute("data-action-bound") === "1") {
         return;
       }
 
-      button.setAttribute("data-action-bound", "1");
-      button.addEventListener("click", function (event) {
-        var action = button.getAttribute("data-action") || "";
+      element.setAttribute("data-action-bound", "1");
+      element.addEventListener("click", function (event) {
+        var action = element.getAttribute("data-action") || "";
 
         event.preventDefault();
         event.stopPropagation();
 
         if (action === "login") {
-          handleLoginButton(button);
+          handleLoginButton(element);
+          return;
+        }
+
+        if (action === "logout") {
+          handleLogoutButton(element);
+          return;
+        }
+
+        if (action === "open-issues" || action === "open-repo" || action === "view-issue") {
+          handleGithubGatewayAction(element);
           return;
         }
 
         if (action === "like") {
-          toggleIssueLike(button);
+          toggleIssueLike(element);
           return;
         }
 
         if (action === "comment") {
-          openCommentPanel(button);
+          openCommentPanel(element);
           return;
         }
 
         if (action === "comment-login") {
-          handleCommentLogin(button);
+          handleCommentLogin(element);
         }
       });
     });
@@ -1436,8 +1636,7 @@
     }, false);
 
     window.addEventListener("minmin:weibo-oauth:success", function () {
-      refreshSessionBoundUi(true);
-      replayPendingInteraction();
+      fetchIssues();
     }, false);
 
     window.addEventListener("minmin:weibo-oauth:error", function () {

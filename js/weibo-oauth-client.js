@@ -28,23 +28,78 @@
     return /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
   }
 
-  function getConfig() {
+  function pickOauthScope() {
     var oauth = rootConfig.oauth || {};
-    var scoped = isLocalMode() ? oauth.dev || {} : oauth.prod || {};
+    var dev = oauth.dev || {};
+    var prod = oauth.prod || {};
+    var scoped = isLocalMode() ? dev : prod;
+    var fallback = isLocalMode() ? prod : dev;
+
+    if (
+      scoped &&
+      scoped.clientID &&
+      scoped.exchangeURL &&
+      scoped.callback
+    ) {
+      return scoped;
+    }
+
+    return fallback || {};
+  }
+
+  function getConfig() {
+    var scoped = pickOauthScope();
     var clientID = scoped.clientID || rootConfig.clientID || "";
-    var callback = scoped.callback || rootConfig.callback || window.location.origin + "/blog/weibo/oauth-callback/";
+    var callback = scoped.callback || rootConfig.callback || window.location.origin + "/blog/weibo/";
     var exchangeURL = scoped.exchangeURL || rootConfig.exchangeURL || "";
     var authorizeURL = scoped.authorizeURL || rootConfig.authorizeURL || "https://github.com/login/oauth/authorize";
     var scope = scoped.scope || rootConfig.scope || "public_repo read:user";
+    var callbackOrigin = "";
+
+    if (callback) {
+      try {
+        callbackOrigin = new window.URL(callback).origin;
+      } catch (error) {
+        callbackOrigin = "";
+      }
+    }
 
     return {
       clientID: clientID,
       callback: callback,
+      callbackOrigin: callbackOrigin,
       exchangeURL: exchangeURL,
       authorizeURL: authorizeURL,
       scope: scope,
       configured: !!(clientID && callback && exchangeURL)
     };
+  }
+
+  function getAllowedMessageOrigins() {
+    var origins = [window.location.origin];
+    var oauth = rootConfig.oauth || {};
+    var scopes = [oauth.dev || {}, oauth.prod || {}, pickOauthScope()];
+
+    scopes.forEach(function (scope) {
+      var callback = scope && scope.callback;
+      var callbackOrigin = "";
+
+      if (!callback) {
+        return;
+      }
+
+      try {
+        callbackOrigin = new window.URL(callback).origin;
+      } catch (error) {
+        callbackOrigin = "";
+      }
+
+      if (callbackOrigin && origins.indexOf(callbackOrigin) === -1) {
+        origins.push(callbackOrigin);
+      }
+    });
+
+    return origins;
   }
 
   function dispatch(name, detail) {
@@ -159,6 +214,72 @@
     }
 
     return String(Date.now()) + String(Math.random()).slice(2);
+  }
+
+  function parseCurrentAuthParams() {
+    var params = new window.URLSearchParams(window.location.search);
+    var code = params.get("code") || "";
+    var state = params.get("state") || "";
+    var error = params.get("error") || "";
+    var errorDescription = params.get("error_description") || "";
+
+    return {
+      code: code,
+      state: state,
+      error: error,
+      errorDescription: errorDescription,
+      hasAuthResponse: !!(code || state || error || errorDescription)
+    };
+  }
+
+  function getCurrentPageUrl() {
+    var url = null;
+
+    try {
+      url = new window.URL(window.location.href);
+      url.searchParams.delete("code");
+      url.searchParams.delete("state");
+      url.searchParams.delete("error");
+      url.searchParams.delete("error_description");
+      return url.toString();
+    } catch (error) {
+      return window.location.origin + window.location.pathname + window.location.hash;
+    }
+  }
+
+  function cleanupAuthParams() {
+    var cleanUrl = getCurrentPageUrl();
+
+    if (window.history && typeof window.history.replaceState === "function") {
+      try {
+        window.history.replaceState(null, document.title, cleanUrl);
+      } catch (error) {
+        return cleanUrl;
+      }
+    }
+
+    return cleanUrl;
+  }
+
+  function hasOpenerWindow() {
+    try {
+      return !!(window.opener && window.opener !== window && !window.opener.closed);
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function postToOpener(payload, origin) {
+    if (!hasOpenerWindow()) {
+      return false;
+    }
+
+    try {
+      window.opener.postMessage(payload, origin || window.location.origin);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   function readPending() {
@@ -324,7 +445,7 @@
   }
 
   function parseMessageData(event) {
-    if (!event || event.origin !== window.location.origin) {
+    if (!event || getAllowedMessageOrigins().indexOf(event.origin) === -1) {
       return null;
     }
 
@@ -368,6 +489,67 @@
     });
   }
 
+  function handleCurrentPageCallback() {
+    var params = parseCurrentAuthParams();
+    var pending = null;
+
+    if (!params.hasAuthResponse) {
+      return;
+    }
+
+    if (params.error) {
+      if (postToOpener({
+        source: authSource,
+        status: "error",
+        error: params.error,
+        error_description: params.errorDescription || ""
+      }, window.location.origin)) {
+        cleanupAuthParams();
+        window.setTimeout(function () {
+          window.close();
+        }, 60);
+        return;
+      }
+
+      clearPending();
+      cleanupAuthParams();
+      dispatch("error", {
+        error: params.error,
+        error_description: params.errorDescription || ""
+      });
+      return;
+    }
+
+    if (params.code && params.state && postToOpener({
+      source: authSource,
+      status: "code",
+      code: params.code,
+      state: params.state
+    }, window.location.origin)) {
+      cleanupAuthParams();
+      window.setTimeout(function () {
+        window.close();
+      }, 60);
+      return;
+    }
+
+    pending = readPending();
+    if (!params.code || !pending || pending.state !== params.state) {
+      clearPending();
+      cleanupAuthParams();
+      dispatch("error", { error: "state_mismatch" });
+      return;
+    }
+
+    completeLogin(params, pending).catch(function (error) {
+      cleanupAuthParams();
+      dispatch("error", {
+        error: "exchange_failed",
+        message: error && error.message ? error.message : "oauth_exchange_failed"
+      });
+    });
+  }
+
   function getPopupOptions() {
     var width = Math.max(Math.floor(window.outerWidth * 0.42), 420);
     var height = Math.max(Math.floor(window.outerHeight * 0.7), 640);
@@ -392,6 +574,7 @@
     var config = getConfig();
     var state;
     var url;
+    var crossOriginCallback = !!(config.callbackOrigin && config.callbackOrigin !== window.location.origin);
 
     if (!config.configured) {
       showSetup();
@@ -407,7 +590,7 @@
       callback: config.callback,
       exchangeURL: config.exchangeURL,
       origin: window.location.origin,
-      returnTo: window.location.href,
+      returnTo: getCurrentPageUrl(),
       createdAt: Date.now()
       })
     ) {
@@ -418,7 +601,7 @@
     url = buildAuthorizeUrl(config, state);
     dispatch("start", { action: action || "login" });
 
-    if (shouldUseFullPageAuth()) {
+    if (shouldUseFullPageAuth() && !crossOriginCallback) {
       window.location.assign(url);
       return;
     }
@@ -443,6 +626,7 @@
 
     installed = true;
     window.addEventListener("message", handleAuthMessage, false);
+    handleCurrentPageCallback();
   }
 
   window.MinminWeiboOAuth = {
@@ -464,4 +648,6 @@
       authSource: authSource
     }
   };
+
+  install();
 })(window);

@@ -99,9 +99,11 @@
   }
 
   function postToOpener(payload, pending) {
+    var targetOrigin = (pending && pending.origin) || "*";
+
     try {
       if (window.opener && !window.opener.closed) {
-        window.opener.postMessage(payload, (pending && pending.origin) || window.location.origin);
+        window.opener.postMessage(payload, targetOrigin);
         return true;
       }
     } catch (error) {
@@ -162,12 +164,12 @@
     };
 
     if (postToOpener(payload, pending)) {
-      setStatus("GitHub 登录未完成", "已经把错误状态传回微博页，这个窗口会自动关闭。", "error");
+      setStatus("GitHub 登录未完成", "错误状态已经传回微博页，这个窗口会自动关闭。", "error");
       closeSoon(240);
       return;
     }
 
-    setStatus("GitHub 登录未完成", "请返回微博页后重试一次。", "error");
+    setStatus("GitHub 登录未完成", "请返回微博页后重新发起 GitHub 登录。", "error");
     clearPending();
     redirectBack(pending, 1000);
   }
@@ -175,19 +177,14 @@
   function run() {
     var params = parseParams();
     var pending = readPending();
+    var popupFlow = !!(window.opener && !window.opener.closed);
 
     if (params.error) {
       handleError(params, pending);
       return;
     }
 
-    if (!params.code || !pending || !pending.state || pending.state !== params.state) {
-      setStatus("授权状态校验失败", "请返回微博页重新发起 GitHub 登录。", "error");
-      clearPending();
-      return;
-    }
-
-    if (
+    if (params.code && params.state && popupFlow) {
       postToOpener(
         {
           source: authSource,
@@ -196,11 +193,15 @@
           state: params.state
         },
         pending
-      )
-    ) {
+      );
       setStatus("GitHub 授权已完成", "正在把授权结果传回微博页，这个窗口会自动关闭。", "success");
       closeSoon(240);
-      redirectBack(pending, 900);
+      return;
+    }
+
+    if (!params.code || !pending || !pending.state || pending.state !== params.state) {
+      setStatus("授权状态校验失败", "请返回微博页重新发起 GitHub 登录。", "error");
+      clearPending();
       return;
     }
 
