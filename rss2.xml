@@ -5,159 +5,1906 @@
   <channel>
     <title>衰小孩</title>
     <link>https://minmin0101.github.io/</link>
-    
+
     <atom:link href="https://minmin0101.github.io/rss2.xml" rel="self" type="application/rss+xml"/>
-    
+
     <description>热爱分享与生活记录的个人博客，记录学习、折腾和日常灵感。</description>
-    <pubDate>Fri, 13 Mar 2026 07:49:20 GMT</pubDate>
+    <pubDate>Mon, 23 Mar 2026 15:40:00 +0000</pubDate>
     <generator>http://hexo.io/</generator>
-    
+
+    <item>
+      <title>Markdown 全功能长文实验室</title>
+      <link>https://minmin0101.github.io/2026/03/23/markdown-all-features-lab/</link>
+      <guid>https://minmin0101.github.io/2026/03/23/markdown-all-features-lab/</guid>
+      <pubDate>Mon, 23 Mar 2026 15:40:00 +0000</pubDate>
+      <description>这是一篇专门用来回归测试 Markdown 全部常用显示能力的长文，包含目录、图片、SVG、GIF、视频、数学公式、化学公式、化学结构式、表格、脚注、定义列表、HTML 扩展和多语言代码块。</description>
+      <content:encoded><![CDATA[<p>这篇文章专门用来做站内 Markdown 全量回归测试。<br>
+目标不是写一篇普通博客，而是尽可能把当前这套博客文章页能展示的内容形式都集中到一页里，方便后续改样式、调插件、修移动端时做一次性回归。</p>
+<!-- more -->
+
+<h2 id="1">1. 目录与层级标题</h2>
+<p>如果右侧目录能正确显示这一节以及后面的二级、三级标题，说明文章目录生成、滚动定位和锚点跳转这三件事是通的。</p>
+<h3 id="11">1.1 小标题示例</h3>
+<p>这里用一段普通正文来确认标题层级下的段落间距是否正常，桌面端、移动端、iOS 端都应该保持舒服的阅读节奏。</p>
+<h3 id="12">1.2 行内样式示例</h3>
+<p>你可以在同一段里混用 <strong>粗体</strong>、<em>斜体</em>、<code>行内代码</code>、<a href="/blog/">站内链接</a>、以及一个脚注引用<sup id="fnref:first-note"><a class="footnote-ref" href="#fn:first-note">1</a></sup>。</p>
+<h2 id="2">2. 引用、列表与分隔线</h2>
+<blockquote>
+<p>记录不是为了证明什么，而是为了在回头看的时候，知道自己曾经认真生活过。</p>
+</blockquote>
+<ul>
+<li>无序列表第一项</li>
+<li>无序列表第二项</li>
+<li>无序列表第三项</li>
+</ul>
+<ol>
+<li>有序列表第一项</li>
+<li>有序列表第二项</li>
+<li>有序列表第三项</li>
+</ol>
+<ul>
+<li>嵌套列表示例</li>
+<li>第二层信息</li>
+<li>第二层补充</li>
+</ul>
+<hr>
+<h2 id="3-svg">3. 图片与 SVG</h2>
+<p>这一节同时测试普通 JPG 图片和 SVG 图片。</p>
+<h3 id="31">3.1 普通图片</h3>
+<p><img alt="静态图片测试" src="/img/posts/2026-03-23-markdown-all-features-lab/figure-avatar.jpg"></p>
+<h3 id="32">3.2 矢量图片</h3>
+<p><img alt="矢量图片测试" src="/img/posts/2026-03-23-markdown-all-features-lab/figure-vector.svg"></p>
+<h2 id="4-gif">4. GIF、动图与视频</h2>
+<h3 id="41-gif">4.1 GIF 动图</h3>
+<p><img alt="GIF 动图测试" src="/media/posts/2026-03-23-markdown-all-features-lab/loader.gif"></p>
+<h3 id="42-html5">4.2 HTML5 视频</h3>
+<video controls preload="metadata" playsinline poster="/img/posts/2026-03-23-markdown-all-features-lab/figure-avatar.jpg">
+  <source src="/media/posts/2026-03-23-markdown-all-features-lab/flower.mp4" type="video/mp4">
+  当前浏览器不支持 HTML5 视频播放。
+</video>
+
+<h2 id="5">5. 表格、脚注、定义列表</h2>
+<h3 id="51">5.1 表格</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>图片</td>
+<td><code>![alt](url)</code></td>
+<td>测试图片渲染</td>
+</tr>
+<tr>
+<td>视频</td>
+<td><code>&lt;video&gt;</code></td>
+<td>测试多媒体布局</td>
+</tr>
+<tr>
+<td>数学公式</td>
+<td><code>$E = mc^2$</code></td>
+<td>测试公式渲染</td>
+</tr>
+<tr>
+<td>化学公式</td>
+<td><code>$\ce{H2O}$</code></td>
+<td>测试 mhchem</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52">5.2 定义列表</h3>
+<dl>
+<dt>Markdown</dt>
+<dd>当前博客新增文章的主要编写格式。</dd>
+<dt>Front matter</dt>
+<dd>Markdown 文件头部的元信息区域，用来控制标题、时间、标签、封面等配置。</dd>
+</dl>
+<h3 id="53">5.3 脚注</h3>
+<p>脚注最适合放补充说明<sup id="fnref:second-note"><a class="footnote-ref" href="#fn:second-note">2</a></sup>，不会打断正文节奏。</p>
+<h2 id="6">6. 数学公式</h2>
+<h3 id="61">6.1 行内公式</h3>
+<p>行内公式示例：$E = mc^2$、$a^2 + b^2 = c^2$、$F = ma$。</p>
+<h3 id="62">6.2 块级公式</h3>
+<p>$$
+\int_0^1 x^2 \, dx = \frac{1}{3}
+$$</p>
+<p>$$
+\sum_{n=1}^{10} n = 55
+$$</p>
+<h3 id="63">6.3 矩阵与极限</h3>
+<p>$$
+A =
+\begin{bmatrix}
+1 &amp; 2 &amp; 3 \
+0 &amp; 1 &amp; 4 \
+5 &amp; 6 &amp; 0
+\end{bmatrix}
+$$</p>
+<p>$$
+\lim_{x \to 0}\frac{\sin x}{x} = 1
+$$</p>
+<h2 id="7">7. 化学公式与化学结构式</h2>
+<h3 id="71">7.1 行内化学式</h3>
+<p>行内化学式可以这样写：$\ce{H2O}$、$\ce{CO2}$、$\ce{NaCl}$。</p>
+<h3 id="72">7.2 反应式</h3>
+<p>$$
+\ce{2H2 + O2 -&gt; 2H2O}
+$$</p>
+<p>$$
+\ce{CaCO3 -&gt;[\Delta] CaO + CO2}
+$$</p>
+<h3 id="73">7.3 化学结构式</h3>
+<p>下面这张 SVG 用来测试“化学结构式图片”这种内容是否能稳定显示：</p>
+<p><img alt="苯环结构式测试" src="/img/posts/2026-03-23-markdown-all-features-lab/benzene-structure.svg"></p>
+<h2 id="8">8. 代码块与多语言高亮</h2>
+<h3 id="81-javascript">8.1 JavaScript</h3>
+<pre><code class="language-js">const sections = Array.from(document.querySelectorAll(&quot;#post-content h2, #post-content h3&quot;));
+
+function activeHeading(scrollTop) {
+  return sections.findLast((section) =&gt; section.offsetTop - 120 &lt;= scrollTop);
+}
+
+window.addEventListener(&quot;scroll&quot;, () =&gt; {
+  const current = activeHeading(window.scrollY);
+  console.log(&quot;current heading:&quot;, current ? current.textContent : &quot;none&quot;);
+});
+</code></pre>
+<h3 id="82-python">8.2 Python</h3>
+<pre><code class="language-python">from pathlib import Path
+
+root = Path(&quot;D:/blog/Minmin0101.github.io&quot;)
+markdown_dir = root / &quot;markdown-posts&quot;
+
+for file in sorted(markdown_dir.glob(&quot;*.md&quot;)):
+    print(file.name)
+</code></pre>
+<h3 id="83-html">8.3 HTML</h3>
+<pre><code class="language-html">&lt;section class=&quot;feature-card&quot;&gt;
+  &lt;h2&gt;Markdown 测试页&lt;/h2&gt;
+  &lt;p&gt;这个区块用来确认 HTML 代码块高亮是否正常。&lt;/p&gt;
+&lt;/section&gt;
+</code></pre>
+<h3 id="84-css">8.4 CSS</h3>
+<pre><code class="language-css">.feature-card {
+  border-radius: 24px;
+  padding: 24px;
+  background: linear-gradient(135deg, #f6fbff, #eef7ff);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+</code></pre>
+<h3 id="85-json">8.5 JSON</h3>
+<pre><code class="language-json">{
+  &quot;title&quot;: &quot;Markdown 全功能长文实验室&quot;,
+  &quot;features&quot;: [&quot;image&quot;, &quot;gif&quot;, &quot;video&quot;, &quot;math&quot;, &quot;chemistry&quot;, &quot;svg&quot;, &quot;code&quot;],
+  &quot;keep_for_regression&quot;: true
+}
+</code></pre>
+<h3 id="86-bash">8.6 Bash</h3>
+<pre><code class="language-bash">cd D:/blog/Minmin0101.github.io
+./build-markdown-posts.bat
+git status
+</code></pre>
+<h2 id="9-html">9. HTML 扩展结构</h2>
+<h3 id="91-details">9.1 Details 折叠块</h3>
+<details>
+  <summary>点击展开额外说明</summary>
+  <p>这里测试的是 Markdown 正文中混用原生 HTML 结构时，样式和排版是否仍然稳定。</p>
+</details>
+
+<h3 id="92-html">9.2 行内 HTML</h3>
+<p>你也可以在正文里混用 <mark>高亮文本</mark>、<sup>上标</sup>、<sub>下标</sub> 和 <kbd>Ctrl</kbd> + <kbd>S</kbd> 这类原生标签。</p>
+<h2 id="10">10. 长段落滚动测试</h2>
+<p>当一篇文章真的很长时，读者很少会严格按顺序逐段往下看。更多时候，大家会先扫一眼目录，再按需要跳到某个段落。所以目录、回顶、卡片摘要、封面图这些功能，本质上都不是装饰，它们直接影响一篇长文是不是“愿意继续读下去”。</p>
+<p>为了让这个测试页也能承担回归价值，这里刻意保留一段较长的连续文字，用来观察小屏滚动、目录高亮、图片延迟加载、视频区域高度、公式块换行、代码块横向滚动等细节是否稳定。如果后面你继续改博客主题，这篇文章就可以当作一站式检查页。</p>
+<h2 id="11_1">11. 缩写定义</h2>
+<dl>
+<dt>HTML</dt>
+<dd>HyperText Markup Language</dd>
+<dt>CSS</dt>
+<dd>Cascading Style Sheets</dd>
+<dt>SVG</dt>
+<dd>Scalable Vector Graphics</dd>
+</dl>
+<h2 id="12_1">12. 结语</h2>
+<p>如果这篇文章能在博客页卡片、文章详情页、右侧目录、移动端长页滚动和多媒体渲染里都保持稳定，就说明当前这套 Markdown 发文结构已经比较成熟了。</p>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:first-note">
+<p>这条脚注主要测试脚注跳转和脚注区渲染。&#160;<a class="footnote-backref" href="#fnref:first-note" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:second-note">
+<p>这条脚注主要测试多个脚注同时存在时的编号与排版。&#160;<a class="footnote-backref" href="#fnref:second-note" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>]]></content:encoded>
+      
+      <category domain="/tags/Markdown/">Markdown</category>
+      
+      <category domain="/tags/%E9%95%BF%E6%96%87%E6%B5%8B%E8%AF%95/">长文测试</category>
+      
+      <category domain="/tags/%E5%A4%9A%E5%AA%92%E4%BD%93/">多媒体</category>
+      
+      <category domain="/tags/%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F/">数学公式</category>
+      
+      <category domain="/tags/%E5%8C%96%E5%AD%A6%E7%AC%A6%E5%8F%B7/">化学符号</category>
+      
+      <comments>https://minmin0101.github.io/2026/03/23/markdown-all-features-lab/#disqus_thread</comments>
+    </item>
+    <item>
+      <title>个人博客运维手册（小白版）</title>
+      <link>https://minmin0101.github.io/2026/03/23/blog-maintenance-readme/</link>
+      <guid>https://minmin0101.github.io/2026/03/23/blog-maintenance-readme/</guid>
+      <pubDate>Mon, 23 Mar 2026 13:00:00 +0000</pubDate>
+      <description>这篇文章直接同步站点根目录 README.md，集中记录个人博客的部署、发文、微博、相册和 GitHub Pages 运维流程。</description>
+      <content:encoded><![CDATA[<p>这是一份给“完全不懂代码也能照着做”的博客维护说明书。<br>
+你当前博客项目的本地目录是：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io
+</code></pre>
+<p>如果你后面忘了某个内容该去哪里改，先回到这份 <code>README.md</code> 看，一般都能找到。
+为了方便你直接在电脑里定位文件，下面文中提到的关键文件路径，我都尽量改成了你本机可用的绝对路径显示。</p>
+<p><img alt="当前头像示例" src="/img/avatar.png"></p>
+<hr>
+<h2 id="1">1. 先搞清楚：这个项目是什么</h2>
+<p>这个仓库 <strong>不是“Hexo 源码工程”</strong>，而是一个已经生成好的 <strong>静态网站成品</strong>。</p>
+<p>这句话很重要，它意味着：</p>
+<ol>
+<li>你改的是网页文件本身，不是“配置完自动生成”的源码。</li>
+<li>很多页面内容是重复写死在不同 HTML 文件里的。</li>
+<li>这里现在有两套发文方式：
+   - 如果你走旧的“手工改 HTML”方式，新文章不会自动更新博客列表、标签页、搜索索引、站点地图，通常需要你手动补几处文件。
+   - 如果你走现在推荐的“Markdown 发文流程”，只要把文章放进 <code>D:\blog\Minmin0101.github.io\markdown-posts</code>，再运行 <code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code>，或者直接推送到 GitHub，博客首页、最新文章、标签页、归档页、搜索索引、RSS、站点地图都会自动更新。</li>
+</ol>
+<p>你可以把它理解成：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\index.html</code> 是首页门户</li>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code> 是博客首页</li>
+<li><code>D:\blog\Minmin0101.github.io\2026\...\index.html</code> 是每一篇文章详情页</li>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code> 是微博页</li>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code> 是相册页</li>
+<li><code>D:\blog\Minmin0101.github.io\about\index.html</code>、<code>D:\blog\Minmin0101.github.io\projects\index.html</code>、<code>D:\blog\Minmin0101.github.io\thinking\index.html</code> 是独立菜单页</li>
+</ul>
+<hr>
+<h2 id="2">2. 这份手册怎么用</h2>
+<p>如果你只想做某一件事，可以直接跳到对应章节：</p>
+<ul>
+<li>修改站名、座右铭、入口按钮、头像：看“5. 站点基础信息怎么改”</li>
+<li>修改每个菜单页的介绍：看“6. 各菜单页怎么改”</li>
+<li>发布博客文章：看“7. 如何写并发布博客文章”</li>
+<li>添加标签：看“8. 如何添加标签”</li>
+<li>发布微博：看“9. 如何写并发布微博”</li>
+<li>新建相册、上传图片：看“10. 如何新建相册并上传图片”</li>
+<li>发布到 GitHub Pages：看“12. 如何部署到 GitHub Pages”</li>
+<li>打版本号：看“13. 如何打版本号”</li>
+<li>微博登录坏了：看“14. 微博登录与 GitHub OAuth 维护”</li>
+</ul>
+<hr>
+<h2 id="3">3. 推荐环境</h2>
+<p>为了后续维护轻松一些，建议你电脑上至少装这 4 个东西。</p>
+<h3 id="31">3.1 必装软件</h3>
+<ol>
+<li>
+<p><code>Git for Windows</code>
+   用来提交、推送代码到 GitHub。</p>
+</li>
+<li>
+<p><code>VS Code</code>
+   用来打开和编辑项目文件。</p>
+</li>
+<li>
+<p><code>Python 3</code>
+   用来本地预览网站。</p>
+</li>
+<li>
+<p><code>浏览器</code>
+   推荐 Edge 或 Chrome。</p>
+</li>
+</ol>
+<h3 id="32">3.2 选装软件</h3>
+<ol>
+<li>
+<p><code>Node.js</code>
+   只有你维护微博登录的 Cloudflare Worker 时才需要。</p>
+</li>
+<li>
+<p><code>Cloudflare 账号</code>
+   只有你维护微博页 GitHub 登录时才需要。</p>
+</li>
+</ol>
+<hr>
+<h2 id="4">4. 项目目录总览</h2>
+<p>下面这张“地图”非常重要，后面所有修改基本都围绕这些目录展开。</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io\
+├─ index.html                          # 根首页 / 个人门户页
+├─ blog/
+│  ├─ index.html                       # 博客首页
+│  └─ weibo/
+│     ├─ index.html                    # 微博页
+│     ├─ issues-cache.json             # 微博缓存数据
+│     ├─ comments-cache.json           # 微博评论缓存数据
+│     └─ oauth-callback/
+│        └─ index.html                 # 微博登录回调页
+├─ 2026/                               # 博客文章详情页目录
+├─ about/index.html                    # 关于页
+├─ projects/index.html                 # 项目页
+├─ thinking/index.html                 # 思考页
+├─ gallery/index.html                  # 相册页
+├─ archives/                           # 归档页
+├─ tags/                               # 标签页总目录
+├─ img/                                # 常规图片资源
+├─ media/                              # 动图、视频等资源
+├─ css/                                # 全站样式
+├─ js/                                 # 全站脚本
+├─ content.json                        # 搜索索引
+├─ rss2.xml                            # RSS
+├─ sitemap.xml                         # 站点地图
+├─ sitemap.txt                         # 简版站点地图
+└─ serverless/
+   └─ github-oauth-worker/             # 微博页 GitHub 登录 Worker
+</code></pre>
+<h3 id="41">4.1 关键文件一览表</h3>
+<table>
+<thead>
+<tr>
+<th>你要做什么</th>
+<th>主要文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>改首页站名、座右铭、入口按钮</td>
+<td><code>D:\blog\Minmin0101.github.io\index.html</code></td>
+</tr>
+<tr>
+<td>改博客首页文案</td>
+<td><code>D:\blog\Minmin0101.github.io\blog\index.html</code></td>
+</tr>
+<tr>
+<td>改微博页文案与配置</td>
+<td><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></td>
+</tr>
+<tr>
+<td>改微博样式与交互</td>
+<td><code>D:\blog\Minmin0101.github.io\css\weibo-gwitter.css</code>、<code>D:\blog\Minmin0101.github.io\js\weibo-gwitter.js</code></td>
+</tr>
+<tr>
+<td>改相册内容</td>
+<td><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></td>
+</tr>
+<tr>
+<td>改关于页</td>
+<td><code>D:\blog\Minmin0101.github.io\about\index.html</code></td>
+</tr>
+<tr>
+<td>改项目页</td>
+<td><code>D:\blog\Minmin0101.github.io\projects\index.html</code></td>
+</tr>
+<tr>
+<td>改思考页</td>
+<td><code>D:\blog\Minmin0101.github.io\thinking\index.html</code></td>
+</tr>
+<tr>
+<td>改搜索</td>
+<td><code>D:\blog\Minmin0101.github.io\content.json</code>、<code>D:\blog\Minmin0101.github.io\js\search-fuzzy.js</code>、<code>D:\blog\Minmin0101.github.io\css\search-fuzzy.css</code></td>
+</tr>
+<tr>
+<td>改头像</td>
+<td><code>D:\blog\Minmin0101.github.io\img\avatar.png</code></td>
+</tr>
+<tr>
+<td>改网站图标</td>
+<td><code>D:\blog\Minmin0101.github.io\img\favicon1.ico</code></td>
+</tr>
+<tr>
+<td>改微信二维码</td>
+<td><code>D:\blog\Minmin0101.github.io\img\wechat_channel.jpg</code></td>
+</tr>
+<tr>
+<td>改打赏二维码</td>
+<td><code>D:\blog\Minmin0101.github.io\img\wechatpay.png</code>、<code>D:\blog\Minmin0101.github.io\img\alipay.png</code></td>
+</tr>
+<tr>
+<td>改微博登录 Worker</td>
+<td><code>D:\blog\Minmin0101.github.io\serverless\github-oauth-worker</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="42">4.2 一个很重要的小提示</h3>
+<p>这个项目里很多 HTML 文件是 <strong>压缩成一行</strong> 的，所以你打开时会觉得很乱。<br>
+这不是你弄坏了，是文件本来就这样。</p>
+<p>建议操作方式：</p>
+<ol>
+<li>在 VS Code 里打开项目</li>
+<li>直接用“全局搜索”找关键词</li>
+<li>找到后改文字，不要执着于行号</li>
+</ol>
+<p>常用搜索关键词：</p>
+<ul>
+<li><code>衰小孩</code></li>
+<li><code>热爱分享</code></li>
+<li><code>PRESS START</code></li>
+<li><code>为什么要记录微博</code></li>
+<li><code>文章记录 / 生活切片 / 思考沉淀</code></li>
+<li><code>欢迎添加我的微信</code></li>
+<li><code>mail.qq.com</code></li>
+<li><code>https://github.com/Minmin0101</code></li>
+</ul>
+<hr>
+<h2 id="5">5. 环境搭建与本地预览</h2>
+<h3 id="51">5.1 第一次打开项目</h3>
+<p>在 PowerShell 里执行：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+code .
+</code></pre>
+<p>如果 <code>code .</code> 没反应，就直接手动打开 VS Code，然后“文件 -&gt; 打开文件夹”，选择：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io
+</code></pre>
+<h3 id="52">5.2 本地预览网站</h3>
+<p>推荐最简单的预览方式：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+python -m http.server 4000
+</code></pre>
+<p>然后浏览器打开：</p>
+<pre><code class="language-text">http://127.0.0.1:4000/
+</code></pre>
+<p>常用页面地址：</p>
+<ul>
+<li>首页：<code>http://127.0.0.1:4000/</code></li>
+<li>博客：<code>http://127.0.0.1:4000/blog/</code></li>
+<li>微博：<code>http://127.0.0.1:4000/blog/weibo/</code></li>
+<li>相册：<code>http://127.0.0.1:4000/gallery/</code></li>
+</ul>
+<h3 id="53-4000">5.3 如果端口 4000 被占用</h3>
+<p>可以换成别的端口，比如 4010：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+python -m http.server 4010
+</code></pre>
+<p>然后打开：</p>
+<pre><code class="language-text">http://127.0.0.1:4010/
+</code></pre>
+<hr>
+<h2 id="6">6. 站点基础信息怎么改</h2>
+<p>这一章解决这些问题：</p>
+<ul>
+<li>怎么改站名</li>
+<li>怎么改首页句子 / 座右铭</li>
+<li>怎么改入口标签名</li>
+<li>怎么改头像</li>
+<li>怎么改 favicon</li>
+<li>怎么改邮箱 / GitHub / 微博链接</li>
+<li>怎么改左侧菜单栏文字</li>
+</ul>
+<h3 id="61">6.1 修改站名</h3>
+<p>最常改的地方有 2 组：</p>
+<ol>
+<li>首页门户名称</li>
+<li>博客和其他页面左侧侧边栏名称</li>
+</ol>
+<h4 id="_2">首页门户名称</h4>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\index.html</code></li>
+</ul>
+<p>搜索这些关键词：</p>
+<pre><code class="language-html">&lt;title&gt;衰小孩 | 热爱分享 &amp; 生活记录&lt;/title&gt;
+&lt;h2 class=&quot;content-title&quot;&gt;衰小孩&lt;/h2&gt;
+&lt;h1&gt;衰小孩&lt;/h1&gt;
+</code></pre>
+<p>把 <code>衰小孩</code> 改成你想要的新名字即可。</p>
+<h4 id="_3">博客和各内容页名称</h4>
+<p>文件通常包括：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\about\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\projects\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\thinking\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></li>
+<li>各文章页 <code>2026/.../index.html</code></li>
+</ul>
+<p>搜索关键词：</p>
+<pre><code class="language-text">衰小孩
+</code></pre>
+<p>把页面里的名字替换成你的新站名即可。</p>
+<h3 id="62">6.2 修改首页座右铭 / 句子</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\index.html</code></li>
+</ul>
+<p>搜索这两个字段：</p>
+<pre><code class="language-html">&lt;h3 class=&quot;content-subtitle&quot; original-content=&quot;“如果你有勇气，我就陪你打断婚车的车轴”--《龙族》楚子航&quot;&gt;
+&lt;h2 id=&quot;signature&quot; original-content=&quot;「热爱分享 | 生活记录」&quot;&gt;
+</code></pre>
+<p>你可以把 <code>original-content</code> 里的内容改成自己的。</p>
+<p>例如：</p>
+<pre><code class="language-html">&lt;h3 class=&quot;content-subtitle&quot; original-content=&quot;想把今天的风和心情都认真存档。&quot;&gt;
+&lt;h2 id=&quot;signature&quot; original-content=&quot;「生活记录 | 学习分享 | 慢慢生长」&quot;&gt;
+</code></pre>
+<h3 id="63">6.3 修改首页入口标签名</h3>
+<p>首页的入口按钮在：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\index.html</code></li>
+</ul>
+<p>搜索：</p>
+<pre><code class="language-html">&lt;ul class=&quot;portal-links&quot;&gt;
+</code></pre>
+<p>你会看到类似内容：</p>
+<pre><code class="language-html">&lt;span class=&quot;nav-text&quot;&gt;博客&lt;/span&gt;
+&lt;span class=&quot;nav-text&quot;&gt;微博&lt;/span&gt;
+&lt;span class=&quot;nav-text&quot;&gt;关于&lt;/span&gt;
+&lt;span class=&quot;nav-text&quot;&gt;相册&lt;/span&gt;
+&lt;span class=&quot;nav-text&quot;&gt;项目&lt;/span&gt;
+&lt;span class=&quot;nav-text&quot;&gt;思考&lt;/span&gt;
+</code></pre>
+<p>把这些文字改成你想要的名字即可。</p>
+<p>例如：</p>
+<ul>
+<li><code>博客</code> 改成 <code>文章</code></li>
+<li><code>思考</code> 改成 <code>碎碎念</code></li>
+<li><code>项目</code> 改成 <code>作品</code></li>
+</ul>
+<h3 id="64">6.4 修改首页按钮文字</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\index.html</code></li>
+</ul>
+<p>搜索：</p>
+<pre><code class="language-html">PRESS START
+</code></pre>
+<p>比如可以改成：</p>
+<pre><code class="language-html">ENTER
+开始进入
+点我开始
+</code></pre>
+<h3 id="65">6.5 修改头像</h3>
+<p>最省事的做法不是改代码，而是 <strong>直接替换同名文件</strong>。</p>
+<p>当前头像文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\img\avatar.png</code></li>
+</ul>
+<p>建议操作：</p>
+<ol>
+<li>准备一张新的头像图片</li>
+<li>把它改名为 <code>avatar.png</code></li>
+<li>直接覆盖项目里的这个文件</li>
+</ol>
+<p>这样做的好处：</p>
+<ul>
+<li>不需要全站到处改图片路径</li>
+<li>首页、博客、关于页、相册页、头像预览会一起更新</li>
+</ul>
+<h3 id="66-favicon">6.6 修改网站图标 favicon</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\img\favicon1.ico</code></li>
+</ul>
+<p>最简单做法：</p>
+<ol>
+<li>准备新的 <code>.ico</code> 图标</li>
+<li>命名成 <code>favicon1.ico</code></li>
+<li>覆盖原文件</li>
+</ol>
+<h3 id="67">6.7 修改微信二维码、打赏二维码</h3>
+<p>微信二维码：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\img\wechat_channel.jpg</code></li>
+</ul>
+<p>微信打赏码：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\img\wechatpay.png</code></li>
+</ul>
+<p>支付宝打赏码：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\img\alipay.png</code></li>
+</ul>
+<p>同样建议直接用同名图片覆盖。</p>
+<h3 id="68">6.8 修改左侧社交链接</h3>
+<p>当前常见链接分布在很多 HTML 页面中，最简单的方法是 <strong>全局搜索并替换</strong>。</p>
+<p>常见值：</p>
+<pre><code class="language-text">https://mail.qq.com/
+https://github.com/Minmin0101
+https://weibo.com/u/x
+</code></pre>
+<p>推荐在 VS Code 里按：</p>
+<pre><code class="language-text">Ctrl + Shift + F
+</code></pre>
+<p>然后搜索并替换。</p>
+<h4 id="_4">这些链接分别代表什么</h4>
+<ul>
+<li><code>https://mail.qq.com/</code>：邮箱入口</li>
+<li><code>https://github.com/Minmin0101</code>：GitHub 主页</li>
+<li><code>https://weibo.com/u/x</code>：微博主页</li>
+</ul>
+<h3 id="69">6.9 修改左侧菜单栏标签</h3>
+<p>左侧菜单不是只在一个文件里，而是很多页面都各自写了一份。</p>
+<p>常见菜单文字：</p>
+<pre><code class="language-text">主 页
+归 档
+标 签
+微 博
+相 册
+关 于
+项 目
+思 考
+导 航
+</code></pre>
+<h4 id="_5">推荐改法</h4>
+<p>用 VS Code 全局搜索这些词，然后统一替换。</p>
+<h4 id="_6">需要重点检查的页面</h4>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\about\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\projects\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\thinking\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></li>
+<li>所有文章详情页 <code>2026/.../index.html</code></li>
+</ul>
+<h4 id="_7">小提醒</h4>
+<p>改菜单名字后，最好每个页面都本地点一遍，避免某些页面菜单文字没同步。</p>
+<hr>
+<h2 id="7">7. 各菜单页怎么改</h2>
+<p>这一章对应：</p>
+<ul>
+<li>关于页</li>
+<li>项目页</li>
+<li>思考页</li>
+<li>相册页</li>
+<li>微博页介绍文字</li>
+<li>博客首页介绍文字</li>
+</ul>
+<hr>
+<h3 id="71">7.1 关于页</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\about\index.html</code></li>
+</ul>
+<p>重点改 3 处：</p>
+<ol>
+<li>页面标题</li>
+<li>页面副标题</li>
+<li>页面正文介绍</li>
+</ol>
+<p>搜索关键词：</p>
+<pre><code class="language-text">认识一下我和这个博客
+你好，我是
+这个博客主要用来记录三类内容
+</code></pre>
+<p>真正的正文区域是：</p>
+<pre><code class="language-html">&lt;div class=&quot;post-content page-content&quot; id=&quot;page-content&quot;&gt;
+</code></pre>
+<p>你想改介绍内容，主要就是改这个区域里的 HTML。</p>
+<hr>
+<h3 id="72">7.2 项目页</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\projects\index.html</code></li>
+</ul>
+<p>搜索关键词：</p>
+<pre><code class="language-text">做过的项目、练习与长期更新计划
+</code></pre>
+<p>正文内容同样在：</p>
+<pre><code class="language-html">&lt;div class=&quot;post-content page-content&quot; id=&quot;page-content&quot;&gt;
+</code></pre>
+<hr>
+<h3 id="73">7.3 思考页</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\thinking\index.html</code></li>
+</ul>
+<p>搜索关键词：</p>
+<pre><code class="language-text">稍微慢一点写下来的想法与阶段总结
+这里适合放更完整的阶段总结
+</code></pre>
+<hr>
+<h3 id="74">7.4 相册页介绍</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></li>
+</ul>
+<p>可以改的地方包括：</p>
+<ul>
+<li>页面副标题</li>
+<li>相册总览说明</li>
+<li>相册统计文字</li>
+<li>相册说明段落</li>
+</ul>
+<p>搜索关键词：</p>
+<pre><code class="language-text">这里放生活切片、界面草稿和想留下来的旅途画面。
+把生活碎片收进相册里，想看的时候就翻出来。
+目前收录
+每一本相册都可以继续往里加照片
+</code></pre>
+<hr>
+<h3 id="75">7.5 微博页介绍</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></li>
+</ul>
+<p>你现在能直接改到这些位置：</p>
+<ul>
+<li>顶部引导文案</li>
+<li>折叠介绍标题</li>
+<li>折叠介绍正文</li>
+<li>标签云</li>
+</ul>
+<p>搜索关键词：</p>
+<pre><code class="language-text">终于明白为什么有人会说
+为什么要记录微博
+为什么要记录生活
+都有什么内容
+</code></pre>
+<hr>
+<h3 id="76">7.6 博客首页介绍</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+</ul>
+<p>搜索关键词：</p>
+<pre><code class="language-text">文章记录 / 生活切片 / 思考沉淀
+沿着时间往下翻，就是这段时间留下来的思考与记录。
+目前共收录
+</code></pre>
+<p>你可以修改：</p>
+<ul>
+<li>博客页副标题</li>
+<li>博客首页介绍句</li>
+<li>文章数量显示文字</li>
+</ul>
+<hr>
+<h2 id="8">8. 如何写并发布博客文章</h2>
+<p>先看最重要的一句：</p>
+<p>现在这套博客已经支持“小白模式”发文了。
+以后默认新增一篇博客文章，你只需要：</p>
+<ol>
+<li>在 <code>D:\blog\Minmin0101.github.io\markdown-posts</code> 里新增 1 个 <code>.md</code> 文件</li>
+<li>改好标题、日期、标签和正文</li>
+<li>本地双击 <code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code>，或者直接推送到 GitHub</li>
+</ol>
+<p>脚本会自动帮你生成：</p>
+<ul>
+<li>新文章详情页</li>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code> 里的文章卡片</li>
+<li><code>D:\blog\Minmin0101.github.io\archives\index.html</code> 归档</li>
+<li><code>D:\blog\Minmin0101.github.io\tags\index.html</code> 和对应标签页</li>
+<li><code>D:\blog\Minmin0101.github.io\content.json</code> 搜索索引</li>
+<li><code>D:\blog\Minmin0101.github.io\rss2.xml</code></li>
+<li><code>D:\blog\Minmin0101.github.io\sitemap.xml</code></li>
+<li><code>D:\blog\Minmin0101.github.io\sitemap.txt</code></li>
+</ul>
+<p>而且会继续复用你现在博客的现有页面结构，所以 PC、移动端、iOS 端样式都会跟现有文章页保持一致。</p>
+<h3 id="80-markdown">8.0 现在最推荐的发文方式：只上传一个 Markdown 文件</h3>
+<p>你只需要记住这 4 个位置：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\markdown-posts</code>
+  这里放你以后新写的 Markdown 文章</li>
+<li><code>D:\blog\Minmin0101.github.io\markdown-posts\_template.md</code>
+  这是写新文章时直接复制的模板</li>
+<li><code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code>
+  本地一键生成文章的脚本</li>
+<li><code>D:\blog\Minmin0101.github.io\.github\workflows\build-markdown-posts.yml</code>
+  推到 GitHub 后自动生成文章的工作流</li>
+</ul>
+<h3 id="801">8.0.1 小白最简单步骤</h3>
+<h4 id="_8">第一步：复制模板文件</h4>
+<p>把这个文件复制一份：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\markdown-posts\_template.md</code></li>
+</ul>
+<p>例如你可以复制成：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\markdown-posts\2026-03-23-我的新文章.md</code></li>
+</ul>
+<h4 id="_9">第二步：改这些字段</h4>
+<p>模板开头这段叫 front matter：</p>
+<pre><code class="language-yaml">---
+title: 你的文章标题
+date: 2026-03-23 20:00
+updated: 2026-03-23 20:00
+slug: my-new-post
+summary: 这里写摘要
+tags:
+  - 生活记录
+  - 随笔
+cover: /img/posts/your-cover.jpg
+cover_alt: 文章封面
+---
+</code></pre>
+<p>这些字段分别是什么意思：</p>
+<ul>
+<li><code>title</code>
+  文章标题，会显示在文章页、博客首页、归档页、搜索结果里</li>
+<li><code>date</code>
+  发布时间，决定文章排序和文章 URL 里的年月日</li>
+<li><code>updated</code>
+  最后更新时间</li>
+<li><code>slug</code>
+  文章网址最后那一段，建议只写英文、数字、中划线</li>
+<li><code>summary</code>
+  摘要，会显示在博客列表和搜索结果里</li>
+<li><code>tags</code>
+  标签列表，会自动生成到标签页里</li>
+<li><code>cover</code>
+  封面图路径，可留空；如果留空，系统会自动用现有博客卡片那种画布封面</li>
+<li><code>cover_alt</code>
+  封面图描述文字</li>
+</ul>
+<p>封面图现在怎么改最省事：</p>
+<ul>
+<li>新文章：直接改你这篇 Markdown 文章开头的 <code>cover:</code> 和 <code>cover_alt:</code></li>
+<li>封面图片文件建议先放到 <code>D:\blog\Minmin0101.github.io\img\posts\你的文章目录\</code></li>
+<li>例如你先把图片放到 <code>D:\blog\Minmin0101.github.io\img\posts\2026-03-23-my-first-post\cover.jpg</code></li>
+<li>然后在文章 front matter 里写：<code>cover: /img/posts/2026-03-23-my-first-post/cover.jpg</code></li>
+<li>README 这篇文章当前就改这里：<code>D:\blog\Minmin0101.github.io\markdown-posts\2026-03-23-blog-maintenance-readme.md</code></li>
+</ul>
+<p>要注意一件事：</p>
+<ul>
+<li>现在旧文章首页卡片也已经统一切到 Markdown 生成卡片了</li>
+<li>也就是说，你现在改旧文章 Markdown 里的 <code>cover:</code>，博客首页卡片封面也会一起跟着变</li>
+<li>如果 <code>cover:</code> 留空，首页卡片就会自动回退到当前博客那种画布封面</li>
+</ul>
+<h4 id="_10">第三步：写正文</h4>
+<p>front matter 下面就是正常 Markdown 正文，你可以直接写：</p>
+<ul>
+<li>标题</li>
+<li>段落</li>
+<li>图片</li>
+<li>代码块</li>
+<li>表格</li>
+<li>数学公式</li>
+</ul>
+<p>如果要插图片，推荐先把图片放到：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\img</code></li>
+<li><code>D:\blog\Minmin0101.github.io\media</code></li>
+</ul>
+<p>例如：</p>
+<pre><code class="language-markdown">![今天拍到的天空](/img/avatar.png)
+</code></pre>
+<h4 id="_11">第四步：生成文章</h4>
+<p>你有两种方法。</p>
+<p>方法 A：本地生成</p>
+<p>直接双击：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code></li>
+</ul>
+<p>或者命令行运行：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+.\build-markdown-posts.bat
+</code></pre>
+<p>方法 B：直接推送到 GitHub</p>
+<p>只要你把新 Markdown 文件推到仓库，GitHub Actions 就会自动运行：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\.github\workflows\build-markdown-posts.yml</code></li>
+</ul>
+<p>它会自动生成新文章页面并提交回仓库。</p>
+<h3 id="802">8.0.2 生成后你会看到什么</h3>
+<p>如果你新建了：</p>
+<ul>
+<li><code>markdown-posts/2026-03-23-我的新文章.md</code></li>
+</ul>
+<p>并且里面写的是：</p>
+<ul>
+<li><code>date: 2026-03-23 20:00</code></li>
+<li><code>slug: my-new-post</code></li>
+</ul>
+<p>那么脚本会自动生成：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\2026\03\23</code></li>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\archives\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\tags\index.html</code></li>
+<li>对应标签页，比如 <code>D:\blog\Minmin0101.github.io\tags\生活记录\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\content.json</code></li>
+<li><code>D:\blog\Minmin0101.github.io\rss2.xml</code></li>
+<li><code>D:\blog\Minmin0101.github.io\sitemap.xml</code></li>
+</ul>
+<h3 id="803">8.0.3 以后你尽量不要再手改这些文件</h3>
+<p>用了这套 Markdown 发文流程后，新增文章时尽量不要再手改下面这些文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\archives\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\tags\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\content.json</code></li>
+<li><code>D:\blog\Minmin0101.github.io\rss2.xml</code></li>
+<li><code>D:\blog\Minmin0101.github.io\sitemap.xml</code></li>
+</ul>
+<p>因为这些文件现在会由脚本自动维护。</p>
+<h3 id="804">8.0.4 旧方法还保留，但只当备用</h3>
+<p>下面 8.1 到 8.12 里原来的手工 HTML 做法我先保留着，主要是为了你以后万一要修旧文章、抢救页面或者手工排查时还能参考。
+但以后“新增一篇新文章”，默认优先走上面这套 Markdown 流程就够了。</p>
+<p>这是整个站最需要你熟悉的一章。</p>
+<h3 id="81">8.1 先理解博客文章的结构</h3>
+<p>每篇文章都有自己的独立目录，路径长这样：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io\2026\03\12\post-interaction-long-test\index.html
+</code></pre>
+<p>也就是：</p>
+<pre><code class="language-text">年 / 月 / 日 / 文章英文路径 / index.html
+</code></pre>
+<p>例如一篇新文章可以做成：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io\2026\03\23\my-first-post\index.html
+</code></pre>
+<h3 id="82-html">8.2 旧方法（备用）：手动复制现有 HTML 文章模板</h3>
+<p>最简单的方法是复制一篇现有文章，然后改里面的标题和正文。</p>
+<p>推荐拿这篇做模板：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\2026\01\23\hello-world\index.html</code></li>
+</ul>
+<h4 id="_12">复制文章模板命令</h4>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+Copy-Item -Recurse &quot;.\2026\01\23\hello-world&quot; &quot;.\2026\03\23\my-first-post&quot;
+</code></pre>
+<p>然后去改新文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\2026\03\23\my-first-post\index.html</code></li>
+</ul>
+<h3 id="83">8.3 文章里通常要改哪些内容</h3>
+<p>打开新文章后，搜索这些关键词并替换：</p>
+<pre><code class="language-text">你好，世界
+这是博客重构后的第一篇文章
+2026-01-23
+衰小孩
+生活
+建站
+</code></pre>
+<p>一般要改的内容包括：</p>
+<ol>
+<li>页面 <code>&lt;title&gt;</code></li>
+<li><code>meta description</code></li>
+<li>文章标题</li>
+<li>发布时间</li>
+<li>正文内容</li>
+<li>标签</li>
+<li>封面图</li>
+</ol>
+<h3 id="84">8.4 图片、动图、视频往哪里放</h3>
+<p>推荐放在：</p>
+<ul>
+<li><code>img/</code>：普通图片</li>
+<li><code>media/</code>：GIF、MP4、较大的媒体资源</li>
+</ul>
+<p>建议你自己整理子目录，后面不容易乱。</p>
+<p>例如：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io\img\posts\2026-03-23-my-first-post\cover.jpg
+D:\blog\Minmin0101.github.io\img\posts\2026-03-23-my-first-post\figure-1.jpg
+D:\blog\Minmin0101.github.io\media\posts\2026-03-23-my-first-post\demo.gif
+D:\blog\Minmin0101.github.io\media\posts\2026-03-23-my-first-post\demo.mp4
+</code></pre>
+<p>然后在文章里引用：</p>
+<pre><code class="language-html">&lt;img src=&quot;/D:\blog\Minmin0101.github.io\img\posts\2026-03-23-my-first-post\cover.jpg&quot; alt=&quot;文章封面&quot;&gt;
+</code></pre>
+<h3 id="85">8.5 只新增文章详情页还不够</h3>
+<p>因为这是静态站，<strong>新文章不会自动出现在博客首页</strong>。<br>
+你还需要至少补这几处：</p>
+<ol>
+<li>博客首页文章卡片</li>
+<li>博客首页“最新文章”列表</li>
+<li>搜索索引 <code>content.json</code></li>
+<li>标签页</li>
+<li>归档页</li>
+<li>站点地图</li>
+<li>RSS</li>
+</ol>
+<p>下面一项一项讲。</p>
+<hr>
+<h3 id="86">8.6 把新文章加到博客首页</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+</ul>
+<p>你需要改 3 个地方：</p>
+<h4 id="1_1">1. 最新文章弹层</h4>
+<p>搜索：</p>
+<pre><code class="language-text">latest-posts-list
+</code></pre>
+<p>你会看到类似：</p>
+<pre><code class="language-html">&lt;li class=&quot;latest-posts-item&quot;&gt;
+  &lt;a class=&quot;latest-posts-link&quot; href=&quot;/2026/03/12/post-interaction-long-test/&quot;&gt;
+</code></pre>
+<p>照着新增一条即可。</p>
+<h4 id="2_1">2. 主文章列表</h4>
+<p>搜索：</p>
+<pre><code class="language-text">&lt;ul class=&quot;post-list rich-post-list&quot;
+</code></pre>
+<p>这里面每个 <code>&lt;li class="post-list-item"&gt;</code> 就是一篇文章卡片。</p>
+<p>你可以复制一整块文章卡片，改成新文章的信息。</p>
+<h4 id="3_1">3. 文章数量</h4>
+<p>搜索：</p>
+<pre><code class="language-text">目前共收录 6 篇文章
+</code></pre>
+<p>如果新增一篇，就改成：</p>
+<pre><code class="language-text">目前共收录 7 篇文章
+</code></pre>
+<hr>
+<h3 id="87">8.7 把新文章加到搜索里</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\content.json</code></li>
+</ul>
+<p>这个文件决定搜索框能不能搜到你的新文章。</p>
+<p>结构长这样：</p>
+<pre><code class="language-json">{
+  &quot;posts&quot;: [
+    {
+      &quot;title&quot;: &quot;文章标题&quot;,
+      &quot;path&quot;: &quot;2026/03/23/my-first-post/&quot;,
+      &quot;date&quot;: &quot;2026-03-23T10:00:00.000Z&quot;,
+      &quot;tags&quot;: [
+        { &quot;name&quot;: &quot;生活记录&quot; },
+        { &quot;name&quot;: &quot;随笔&quot; }
+      ],
+      &quot;text&quot;: &quot;文章摘要和正文关键内容&quot;
+    }
+  ]
+}
+</code></pre>
+<h4 id="_13">你要改什么</h4>
+<p>在 <code>posts</code> 数组里新增一项，至少写上：</p>
+<ol>
+<li><code>title</code></li>
+<li><code>path</code></li>
+<li><code>date</code></li>
+<li><code>tags</code></li>
+<li><code>text</code></li>
+</ol>
+<h4 id="_14">最简单做法</h4>
+<p>复制最后一篇文章对象，改成你的内容。</p>
+<hr>
+<h3 id="88">8.8 添加文章标签</h3>
+<p>文章标签会出现 3 个地方：</p>
+<ol>
+<li>文章详情页</li>
+<li>博客首页卡片</li>
+<li>标签页</li>
+</ol>
+<h4 id="_15">文章详情页标签</h4>
+<p>在文章自己的 <code>index.html</code> 里搜索：</p>
+<pre><code class="language-text">article-tag-list
+</code></pre>
+<p>复制已有标签链接改名字即可。</p>
+<h4 id="_16">博客首页卡片标签</h4>
+<p>在 <code>D:\blog\Minmin0101.github.io\blog\index.html</code> 的对应文章卡片中，搜索：</p>
+<pre><code class="language-text">article-tag-list-link
+</code></pre>
+<p>照着新增或修改。</p>
+<hr>
+<h3 id="89">8.9 给标签建立独立页面</h3>
+<p>标签目录在：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\tags</code></li>
+</ul>
+<p>现有标签有这些：</p>
+<pre><code class="language-text">CSS
+Hexo
+Markdown
+主题改造
+化学符号
+响应式
+多媒体
+建站
+数学公式
+测试文章
+生活
+生活记录
+随笔
+</code></pre>
+<h4 id="_17">如果你要新增一个从未存在过的新标签</h4>
+<p>比如你要新增标签 <code>旅行</code>，推荐做法：</p>
+<ol>
+<li>复制一个已有标签目录</li>
+<li>改成新标签名</li>
+<li>修改标签页里的标题与文章列表</li>
+</ol>
+<p>例如：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+Copy-Item -Recurse &quot;.\tags\生活&quot; &quot;.\tags\旅行&quot;
+</code></pre>
+<p>然后编辑：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\tags\旅行\index.html</code></li>
+</ul>
+<p>把里面的：</p>
+<ul>
+<li>标签名字</li>
+<li>标签文章数量</li>
+<li>标签下的文章列表</li>
+</ul>
+<p>改成你的新标签内容。</p>
+<h4 id="_18">标签总览页</h4>
+<p>总标签页在：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\tags\index.html</code></li>
+</ul>
+<p>如果你新增了标签，也要把总览页一起补上。</p>
+<hr>
+<h3 id="810">8.10 更新归档页</h3>
+<p>归档页目录：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\archives</code></li>
+</ul>
+<p>常用文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\archives\index.html</code></li>
+</ul>
+<p>如果新增文章，建议同步补到归档页里。</p>
+<p>搜索关键词：</p>
+<pre><code class="language-text">文章标题
+2026
+03
+</code></pre>
+<p>通常复制现有归档条目，改标题和链接即可。</p>
+<hr>
+<h3 id="811-rss-sitemap">8.11 更新 RSS 和 sitemap</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\rss2.xml</code></li>
+<li><code>D:\blog\Minmin0101.github.io\sitemap.xml</code></li>
+<li><code>D:\blog\Minmin0101.github.io\sitemap.txt</code></li>
+</ul>
+<h4 id="_19">为什么要改</h4>
+<ul>
+<li>RSS：订阅器会用到</li>
+<li>sitemap：搜索引擎会用到</li>
+</ul>
+<h4 id="_20">最低要求</h4>
+<p>新增文章后，把文章 URL 至少加进：</p>
+<ul>
+<li><code>sitemap.xml</code></li>
+<li><code>sitemap.txt</code></li>
+</ul>
+<p>例如：</p>
+<pre><code class="language-text">https://minmin0101.github.io/2026/03/23/my-first-post/
+</code></pre>
+<hr>
+<h3 id="812">8.12 发布文章的完整流程图</h3>
+<pre><code class="language-mermaid">flowchart TD
+    A[&quot;复制一篇旧文章做模板&quot;] --&gt; B[&quot;修改新文章 index.html&quot;]
+    B --&gt; C[&quot;上传图片到 img/ 或 media/&quot;]
+    C --&gt; D[&quot;把文章卡片加到 blog/index.html&quot;]
+    D --&gt; E[&quot;把文章加入 content.json 搜索索引&quot;]
+    E --&gt; F[&quot;更新标签页 / 归档页&quot;]
+    F --&gt; G[&quot;更新 sitemap / RSS&quot;]
+    G --&gt; H[&quot;本地预览&quot;]
+    H --&gt; I[&quot;git add / commit / push&quot;]
+</code></pre>
+<hr>
+<h2 id="9">9. 如何写并发布微博</h2>
+<p>你的微博页不是传统微博后台，而是：</p>
+<p><strong>GitHub Issues = 微博内容源</strong></p>
+<p>也就是说：</p>
+<ul>
+<li>你在 GitHub 仓库里新建一条 Issue</li>
+<li>它就会显示在微博页里</li>
+</ul>
+<h3 id="91">9.1 微博对应哪个仓库</h3>
+<p>当前微博页配置在：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></li>
+</ul>
+<p>其中这段配置决定仓库：</p>
+<pre><code class="language-js">window.MINMIN_WEIBO_CONFIG = {
+  owner: &quot;Minmin0101&quot;,
+  repo: &quot;Minmin0101.github.io&quot;
+}
+</code></pre>
+<p>也就是这个仓库：</p>
+<ul>
+<li><code>Minmin0101/Minmin0101.github.io</code></li>
+</ul>
+<h3 id="92-github-issue">9.2 最简单的发微博方式：直接去 GitHub 发 Issue</h3>
+<p>打开这个地址：</p>
+<p><code>D:\blog\Minmin0101.github.io\issues</code></p>
+<p>然后：</p>
+<ol>
+<li>点 <code>New issue</code></li>
+<li>输入标题</li>
+<li>在正文写内容</li>
+<li>加标签</li>
+<li>点 <code>Create issue</code></li>
+</ol>
+<h3 id="93">9.3 微博标题和正文怎么对应</h3>
+<p>一般规则：</p>
+<ul>
+<li><code>Issue 标题</code> = 微博标题</li>
+<li><code>Issue 正文</code> = 微博正文</li>
+<li><code>Issue Labels</code> = 微博标签</li>
+</ul>
+<h3 id="94">9.4 如何发图文微博</h3>
+<p>在 GitHub Issue 编辑器里：</p>
+<ol>
+<li>直接把图片拖进去</li>
+<li>GitHub 会自动生成图片 Markdown</li>
+<li>发布后微博页就会显示图片</li>
+</ol>
+<p>例如正文里会出现：</p>
+<pre><code class="language-markdown">![随手拍](https://user-images.githubusercontent.com/xxxx/xxxx.png)
+</code></pre>
+<h3 id="95">9.5 如何添加微博标签</h3>
+<p>在 GitHub 仓库的 Issues 页面里，点：</p>
+<pre><code class="language-text">Labels
+</code></pre>
+<p>然后新建标签。</p>
+<p>建议你给生活类微博创建一组固定标签，比如：</p>
+<ul>
+<li>日常</li>
+<li>通勤</li>
+<li>夜晚</li>
+<li>咖啡</li>
+<li>城市</li>
+<li>碎碎念</li>
+<li>散步</li>
+<li>心情</li>
+<li>阅读</li>
+<li>随手拍</li>
+</ul>
+<p>标签颜色会直接影响微博页里的标签颜色。</p>
+<h3 id="96">9.6 微博为什么没显示</h3>
+<p>最常见原因有这几个：</p>
+<ol>
+<li>你发的是 <code>Draft</code> 或没成功创建</li>
+<li>Issue 被关闭了</li>
+<li>GitHub 接口限流</li>
+<li>浏览器缓存</li>
+<li>微博缓存文件还是旧的</li>
+</ol>
+<p>可以先做这些排查：</p>
+<ol>
+<li>确认 Issue 是 <code>Open</code></li>
+<li>刷新微博页</li>
+<li>强刷浏览器：<code>Ctrl + F5</code></li>
+<li>看微博页：<code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code> 配置的仓库是不是对的</li>
+</ol>
+<h3 id="97">9.7 微博页样式和交互去哪改</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\css\weibo-gwitter.css</code></li>
+<li><code>D:\blog\Minmin0101.github.io\js\weibo-gwitter.js</code></li>
+</ul>
+<p>分别负责：</p>
+<ul>
+<li><code>index.html</code>：文案、配置、页面骨架</li>
+<li><code>weibo-gwitter.css</code>：卡片样式、间距、颜色、移动端适配</li>
+<li><code>weibo-gwitter.js</code>：加载微博、点赞、评论、跳转、登录逻辑</li>
+</ul>
+<hr>
+<h2 id="10">10. 如何新建相册并上传图片</h2>
+<p>相册页是纯静态页，不会自动从某个图库后台读取。</p>
+<p>也就是说：</p>
+<ol>
+<li>你先把图片放进项目目录</li>
+<li>再去改 <code>gallery/index.html</code></li>
+</ol>
+<h3 id="101">10.1 相册相关文件</h3>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\js\gallery-viewer.js</code></li>
+</ul>
+<p>真正的数据写在：</p>
+<pre><code class="language-html">&lt;script&gt;
+window.galleryAlbums = [...]
+&lt;/script&gt;
+</code></pre>
+<h3 id="102">10.2 图片放哪里</h3>
+<p>推荐自己建立更整齐的目录。</p>
+<p>比如：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip\01.jpg
+D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip\02.jpg
+D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip\03.jpg
+</code></pre>
+<p>或者：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io\media\gallery\2026-spring-trip\01.jpg
+</code></pre>
+<h3 id="103">10.3 新建一个相册的步骤</h3>
+<h4 id="_21">第一步：上传图片</h4>
+<p>把图片复制到你准备好的目录里。</p>
+<h4 id="_22">第二步：改相册页面正文卡片</h4>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></li>
+</ul>
+<p>搜索：</p>
+<pre><code class="language-text">gallery-album-list
+</code></pre>
+<p>你会看到每本相册的卡片 HTML，大概长这样：</p>
+<pre><code class="language-html">&lt;article class=&quot;gallery-album&quot; data-album=&quot;0&quot;&gt;
+</code></pre>
+<p>复制一整块，改成你的新相册：</p>
+<ul>
+<li>相册名</li>
+<li>相册简介</li>
+<li>封面图</li>
+<li>相册照片数量</li>
+</ul>
+<h4 id="windowgalleryalbums">第三步：改 <code>window.galleryAlbums</code></h4>
+<p>同样在 <code>D:\blog\Minmin0101.github.io\gallery\index.html</code> 搜索：</p>
+<pre><code class="language-text">window.galleryAlbums=
+</code></pre>
+<p>结构是：</p>
+<pre><code class="language-js">{
+  title: &quot;相册标题&quot;,
+  subtitle: &quot;相册副标题&quot;,
+  photos: [
+    {
+      src: &quot;/D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip\01.jpg&quot;,
+      thumb: &quot;/D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip\01.jpg&quot;,
+      title: &quot;照片标题&quot;,
+      description: &quot;照片说明&quot;
+    }
+  ]
+}
+</code></pre>
+<p>你每加一本相册，都要把这里的数据同步补上。</p>
+<h3 id="104">10.4 修改相册总数和照片总数</h3>
+<p>在 <code>D:\blog\Minmin0101.github.io\gallery\index.html</code> 搜索：</p>
+<pre><code class="language-text">目前收录
+</code></pre>
+<p>例如当前是：</p>
+<pre><code class="language-text">目前收录 3 本相册，9 张照片
+</code></pre>
+<p>如果你新加 1 本相册、3 张图，就改成：</p>
+<pre><code class="language-text">目前收录 4 本相册，12 张照片
+</code></pre>
+<h3 id="105">10.5 相册页介绍文字去哪改</h3>
+<p>搜索：</p>
+<pre><code class="language-text">这里放生活切片、界面草稿和想留下来的旅途画面。
+把生活碎片收进相册里，想看的时候就翻出来。
+每一本相册都可以继续往里加照片
+</code></pre>
+<p>都在：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></li>
+</ul>
+<hr>
+<h2 id="11">11. 如何修改搜索框和搜索结果</h2>
+<h3 id="111">11.1 搜索数据来源</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\content.json</code></li>
+</ul>
+<p>如果你新增文章，但没更新这个文件，搜索一般搜不到。</p>
+<h3 id="112">11.2 搜索样式和逻辑在哪</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\js\search-fuzzy.js</code></li>
+<li><code>D:\blog\Minmin0101.github.io\css\search-fuzzy.css</code></li>
+</ul>
+<p>分别控制：</p>
+<ul>
+<li>搜索模糊匹配</li>
+<li>搜索结果布局</li>
+<li>搜索字体大小</li>
+<li>搜索结果左对齐</li>
+</ul>
+<h3 id="113">11.3 搜索框长什么样在哪改</h3>
+<p>页面里搜索输入框骨架分布在很多 HTML 页面里，搜索关键词：</p>
+<pre><code class="language-text">search-wrap
+search-input
+输入感兴趣的关键字
+</code></pre>
+<p>常见页面：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\about\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\projects\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\thinking\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></li>
+</ul>
+<hr>
+<h2 id="12-github-pages">12. 如何部署到 GitHub Pages</h2>
+<p>这是最关键的发布流程。</p>
+<hr>
+<h3 id="121-github">12.1 如果你是第一次在 GitHub 上部署这个项目</h3>
+<h4 id="github">第一步：创建 GitHub 仓库</h4>
+<p>仓库名必须是：</p>
+<pre><code class="language-text">你的 GitHub 用户名.github.io
+</code></pre>
+<p>例如你的用户名是 <code>Minmin0101</code>，仓库名就要叫：</p>
+<pre><code class="language-text">Minmin0101.github.io
+</code></pre>
+<h4 id="_23">第二步：把项目文件上传到仓库</h4>
+<p>推荐用 Git 命令，不建议只靠网页上传。</p>
+<h4 id="github-pages">第三步：开启 GitHub Pages</h4>
+<p>进入 GitHub 仓库：</p>
+<pre><code class="language-text">Settings -&gt; Pages
+</code></pre>
+<p>一般选择：</p>
+<ul>
+<li><code>Deploy from a branch</code></li>
+<li>Branch：<code>main</code></li>
+<li>Folder：<code>/ (root)</code></li>
+</ul>
+<p>保存后，GitHub Pages 会自动部署。</p>
+<hr>
+<h3 id="122">12.2 日常更新后怎么推送上线</h3>
+<p>进入项目目录：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+</code></pre>
+<p>查看改了哪些文件：</p>
+<pre><code class="language-powershell">git status
+</code></pre>
+<p>把所有改动加入暂存区：</p>
+<pre><code class="language-powershell">git add .
+</code></pre>
+<p>提交：</p>
+<pre><code class="language-powershell">git commit -m &quot;feat: update blog content&quot;
+</code></pre>
+<p>推送：</p>
+<pre><code class="language-powershell">git push origin main
+</code></pre>
+<h3 id="123">12.3 部署后多久生效</h3>
+<p>通常：</p>
+<ul>
+<li>1 到 5 分钟内生效</li>
+</ul>
+<p>如果没看到变化：</p>
+<ol>
+<li>等几分钟</li>
+<li>强刷浏览器 <code>Ctrl + F5</code></li>
+<li>开隐身窗口看</li>
+</ol>
+<hr>
+<h2 id="13">13. 如何打版本号</h2>
+<p>当你做完一次比较完整的更新时，建议打一个 Git 标签，方便以后回滚和留档。</p>
+<h3 id="131">13.1 查看当前状态</h3>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+git status
+</code></pre>
+<h3 id="132">13.2 正常提交流程</h3>
+<pre><code class="language-powershell">git add .
+git commit -m &quot;feat: update search and content&quot;
+git push origin main
+</code></pre>
+<h3 id="133">13.3 打标签</h3>
+<p>例如你要打一个版本：</p>
+<pre><code class="language-text">v2026.03.23-my-update
+</code></pre>
+<p>执行：</p>
+<pre><code class="language-powershell">git tag -a v2026.03.23-my-update -m &quot;2026-03-23 内容与样式更新&quot;
+git push origin v2026.03.23-my-update
+</code></pre>
+<h3 id="134">13.4 怎么看历史标签</h3>
+<pre><code class="language-powershell">git tag
+</code></pre>
+<h3 id="135">13.5 什么时候适合打版本号</h3>
+<p>推荐这些场景：</p>
+<ol>
+<li>主题大改版</li>
+<li>微博页改版</li>
+<li>搜索功能改版</li>
+<li>相册结构调整</li>
+<li>上线前备份</li>
+</ol>
+<hr>
+<h2 id="14-github-oauth">14. 微博登录与 GitHub OAuth 维护</h2>
+<p>这一章是高级内容。<br>
+如果你只是写文章、发微博、改相册，可以先不看。</p>
+<p>微博页“登录 GitHub / 退出 GitHub / 点赞 / 评论”相关逻辑，目前用的是：</p>
+<ul>
+<li>GitHub OAuth App</li>
+<li>Cloudflare Worker</li>
+</ul>
+<h3 id="141">14.1 相关文件</h3>
+<p>前端页面：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\oauth-callback\index.html</code></li>
+</ul>
+<p>前端脚本：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\js\weibo-oauth-client.js</code></li>
+<li><code>D:\blog\Minmin0101.github.io\js\weibo-oauth-callback.js</code></li>
+<li><code>D:\blog\Minmin0101.github.io\js\weibo-gwitter.js</code></li>
+</ul>
+<p>Worker：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\serverless\github-oauth-worker\src\index.js</code></li>
+<li><code>D:\blog\Minmin0101.github.io\serverless\github-oauth-worker\wrangler.toml</code></li>
+<li><code>D:\blog\Minmin0101.github.io\serverless\github-oauth-worker\README.md</code></li>
+</ul>
+<h3 id="142">14.2 目前微博页核心配置在哪</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></li>
+</ul>
+<p>搜索：</p>
+<pre><code class="language-js">window.MINMIN_WEIBO_CONFIG
+</code></pre>
+<p>其中重要字段有：</p>
+<pre><code class="language-js">oauth: {
+  prod: {
+    clientID: &quot;...&quot;,
+    exchangeURL: &quot;...&quot;,
+    callback: &quot;https://minmin0101.github.io/blog/weibo/oauth-callback/&quot;
+  },
+  dev: {
+    clientID: &quot;...&quot;,
+    exchangeURL: &quot;http://127.0.0.1:8787/oauth/github/exchange&quot;,
+    callback: &quot;http://127.0.0.1:4000/blog/weibo/oauth-callback/&quot;
+  }
+}
+</code></pre>
+<h3 id="143-github-oauth-app">14.3 GitHub OAuth App 后台怎么填</h3>
+<p>在 GitHub 的 OAuth App 里，最重要的是：</p>
+<ul>
+<li><code>Homepage URL</code></li>
+<li><code>Authorization callback URL</code></li>
+</ul>
+<p>推荐填写：</p>
+<h4 id="_24">正式站</h4>
+<pre><code class="language-text">Homepage URL:
+https://minmin0101.github.io/blog/weibo/
+
+Authorization callback URL:
+https://minmin0101.github.io/blog/weibo/oauth-callback/
+</code></pre>
+<h4 id="_25">本地调试</h4>
+<p>如果你单独新建本地 OAuth App，可以填：</p>
+<pre><code class="language-text">Homepage URL:
+http://127.0.0.1:4000/blog/weibo/
+
+Authorization callback URL:
+http://127.0.0.1:4000/blog/weibo/oauth-callback/
+</code></pre>
+<h3 id="144-worker">14.4 部署 Worker 的常用命令</h3>
+<p>进入 Worker 目录：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io\serverless\github-oauth-worker
+</code></pre>
+<p>登录 Cloudflare：</p>
+<pre><code class="language-powershell">wrangler login
+</code></pre>
+<p>写入 GitHub OAuth 密钥：</p>
+<pre><code class="language-powershell">wrangler secret put GITHUB_CLIENT_ID
+wrangler secret put GITHUB_CLIENT_SECRET
+</code></pre>
+<p>本地调试：</p>
+<pre><code class="language-powershell">wrangler dev
+</code></pre>
+<p>部署：</p>
+<pre><code class="language-powershell">wrangler deploy
+</code></pre>
+<h3 id="145-worker">14.5 更详细的 Worker 说明</h3>
+<p>直接看这个文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\serverless\github-oauth-worker\README.md</code></li>
+</ul>
+<hr>
+<h2 id="15-git">15. 常用 Git 命令备忘</h2>
+<h3 id="151">15.1 看当前改了什么</h3>
+<pre><code class="language-powershell">git status
+</code></pre>
+<h3 id="152">15.2 看提交历史</h3>
+<pre><code class="language-powershell">git log --oneline -20
+</code></pre>
+<h3 id="153">15.3 拉取远端最新代码</h3>
+<pre><code class="language-powershell">git pull origin main
+</code></pre>
+<h3 id="154">15.4 提交并推送</h3>
+<pre><code class="language-powershell">git add .
+git commit -m &quot;feat: update homepage copy&quot;
+git push origin main
+</code></pre>
+<h3 id="155">15.5 打标签并推送</h3>
+<pre><code class="language-powershell">git tag -a v2026.03.23-example -m &quot;example release&quot;
+git push origin v2026.03.23-example
+</code></pre>
+<hr>
+<h2 id="16">16. 日常维护的推荐顺序</h2>
+<p>每次修改博客，尽量都按这个顺序来：</p>
+<pre><code class="language-mermaid">flowchart TD
+    A[&quot;先备份 / git status&quot;] --&gt; B[&quot;本地修改文件&quot;]
+    B --&gt; C[&quot;python -m http.server 4000 本地预览&quot;]
+    C --&gt; D[&quot;浏览器逐页检查&quot;]
+    D --&gt; E[&quot;git add .&quot;]
+    E --&gt; F[&quot;git commit -m ...&quot;]
+    F --&gt; G[&quot;git push origin main&quot;]
+    G --&gt; H[&quot;需要时再打标签&quot;]
+</code></pre>
+<p>最稳妥的习惯是：</p>
+<ol>
+<li>改之前先 <code>git status</code></li>
+<li>改完先本地看</li>
+<li>确认没问题再推 GitHub</li>
+</ol>
+<hr>
+<h2 id="17-10">17. 小白最常见的 10 个问题</h2>
+<h3 id="171">17.1 为什么我改了文章，但博客首页没变</h3>
+<p>因为这个项目不是自动生成的。<br>
+你还要手动改：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\content.json</code></li>
+<li>可能还要改 <code>D:\blog\Minmin0101.github.io\tags</code>、<code>D:\blog\Minmin0101.github.io\archives</code></li>
+</ul>
+<h3 id="172">17.2 为什么搜索不到新文章</h3>
+<p>因为没更新：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\content.json</code></li>
+</ul>
+<h3 id="173">17.3 为什么标签点进去是空的</h3>
+<p>因为你只在文章里写了标签，但没建：</p>
+<ul>
+<li><code>tags/你的标签名/index.html</code></li>
+</ul>
+<h3 id="174">17.4 为什么微博没显示</h3>
+<p>先确认：</p>
+<ol>
+<li>GitHub Issue 是 <code>Open</code></li>
+<li>发在正确仓库</li>
+<li>浏览器强刷了</li>
+<li>微博页配置没改错</li>
+</ol>
+<h3 id="175">17.5 为什么图片显示不出来</h3>
+<p>常见原因：</p>
+<ol>
+<li>路径写错</li>
+<li>图片没放进项目目录</li>
+<li>文件名大小写不一致</li>
+</ol>
+<h3 id="176">17.6 为什么改完本地看不到</h3>
+<p>可能是：</p>
+<ol>
+<li>你开的不是正确端口</li>
+<li>浏览器缓存了</li>
+<li>本地服务没重启</li>
+</ol>
+<h3 id="177">17.7 为什么推送后线上没变</h3>
+<p>先做这几步：</p>
+<ol>
+<li><code>git status</code> 看有没有漏提交</li>
+<li><code>git push origin main</code></li>
+<li>去 GitHub 看提交是否真的上去了</li>
+<li>等 1 到 5 分钟</li>
+</ol>
+<h3 id="178">17.8 为什么微博登录坏了</h3>
+<p>优先检查：</p>
+<ol>
+<li>GitHub OAuth App callback URL</li>
+<li>Worker 是否在线</li>
+<li><code>blog/weibo/index.html</code> 里的 <code>exchangeURL</code></li>
+</ol>
+<h3 id="179">17.9 为什么菜单改了一个页面，其他页面没变</h3>
+<p>因为菜单是很多页面各自写了一份。<br>
+要用全局搜索统一改。</p>
+<h3 id="1710">17.10 为什么文件打开后一整行</h3>
+<p>因为很多 HTML 是压缩过的静态文件。<br>
+正常，不是坏了。直接搜关键词改就行。</p>
+<hr>
+<h2 id="18">18. 一张“去哪改什么”的总表</h2>
+<table>
+<thead>
+<tr>
+<th>需求</th>
+<th>去哪里改</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>站名</td>
+<td><code>D:\blog\Minmin0101.github.io\index.html</code> + 各页面 HTML</td>
+</tr>
+<tr>
+<td>首页大标题、副标题、签名</td>
+<td><code>D:\blog\Minmin0101.github.io\index.html</code></td>
+</tr>
+<tr>
+<td>首页入口标签名</td>
+<td><code>D:\blog\Minmin0101.github.io\index.html</code></td>
+</tr>
+<tr>
+<td>头像</td>
+<td><code>D:\blog\Minmin0101.github.io\img\avatar.png</code></td>
+</tr>
+<tr>
+<td>网站图标</td>
+<td><code>D:\blog\Minmin0101.github.io\img\favicon1.ico</code></td>
+</tr>
+<tr>
+<td>微信二维码</td>
+<td><code>D:\blog\Minmin0101.github.io\img\wechat_channel.jpg</code></td>
+</tr>
+<tr>
+<td>打赏二维码</td>
+<td><code>D:\blog\Minmin0101.github.io\img\wechatpay.png</code>、<code>D:\blog\Minmin0101.github.io\img\alipay.png</code></td>
+</tr>
+<tr>
+<td>博客首页副标题与介绍</td>
+<td><code>D:\blog\Minmin0101.github.io\blog\index.html</code></td>
+</tr>
+<tr>
+<td>博客文章列表</td>
+<td><code>D:\blog\Minmin0101.github.io\blog\index.html</code></td>
+</tr>
+<tr>
+<td>博客文章详情</td>
+<td><code>2026/年/月/日/slug/index.html</code></td>
+</tr>
+<tr>
+<td>搜索内容</td>
+<td><code>D:\blog\Minmin0101.github.io\content.json</code></td>
+</tr>
+<tr>
+<td>微博页文案</td>
+<td><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></td>
+</tr>
+<tr>
+<td>微博样式</td>
+<td><code>D:\blog\Minmin0101.github.io\css\weibo-gwitter.css</code></td>
+</tr>
+<tr>
+<td>微博逻辑</td>
+<td><code>D:\blog\Minmin0101.github.io\js\weibo-gwitter.js</code></td>
+</tr>
+<tr>
+<td>微博登录</td>
+<td><code>D:\blog\Minmin0101.github.io\js\weibo-oauth-client.js</code>、<code>D:\blog\Minmin0101.github.io\serverless\github-oauth-worker</code></td>
+</tr>
+<tr>
+<td>相册卡片和数据</td>
+<td><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></td>
+</tr>
+<tr>
+<td>关于页内容</td>
+<td><code>D:\blog\Minmin0101.github.io\about\index.html</code></td>
+</tr>
+<tr>
+<td>项目页内容</td>
+<td><code>D:\blog\Minmin0101.github.io\projects\index.html</code></td>
+</tr>
+<tr>
+<td>思考页内容</td>
+<td><code>D:\blog\Minmin0101.github.io\thinking\index.html</code></td>
+</tr>
+<tr>
+<td>标签总览页</td>
+<td><code>D:\blog\Minmin0101.github.io\tags\index.html</code></td>
+</tr>
+<tr>
+<td>单个标签页</td>
+<td><code>tags/标签名/index.html</code></td>
+</tr>
+<tr>
+<td>归档页</td>
+<td><code>D:\blog\Minmin0101.github.io\archives\index.html</code></td>
+</tr>
+<tr>
+<td>RSS</td>
+<td><code>D:\blog\Minmin0101.github.io\rss2.xml</code></td>
+</tr>
+<tr>
+<td>站点地图</td>
+<td><code>D:\blog\Minmin0101.github.io\sitemap.xml</code>、<code>D:\blog\Minmin0101.github.io\sitemap.txt</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="19">19. 我最推荐你的实际操作习惯</h2>
+<p>如果你后面想轻松维护博客，最省心的做法是：</p>
+<ol>
+<li>图片尽量覆盖原文件，不轻易改路径</li>
+<li>发文章先复制旧文章模板</li>
+<li>发微博直接去 GitHub Issues</li>
+<li>相册统一把图片放到自己新建的子目录里</li>
+<li>每次改完先本地看，再推 GitHub</li>
+<li>每做完一次大改就打一个版本号</li>
+</ol>
+<hr>
+<h2 id="20">20. 最后给你的建议</h2>
+<p>你现在维护的不是“一个后台系统”，而是“一个已经完成的静态网站作品”。<br>
+所以后面运维的核心思路就 4 句话：</p>
+<ol>
+<li><strong>知道在哪个文件里改</strong></li>
+<li><strong>改完先本地预览</strong></li>
+<li><strong>确认没问题再推 GitHub</strong></li>
+<li><strong>重要版本记得打标签</strong></li>
+</ol>
+<p>如果以后你想把这个项目升级成“真正的 Hexo 源码仓库 + 自动生成静态站”的模式，我也可以继续帮你把它重构成更好维护的版本。那样你发文章、加标签、归档、搜索这些都会轻松很多。</p>]]></content:encoded>
+      
+      <category domain="/tags/%E5%BB%BA%E7%AB%99/">建站</category>
+      
+      <category domain="/tags/%E5%8D%9A%E5%AE%A2%E8%BF%90%E7%BB%B4/">博客运维</category>
+      
+      <category domain="/tags/README/">README</category>
+      
+      <comments>https://minmin0101.github.io/2026/03/23/blog-maintenance-readme/#disqus_thread</comments>
+    </item>
     <item>
       <title>文章页目录与返回顶部长文测试</title>
       <link>https://minmin0101.github.io/2026/03/12/post-interaction-long-test/</link>
       <guid>https://minmin0101.github.io/2026/03/12/post-interaction-long-test/</guid>
-      <pubDate>Thu, 12 Mar 2026 15:25:00 GMT</pubDate>
+      <pubDate>Thu, 12 Mar 2026 15:25:00 +0000</pubDate>
+      <description>这篇长文专门用于回归测试文章页目录、回顶按钮、图片、GIF、视频、数学公式、化学公式和代码块显示。</description>
+      <content:encoded><![CDATA[<p>这篇文章专门保留下来做回归测试，用来检查文章页右侧目录栏、返回顶部按钮、图片、动图、视频、数学公式、化学式、表格和代码块的实际显示效果。</p>
+<!-- more -->
+<h2 id="一、测试目标"><a href="#一、测试目标" class="headerlink" title="一、测试目标"></a>一、测试目标</h2><p>这篇长文的目标很简单：让页面里有足够多的标题层级和滚动距离，方便检查右侧目录是否能够跟随当前阅读位置高亮，目录点击后是否能够准确跳转到对应段落，以及右下角上方的返回顶部按钮是否可以顺畅工作。</p><h3 id="1-1-目录栏检查点"><a href="#1-1-目录栏检查点" class="headerlink" title="1.1 目录栏检查点"></a>1.1 目录栏检查点</h3><p>需要检查的重点包括：</p><ol><li>右侧目录是否默认可见。</li><li>点击目录任一标题后，页面是否平滑滚动到对应位置。</li><li>当前阅读段落变化时，目录高亮是否会同步切换。</li><li>标题包含中文时，锚点是否仍然可用。</li></ol><h3 id="1-2-返回顶部检查点"><a href="#1-2-返回顶部检查点" class="headerlink" title="1.2 返回顶部检查点"></a>1.2 返回顶部检查点</h3><p>返回顶部按钮需要在页面滚动一定距离后出现，并且点击以后直接回到文章开头附近，而不是停在中途或者毫无反应。</p><h2 id="二、图片测试"><a href="#二、图片测试" class="headerlink" title="二、图片测试"></a>二、图片测试</h2><p>先放两张不同类型的图片，一张是常规头像图，一张是矢量图，方便同时观察宽度、自适应和圆角阴影样式。</p><h3 id="2-1-JPG-图片"><a href="#2-1-JPG-图片" class="headerlink" title="2.1 JPG 图片"></a>2.1 JPG 图片</h3><figure class="image-bubble"><div class="img-lightbox"><div class="overlay"></div><img src="/img/img-loading.png" data-original="/img/avatar.jpg" alt="头像图片测试" loading="lazy"></div><div class="image-caption">头像图片测试</div></figure><p>这张图片用于测试普通静态图片在文章内容区的显示效果，尤其是是否会超出正文宽度，以及在手机端时是否能自动缩放。</p><h3 id="2-2-SVG-图片"><a href="#2-2-SVG-图片" class="headerlink" title="2.2 SVG 图片"></a>2.2 SVG 图片</h3><figure class="image-bubble"><div class="img-lightbox"><div class="overlay"></div><img src="/img/img-loading.png" data-original="/img/markdown-demo-figure.svg" alt="矢量图片测试" loading="lazy"></div><div class="image-caption">矢量图片测试</div></figure><p>矢量图更容易暴露容器和边框样式的问题，如果图片在文章卡片里出现挤压、错位或者阴影缺失，就说明正文媒体样式还不够稳定。</p><h2 id="三、动图测试"><a href="#三、动图测试" class="headerlink" title="三、动图测试"></a>三、动图测试</h2><p>动图这里使用一张本地 GIF，用来确认 Markdown 里的动图能否正常显示，而不是只显示第一帧。</p><h3 id="3-1-GIF-动图"><a href="#3-1-GIF-动图" class="headerlink" title="3.1 GIF 动图"></a>3.1 GIF 动图</h3><figure class="image-bubble"><div class="img-lightbox"><div class="overlay"></div><img src="/img/img-loading.png" data-original="/media/markdown-demo-loader.gif" alt="GIF 动图测试" loading="lazy"></div><div class="image-caption">GIF 动图测试</div></figure><p>如果这里能正常看到连续动画，说明文章正文对 GIF 没有做错误的懒加载或替换处理。</p><h2 id="四、视频测试"><a href="#四、视频测试" class="headerlink" title="四、视频测试"></a>四、视频测试</h2><p>视频使用本地 MP4 资源，并且直接写在 Markdown 文件里，方便验证文章详情页的视频显示和播放控件是否正常。</p><h3 id="4-1-MP4-视频"><a href="#4-1-MP4-视频" class="headerlink" title="4.1 MP4 视频"></a>4.1 MP4 视频</h3><video controls preload="metadata" playsinline poster="/img/avatar.png"><source src="/media/markdown-demo-flower.mp4" type="video/mp4">当前浏览器不支持 HTML5 视频播放。</video><h3 id="4-2-视频说明"><a href="#4-2-视频说明" class="headerlink" title="4.2 视频说明"></a>4.2 视频说明</h3><p>如果视频可以正常显示控制条、点击播放，并且不会把正文卡片撑坏，就说明文章里的多媒体布局已经比较稳定了。</p><h2 id="五、数学公式测试"><a href="#五、数学公式测试" class="headerlink" title="五、数学公式测试"></a>五、数学公式测试</h2><p>文章页必须保证行内公式和块级公式都能正常渲染，不然技术文章体验会很差。</p><h3 id="5-1-行内公式"><a href="#5-1-行内公式" class="headerlink" title="5.1 行内公式"></a>5.1 行内公式</h3><p>牛顿第二定律可以写成 $F &#x3D; ma$，质能方程可以写成 $E &#x3D; mc^2$，而毕达哥拉斯定理可以写成 $a^2 + b^2 &#x3D; c^2$。</p><h3 id="5-2-积分与求和"><a href="#5-2-积分与求和" class="headerlink" title="5.2 积分与求和"></a>5.2 积分与求和</h3><p>下面是一个常见的块级数学公式：</p><p>$$<br>\int_0^1 x^2 , dx &#x3D; \frac{1}{3}<br>$$</p><p>再补一个求和公式：</p><p>$$<br>\sum_{n&#x3D;1}^{10} n &#x3D; 55<br>$$</p><h3 id="5-3-矩阵与极限"><a href="#5-3-矩阵与极限" class="headerlink" title="5.3 矩阵与极限"></a>5.3 矩阵与极限</h3><p>$$<br>A &#x3D;<br>\begin{bmatrix}<br>1 &amp; 2 &amp; 3 \<br>0 &amp; 1 &amp; 4 \<br>5 &amp; 6 &amp; 0<br>\end{bmatrix}<br>$$</p><p>$$<br>\lim_{x \to 0} \frac{\sin x}{x} &#x3D; 1<br>$$</p><h2 id="六、化学符号测试"><a href="#六、化学符号测试" class="headerlink" title="六、化学符号测试"></a>六、化学符号测试</h2><p>化学式和反应式通常需要 <code>mhchem</code> 扩展支持，所以这里单独放一节。</p><h3 id="6-1-行内化学式"><a href="#6-1-行内化学式" class="headerlink" title="6.1 行内化学式"></a>6.1 行内化学式</h3><p>行内化学式示例：$\ce{H2O}$、$\ce{CO2}$、$\ce{NaCl}$。</p><h3 id="6-2-化学反应式"><a href="#6-2-化学反应式" class="headerlink" title="6.2 化学反应式"></a>6.2 化学反应式</h3><p>$$<br>\ce{2H2 + O2 -&gt; 2H2O}<br>$$</p><p>$$<br>\ce{CaCO3 -&gt;[\Delta] CaO + CO2}<br>$$</p><h3 id="6-3-离子方程式"><a href="#6-3-离子方程式" class="headerlink" title="6.3 离子方程式"></a>6.3 离子方程式</h3><p>$$<br>\ce{Ag+ + Cl- -&gt; AgCl v}<br>$$</p><h2 id="七、表格与代码块测试"><a href="#七、表格与代码块测试" class="headerlink" title="七、表格与代码块测试"></a>七、表格与代码块测试</h2><p>这一节主要观察表格横向布局和代码块高亮是否正常。</p><h3 id="7-1-表格"><a href="#7-1-表格" class="headerlink" title="7.1 表格"></a>7.1 表格</h3><table><thead><tr><th>类型</th><th>示例</th><th>说明</th></tr></thead><tbody><tr><td>图片</td><td><code>![alt](url)</code></td><td>测试媒体渲染</td></tr><tr><td>数学公式</td><td><code>$E = mc^2$</code></td><td>测试 KaTeX</td></tr><tr><td>化学式</td><td><code>$\ce&#123;NaCl&#125;$</code></td><td>测试 mhchem</td></tr><tr><td>视频</td><td><code>&lt;video&gt;</code></td><td>测试多媒体布局</td></tr></tbody></table><h3 id="7-2-JavaScript-代码"><a href="#7-2-JavaScript-代码" class="headerlink" title="7.2 JavaScript 代码"></a>7.2 JavaScript 代码</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> sections = <span class="title class_">Array</span>.<span class="title function_">from</span>(<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;#post-content h2, #post-content h3&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">activeHeading</span>(<span class="params">scrollTop</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> sections.<span class="title function_">findLast</span>(<span class="function">(<span class="params">section</span>) =&gt;</span> section.<span class="property">offsetTop</span> - <span class="number">120</span> &lt;= scrollTop);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;scroll&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> current = <span class="title function_">activeHeading</span>(<span class="variable language_">window</span>.<span class="property">scrollY</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;current heading:&#x27;</span>, current ? current.<span class="property">textContent</span> : <span class="string">&#x27;none&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure><h3 id="7-3-JSON-代码"><a href="#7-3-JSON-代码" class="headerlink" title="7.3 JSON 代码"></a>7.3 JSON 代码</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;文章页目录与返回顶部长文测试&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;features&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;toc&quot;</span><span class="punctuation">,</span> <span class="string">&quot;gotop&quot;</span><span class="punctuation">,</span> <span class="string">&quot;image&quot;</span><span class="punctuation">,</span> <span class="string">&quot;gif&quot;</span><span class="punctuation">,</span> <span class="string">&quot;video&quot;</span><span class="punctuation">,</span> <span class="string">&quot;math&quot;</span><span class="punctuation">,</span> <span class="string">&quot;chemistry&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;keep_for_regression&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure><h2 id="八、长段落滚动测试"><a href="#八、长段落滚动测试" class="headerlink" title="八、长段落滚动测试"></a>八、长段落滚动测试</h2><p>这一部分故意写长一点，让页面出现明显滚动距离，用来测试右侧目录高亮切换和返回顶部按钮显示逻辑。</p><h3 id="8-1-第一段长文本"><a href="#8-1-第一段长文本" class="headerlink" title="8.1 第一段长文本"></a>8.1 第一段长文本</h3><p>当一篇文章真的写得比较长时，读者很少会只从头看到尾。更常见的行为是先扫一眼目录，再跳到自己关心的标题位置。所以右侧目录不是“有没有都行”的装饰，而是长文阅读体验的一部分。目录必须在标题切换时更新高亮，也必须允许用户通过点击目录快速定位。</p><h3 id="8-2-第二段长文本"><a href="#8-2-第二段长文本" class="headerlink" title="8.2 第二段长文本"></a>8.2 第二段长文本</h3><p>返回顶部按钮也是类似的道理。文章越长，按钮的存在感越强。如果按钮位置不稳定、点击后无效、或者返回的位置不准确，体验会非常割裂。尤其是当页面右下角还有立绘、归档按钮等固定元素时，返回顶部按钮需要在视觉和交互上都避让得足够清楚。</p><h3 id="8-3-第三段长文本"><a href="#8-3-第三段长文本" class="headerlink" title="8.3 第三段长文本"></a>8.3 第三段长文本</h3><p>对于技术博客来说，标题层级往往非常细。除了二级标题，还会频繁出现三级标题、四级标题。如果目录只能展示大标题，或者小标题不能点击，读者在查资料时会非常难受。所以这篇测试文章故意加入了多个层级，确保目录树本身也是可以验证的。</p><h3 id="8-4-第四段长文本"><a href="#8-4-第四段长文本" class="headerlink" title="8.4 第四段长文本"></a>8.4 第四段长文本</h3><p>Markdown 内容渲染也不能只看纯文字。图片、动图、视频、公式、表格、代码块，这些内容通常会一起出现在一篇文章中。只要其中任何一种元素的样式不稳定，就会影响整篇文章的观感。因此这篇文章更像一份页面自检清单，而不是普通随笔。</p><h2 id="九、结语"><a href="#九、结语" class="headerlink" title="九、结语"></a>九、结语</h2><p>如果你现在看到这篇文章右侧目录可以正常出现、点击后可以切换到对应标题、页面往下滚动后返回顶部按钮会出现在右下角立绘正上方，并且图片、GIF、视频、数学公式和化学式都能显示出来，那就说明这次文章页的关键交互已经基本修好了。</p>]]></content:encoded>
       
-      <description>这是一篇专门用于验证文章页右侧目录栏、返回顶部按钮以及多媒体渲染效果的长文测试。</description>
+      <category domain="/tags/Markdown/">Markdown</category>
       
+      <category domain="/tags/%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F/">数学公式</category>
       
+      <category domain="/tags/%E5%8C%96%E5%AD%A6%E7%AC%A6%E5%8F%B7/">化学符号</category>
       
-      <content:encoded><![CDATA[<p>这篇文章专门保留下来做回归测试，用来检查文章页右侧目录栏、返回顶部按钮、图片、动图、视频、数学公式、化学式、表格和代码块的实际显示效果。</p><span id="more"></span><h2 id="一、测试目标"><a href="#一、测试目标" class="headerlink" title="一、测试目标"></a>一、测试目标</h2><p>这篇长文的目标很简单：让页面里有足够多的标题层级和滚动距离，方便检查右侧目录是否能够跟随当前阅读位置高亮，目录点击后是否能够准确跳转到对应段落，以及右下角上方的返回顶部按钮是否可以顺畅工作。</p><h3 id="1-1-目录栏检查点"><a href="#1-1-目录栏检查点" class="headerlink" title="1.1 目录栏检查点"></a>1.1 目录栏检查点</h3><p>需要检查的重点包括：</p><ol><li>右侧目录是否默认可见。</li><li>点击目录任一标题后，页面是否平滑滚动到对应位置。</li><li>当前阅读段落变化时，目录高亮是否会同步切换。</li><li>标题包含中文时，锚点是否仍然可用。</li></ol><h3 id="1-2-返回顶部检查点"><a href="#1-2-返回顶部检查点" class="headerlink" title="1.2 返回顶部检查点"></a>1.2 返回顶部检查点</h3><p>返回顶部按钮需要在页面滚动一定距离后出现，并且点击以后直接回到文章开头附近，而不是停在中途或者毫无反应。</p><h2 id="二、图片测试"><a href="#二、图片测试" class="headerlink" title="二、图片测试"></a>二、图片测试</h2><p>先放两张不同类型的图片，一张是常规头像图，一张是矢量图，方便同时观察宽度、自适应和圆角阴影样式。</p><h3 id="2-1-JPG-图片"><a href="#2-1-JPG-图片" class="headerlink" title="2.1 JPG 图片"></a>2.1 JPG 图片</h3><figure class="image-bubble">                <div class="img-lightbox">                    <div class="overlay"></div>                    <img src="/img/img-loading.png" data-original="/img/avatar.jpg" alt="头像图片测试" title="" loading="lazy">                </div>                <div class="image-caption">头像图片测试</div>            </figure><p>这张图片用于测试普通静态图片在文章内容区的显示效果，尤其是是否会超出正文宽度，以及在手机端时是否能自动缩放。</p><h3 id="2-2-SVG-图片"><a href="#2-2-SVG-图片" class="headerlink" title="2.2 SVG 图片"></a>2.2 SVG 图片</h3><figure class="image-bubble">                <div class="img-lightbox">                    <div class="overlay"></div>                    <img src="/img/img-loading.png" data-original="/img/markdown-demo-figure.svg" alt="矢量图片测试" title="" loading="lazy">                </div>                <div class="image-caption">矢量图片测试</div>            </figure><p>矢量图更容易暴露容器和边框样式的问题，如果图片在文章卡片里出现挤压、错位或者阴影缺失，就说明正文媒体样式还不够稳定。</p><h2 id="三、动图测试"><a href="#三、动图测试" class="headerlink" title="三、动图测试"></a>三、动图测试</h2><p>动图这里使用一张本地 GIF，用来确认 Markdown 里的动图能否正常显示，而不是只显示第一帧。</p><h3 id="3-1-GIF-动图"><a href="#3-1-GIF-动图" class="headerlink" title="3.1 GIF 动图"></a>3.1 GIF 动图</h3><figure class="image-bubble">                <div class="img-lightbox">                    <div class="overlay"></div>                    <img src="/img/img-loading.png" data-original="/media/markdown-demo-loader.gif" alt="GIF 动图测试" title="" loading="lazy">                </div>                <div class="image-caption">GIF 动图测试</div>            </figure><p>如果这里能正常看到连续动画，说明文章正文对 GIF 没有做错误的懒加载或替换处理。</p><h2 id="四、视频测试"><a href="#四、视频测试" class="headerlink" title="四、视频测试"></a>四、视频测试</h2><p>视频使用本地 MP4 资源，并且直接写在 Markdown 文件里，方便验证文章详情页的视频显示和播放控件是否正常。</p><h3 id="4-1-MP4-视频"><a href="#4-1-MP4-视频" class="headerlink" title="4.1 MP4 视频"></a>4.1 MP4 视频</h3><video controls preload="metadata" playsinline poster="/img/avatar.png">  <source src="/media/markdown-demo-flower.mp4" type="video/mp4">  当前浏览器不支持 HTML5 视频播放。</video><h3 id="4-2-视频说明"><a href="#4-2-视频说明" class="headerlink" title="4.2 视频说明"></a>4.2 视频说明</h3><p>如果视频可以正常显示控制条、点击播放，并且不会把正文卡片撑坏，就说明文章里的多媒体布局已经比较稳定了。</p><h2 id="五、数学公式测试"><a href="#五、数学公式测试" class="headerlink" title="五、数学公式测试"></a>五、数学公式测试</h2><p>文章页必须保证行内公式和块级公式都能正常渲染，不然技术文章体验会很差。</p><h3 id="5-1-行内公式"><a href="#5-1-行内公式" class="headerlink" title="5.1 行内公式"></a>5.1 行内公式</h3><p>牛顿第二定律可以写成 $F &#x3D; ma$，质能方程可以写成 $E &#x3D; mc^2$，而毕达哥拉斯定理可以写成 $a^2 + b^2 &#x3D; c^2$。</p><h3 id="5-2-积分与求和"><a href="#5-2-积分与求和" class="headerlink" title="5.2 积分与求和"></a>5.2 积分与求和</h3><p>下面是一个常见的块级数学公式：</p><p>$$<br>\int_0^1 x^2 , dx &#x3D; \frac{1}{3}<br>$$</p><p>再补一个求和公式：</p><p>$$<br>\sum_{n&#x3D;1}^{10} n &#x3D; 55<br>$$</p><h3 id="5-3-矩阵与极限"><a href="#5-3-矩阵与极限" class="headerlink" title="5.3 矩阵与极限"></a>5.3 矩阵与极限</h3><p>$$<br>A &#x3D;<br>\begin{bmatrix}<br>1 &amp; 2 &amp; 3 \<br>0 &amp; 1 &amp; 4 \<br>5 &amp; 6 &amp; 0<br>\end{bmatrix}<br>$$</p><p>$$<br>\lim_{x \to 0} \frac{\sin x}{x} &#x3D; 1<br>$$</p><h2 id="六、化学符号测试"><a href="#六、化学符号测试" class="headerlink" title="六、化学符号测试"></a>六、化学符号测试</h2><p>化学式和反应式通常需要 <code>mhchem</code> 扩展支持，所以这里单独放一节。</p><h3 id="6-1-行内化学式"><a href="#6-1-行内化学式" class="headerlink" title="6.1 行内化学式"></a>6.1 行内化学式</h3><p>行内化学式示例：$\ce{H2O}$、$\ce{CO2}$、$\ce{NaCl}$。</p><h3 id="6-2-化学反应式"><a href="#6-2-化学反应式" class="headerlink" title="6.2 化学反应式"></a>6.2 化学反应式</h3><p>$$<br>\ce{2H2 + O2 -&gt; 2H2O}<br>$$</p><p>$$<br>\ce{CaCO3 -&gt;[\Delta] CaO + CO2}<br>$$</p><h3 id="6-3-离子方程式"><a href="#6-3-离子方程式" class="headerlink" title="6.3 离子方程式"></a>6.3 离子方程式</h3><p>$$<br>\ce{Ag+ + Cl- -&gt; AgCl v}<br>$$</p><h2 id="七、表格与代码块测试"><a href="#七、表格与代码块测试" class="headerlink" title="七、表格与代码块测试"></a>七、表格与代码块测试</h2><p>这一节主要观察表格横向布局和代码块高亮是否正常。</p><h3 id="7-1-表格"><a href="#7-1-表格" class="headerlink" title="7.1 表格"></a>7.1 表格</h3><table><thead><tr><th>类型</th><th>示例</th><th>说明</th></tr></thead><tbody><tr><td>图片</td><td><code>![alt](url)</code></td><td>测试媒体渲染</td></tr><tr><td>数学公式</td><td><code>$E = mc^2$</code></td><td>测试 KaTeX</td></tr><tr><td>化学式</td><td><code>$\ce&#123;NaCl&#125;$</code></td><td>测试 mhchem</td></tr><tr><td>视频</td><td><code>&lt;video&gt;</code></td><td>测试多媒体布局</td></tr></tbody></table><h3 id="7-2-JavaScript-代码"><a href="#7-2-JavaScript-代码" class="headerlink" title="7.2 JavaScript 代码"></a>7.2 JavaScript 代码</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> sections = <span class="title class_">Array</span>.<span class="title function_">from</span>(<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;#post-content h2, #post-content h3&#x27;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">activeHeading</span>(<span class="params">scrollTop</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> sections.<span class="title function_">findLast</span>(<span class="function">(<span class="params">section</span>) =&gt;</span> section.<span class="property">offsetTop</span> - <span class="number">120</span> &lt;= scrollTop);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;scroll&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> current = <span class="title function_">activeHeading</span>(<span class="variable language_">window</span>.<span class="property">scrollY</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;current heading:&#x27;</span>, current ? current.<span class="property">textContent</span> : <span class="string">&#x27;none&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure><h3 id="7-3-JSON-代码"><a href="#7-3-JSON-代码" class="headerlink" title="7.3 JSON 代码"></a>7.3 JSON 代码</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;文章页目录与返回顶部长文测试&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;features&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;toc&quot;</span><span class="punctuation">,</span> <span class="string">&quot;gotop&quot;</span><span class="punctuation">,</span> <span class="string">&quot;image&quot;</span><span class="punctuation">,</span> <span class="string">&quot;gif&quot;</span><span class="punctuation">,</span> <span class="string">&quot;video&quot;</span><span class="punctuation">,</span> <span class="string">&quot;math&quot;</span><span class="punctuation">,</span> <span class="string">&quot;chemistry&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;keep_for_regression&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure><h2 id="八、长段落滚动测试"><a href="#八、长段落滚动测试" class="headerlink" title="八、长段落滚动测试"></a>八、长段落滚动测试</h2><p>这一部分故意写长一点，让页面出现明显滚动距离，用来测试右侧目录高亮切换和返回顶部按钮显示逻辑。</p><h3 id="8-1-第一段长文本"><a href="#8-1-第一段长文本" class="headerlink" title="8.1 第一段长文本"></a>8.1 第一段长文本</h3><p>当一篇文章真的写得比较长时，读者很少会只从头看到尾。更常见的行为是先扫一眼目录，再跳到自己关心的标题位置。所以右侧目录不是“有没有都行”的装饰，而是长文阅读体验的一部分。目录必须在标题切换时更新高亮，也必须允许用户通过点击目录快速定位。</p><h3 id="8-2-第二段长文本"><a href="#8-2-第二段长文本" class="headerlink" title="8.2 第二段长文本"></a>8.2 第二段长文本</h3><p>返回顶部按钮也是类似的道理。文章越长，按钮的存在感越强。如果按钮位置不稳定、点击后无效、或者返回的位置不准确，体验会非常割裂。尤其是当页面右下角还有立绘、归档按钮等固定元素时，返回顶部按钮需要在视觉和交互上都避让得足够清楚。</p><h3 id="8-3-第三段长文本"><a href="#8-3-第三段长文本" class="headerlink" title="8.3 第三段长文本"></a>8.3 第三段长文本</h3><p>对于技术博客来说，标题层级往往非常细。除了二级标题，还会频繁出现三级标题、四级标题。如果目录只能展示大标题，或者小标题不能点击，读者在查资料时会非常难受。所以这篇测试文章故意加入了多个层级，确保目录树本身也是可以验证的。</p><h3 id="8-4-第四段长文本"><a href="#8-4-第四段长文本" class="headerlink" title="8.4 第四段长文本"></a>8.4 第四段长文本</h3><p>Markdown 内容渲染也不能只看纯文字。图片、动图、视频、公式、表格、代码块，这些内容通常会一起出现在一篇文章中。只要其中任何一种元素的样式不稳定，就会影响整篇文章的观感。因此这篇文章更像一份页面自检清单，而不是普通随笔。</p><h2 id="九、结语"><a href="#九、结语" class="headerlink" title="九、结语"></a>九、结语</h2><p>如果你现在看到这篇文章右侧目录可以正常出现、点击后可以切换到对应标题、页面往下滚动后返回顶部按钮会出现在右下角立绘正上方，并且图片、GIF、视频、数学公式和化学式都能显示出来，那就说明这次文章页的关键交互已经基本修好了。</p>]]></content:encoded>
+      <category domain="/tags/%E5%A4%9A%E5%AA%92%E4%BD%93/">多媒体</category>
       
-      
-      <category domain="https://minmin0101.github.io/tags/Markdown/">Markdown</category>
-      
-      <category domain="https://minmin0101.github.io/tags/%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F/">数学公式</category>
-      
-      <category domain="https://minmin0101.github.io/tags/%E5%8C%96%E5%AD%A6%E7%AC%A6%E5%8F%B7/">化学符号</category>
-      
-      <category domain="https://minmin0101.github.io/tags/%E5%A4%9A%E5%AA%92%E4%BD%93/">多媒体</category>
-      
-      <category domain="https://minmin0101.github.io/tags/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/">测试文章</category>
-      
+      <category domain="/tags/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/">测试文章</category>
       
       <comments>https://minmin0101.github.io/2026/03/12/post-interaction-long-test/#disqus_thread</comments>
-      
     </item>
-    
     <item>
       <title>Markdown 内容渲染示例</title>
       <link>https://minmin0101.github.io/2026/03/12/markdown-rich-demo/</link>
       <guid>https://minmin0101.github.io/2026/03/12/markdown-rich-demo/</guid>
-      <pubDate>Thu, 12 Mar 2026 13:20:00 GMT</pubDate>
+      <pubDate>Thu, 12 Mar 2026 13:20:00 +0000</pubDate>
+      <description>这篇文章集中测试 Markdown 在博客里的图片、动图、数学公式、化学公式、表格和代码块渲染效果。</description>
+      <content:encoded><![CDATA[<p>这篇文章专门用来检查博客里的 Markdown 内容渲染。</p><h2 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h2><figure class="image-bubble"><div class="img-lightbox"><div class="overlay"></div><img src="/img/img-loading.png" data-original="/img/markdown-demo-figure.svg" alt="静态图片示例" title="静态图片示例" loading="lazy"></div><div class="image-caption">静态图片示例</div></figure><h2 id="动图"><a href="#动图" class="headerlink" title="动图"></a>动图</h2><figure class="image-bubble"><div class="img-lightbox"><div class="overlay"></div><img src="/img/img-loading.png" data-original="/img/markdown-demo-motion.svg" alt="动图示例" title="动图示例" loading="lazy"></div><div class="image-caption">动图示例</div></figure><h2 id="数学公式"><a href="#数学公式" class="headerlink" title="数学公式"></a>数学公式</h2><p>行内公式：$E &#x3D; mc^2$</p><p>块级公式：</p><p>$$<br>\int_0^1 x^2 , dx &#x3D; \frac{1}{3}<br>$$</p><h2 id="化学式"><a href="#化学式" class="headerlink" title="化学式"></a>化学式</h2><p>行内化学式：$\ce{H2O + CO2 -&gt; H2CO3}$</p><p>块级化学反应式：</p><p>$$<br>\ce{2H2 + O2 -&gt; 2H2O}<br>$$</p><h2 id="表格与代码"><a href="#表格与代码" class="headerlink" title="表格与代码"></a>表格与代码</h2><table><thead><tr><th>类型</th><th>示例</th></tr></thead><tbody><tr><td>图片</td><td><code>![alt](url)</code></td></tr><tr><td>行内公式</td><td><code>$a^2 + b^2 = c^2$</code></td></tr><tr><td>化学式</td><td><code>$\ce&#123;NaCl&#125;$</code></td></tr></tbody></table><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> blogMode = <span class="string">&#x27;author-like&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Current mode: <span class="subst">$&#123;blogMode&#125;</span>`</span>);</span><br></pre></td></tr></table></figure>]]></content:encoded>
       
-      <description>这篇文章用来验证图片、动图、数学公式和化学式在博客里的显示是否正常。</description>
+      <category domain="/tags/Markdown/">Markdown</category>
       
+      <category domain="/tags/%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F/">数学公式</category>
       
-      
-      <content:encoded><![CDATA[<p>这篇文章专门用来检查博客里的 Markdown 内容渲染。</p><h2 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h2><figure class="image-bubble">                <div class="img-lightbox">                    <div class="overlay"></div>                    <img src="/img/img-loading.png" data-original="/img/markdown-demo-figure.svg" alt="静态图片示例" title="静态图片示例" loading="lazy">                </div>                <div class="image-caption">静态图片示例</div>            </figure><h2 id="动图"><a href="#动图" class="headerlink" title="动图"></a>动图</h2><figure class="image-bubble">                <div class="img-lightbox">                    <div class="overlay"></div>                    <img src="/img/img-loading.png" data-original="/img/markdown-demo-motion.svg" alt="动图示例" title="动图示例" loading="lazy">                </div>                <div class="image-caption">动图示例</div>            </figure><h2 id="数学公式"><a href="#数学公式" class="headerlink" title="数学公式"></a>数学公式</h2><p>行内公式：$E &#x3D; mc^2$</p><p>块级公式：</p><p>$$<br>\int_0^1 x^2 , dx &#x3D; \frac{1}{3}<br>$$</p><h2 id="化学式"><a href="#化学式" class="headerlink" title="化学式"></a>化学式</h2><p>行内化学式：$\ce{H2O + CO2 -&gt; H2CO3}$</p><p>块级化学反应式：</p><p>$$<br>\ce{2H2 + O2 -&gt; 2H2O}<br>$$</p><h2 id="表格与代码"><a href="#表格与代码" class="headerlink" title="表格与代码"></a>表格与代码</h2><table><thead><tr><th>类型</th><th>示例</th></tr></thead><tbody><tr><td>图片</td><td><code>![alt](url)</code></td></tr><tr><td>行内公式</td><td><code>$a^2 + b^2 = c^2$</code></td></tr><tr><td>化学式</td><td><code>$\ce&#123;NaCl&#125;$</code></td></tr></tbody></table><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> blogMode = <span class="string">&#x27;author-like&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Current mode: <span class="subst">$&#123;blogMode&#125;</span>`</span>);</span><br></pre></td></tr></table></figure>]]></content:encoded>
-      
-      
-      <category domain="https://minmin0101.github.io/tags/Markdown/">Markdown</category>
-      
-      <category domain="https://minmin0101.github.io/tags/%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F/">数学公式</category>
-      
-      <category domain="https://minmin0101.github.io/tags/%E5%8C%96%E5%AD%A6%E7%AC%A6%E5%8F%B7/">化学符号</category>
-      
+      <category domain="/tags/%E5%8C%96%E5%AD%A6%E7%AC%A6%E5%8F%B7/">化学符号</category>
       
       <comments>https://minmin0101.github.io/2026/03/12/markdown-rich-demo/#disqus_thread</comments>
-      
     </item>
-    
     <item>
       <title>博客框架重构记录</title>
       <link>https://minmin0101.github.io/2026/03/12/blog-framework-rebuild/</link>
       <guid>https://minmin0101.github.io/2026/03/12/blog-framework-rebuild/</guid>
-      <pubDate>Thu, 12 Mar 2026 12:20:00 GMT</pubDate>
-      
-      <description>这篇文章记录门户首页、博客入口和移动端适配的一次完整重构。</description>
-      
-      
-      
+      <pubDate>Thu, 12 Mar 2026 12:20:00 +0000</pubDate>
+      <description>最近把这个博客从传统的文章首页，改成了更偏“门户入口 + 独立博客区”的结构。 这次调整里最重要的几件事： 根路径 / 只承担个人入口页的作用。 真正的博客首页统一放在 /blog/。 入口页和博客区都重新适配了手机端与 PC 端。 后面…</description>
       <content:encoded><![CDATA[<p>最近把这个博客从传统的文章首页，改成了更偏“门户入口 + 独立博客区”的结构。</p><p>这次调整里最重要的几件事：</p><ol><li>根路径 <code>/</code> 只承担个人入口页的作用。</li><li>真正的博客首页统一放在 <code>/blog/</code>。</li><li>入口页和博客区都重新适配了手机端与 PC 端。</li></ol><p>后面我还会继续补文章封面、页面细节和更多内容页，让整个站点慢慢长成自己喜欢的样子。</p>]]></content:encoded>
       
+      <category domain="/tags/Hexo/">Hexo</category>
       
-      <category domain="https://minmin0101.github.io/tags/Hexo/">Hexo</category>
-      
-      <category domain="https://minmin0101.github.io/tags/%E4%B8%BB%E9%A2%98%E6%94%B9%E9%80%A0/">主题改造</category>
-      
+      <category domain="/tags/%E4%B8%BB%E9%A2%98%E6%94%B9%E9%80%A0/">主题改造</category>
       
       <comments>https://minmin0101.github.io/2026/03/12/blog-framework-rebuild/#disqus_thread</comments>
-      
     </item>
-    
     <item>
       <title>移动端适配说明</title>
       <link>https://minmin0101.github.io/2026/03/11/mobile-layout-notes/</link>
       <guid>https://minmin0101.github.io/2026/03/11/mobile-layout-notes/</guid>
-      <pubDate>Wed, 11 Mar 2026 11:18:00 GMT</pubDate>
-      
-      <description>把首页和博客区同时适配到手机端时，最关键的是信息层级和点击区域。</description>
-      
-      
-      
+      <pubDate>Wed, 11 Mar 2026 11:18:00 +0000</pubDate>
+      <description>移动端适配时，最容易忽略的不是布局本身，而是信息优先级。 这次我优先保证了三件事： 首屏按钮、箭头和导航入口都能被手指稳定点中。 第二屏入口区在小屏上仍然保持清晰分组。 博客列表卡片在纵向屏幕里也能保留标题、摘要和标签信息。 后续如果要继…</description>
       <content:encoded><![CDATA[<p>移动端适配时，最容易忽略的不是布局本身，而是信息优先级。</p><p>这次我优先保证了三件事：</p><ol><li>首屏按钮、箭头和导航入口都能被手指稳定点中。</li><li>第二屏入口区在小屏上仍然保持清晰分组。</li><li>博客列表卡片在纵向屏幕里也能保留标题、摘要和标签信息。</li></ol><p>后续如果要继续打磨，我会把触摸反馈、滚动过渡和卡片间距再压得更细一些。</p>]]></content:encoded>
       
+      <category domain="/tags/CSS/">CSS</category>
       
-      <category domain="https://minmin0101.github.io/tags/CSS/">CSS</category>
-      
-      <category domain="https://minmin0101.github.io/tags/%E5%93%8D%E5%BA%94%E5%BC%8F/">响应式</category>
-      
+      <category domain="/tags/%E5%93%8D%E5%BA%94%E5%BC%8F/">响应式</category>
       
       <comments>https://minmin0101.github.io/2026/03/11/mobile-layout-notes/#disqus_thread</comments>
-      
     </item>
-    
     <item>
       <title>把想法写下来</title>
       <link>https://minmin0101.github.io/2026/03/10/start-writing/</link>
       <guid>https://minmin0101.github.io/2026/03/10/start-writing/</guid>
-      <pubDate>Tue, 10 Mar 2026 14:06:00 GMT</pubDate>
-      
-      <description>有些念头如果不及时写下来，就会在忙碌里被冲散，所以决定重新认真经营这个博客。</description>
-      
-      
-      
+      <pubDate>Tue, 10 Mar 2026 14:06:00 +0000</pubDate>
+      <description>重新搭博客这件事，本质上是在给自己留一个能慢下来整理思路的地方。 想记录的东西其实很多： 学习时的笔记和坑点。 生活里值得留下来的片段。 做项目时那些不想被忘掉的小经验。 希望这个站点以后不仅是一个作品，也是一个能长期陪伴自己的记录空间。</description>
       <content:encoded><![CDATA[<p>重新搭博客这件事，本质上是在给自己留一个能慢下来整理思路的地方。</p><p>想记录的东西其实很多：</p><ol><li>学习时的笔记和坑点。</li><li>生活里值得留下来的片段。</li><li>做项目时那些不想被忘掉的小经验。</li></ol><p>希望这个站点以后不仅是一个作品，也是一个能长期陪伴自己的记录空间。</p>]]></content:encoded>
       
+      <category domain="/tags/%E9%9A%8F%E7%AC%94/">随笔</category>
       
-      <category domain="https://minmin0101.github.io/tags/%E9%9A%8F%E7%AC%94/">随笔</category>
-      
-      <category domain="https://minmin0101.github.io/tags/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/">生活记录</category>
-      
+      <category domain="/tags/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/">生活记录</category>
       
       <comments>https://minmin0101.github.io/2026/03/10/start-writing/#disqus_thread</comments>
-      
     </item>
-    
     <item>
       <title>你好，世界</title>
       <link>https://minmin0101.github.io/2026/01/23/hello-world/</link>
       <guid>https://minmin0101.github.io/2026/01/23/hello-world/</guid>
-      <pubDate>Fri, 23 Jan 2026 02:00:00 GMT</pubDate>
-      
-        
-        
-      <description>&lt;p&gt;这是博客重构后的第一篇文章。&lt;/p&gt;
-&lt;p&gt;最近我把站点从单纯的博客首页，调整成了一个更接近作者个人站的结构：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;根路径是个人门户首页，用来承接访客和集中导航。&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;/blog/&lt;/code&gt; 继续作为博客内容列表页。&lt;/l</description>
-        
-      
-      
-      
+      <pubDate>Fri, 23 Jan 2026 02:00:00 +0000</pubDate>
+      <description>这是博客重构后的第一篇文章。 最近我把站点从单纯的博客首页，调整成了一个更接近作者个人站的结构： 根路径是个人门户首页，用来承接访客和集中导航。 /blog/ 继续作为博客内容列表页。 全站同时兼顾手机端和桌面端浏览体验。 后面这里会继续…</description>
       <content:encoded><![CDATA[<p>这是博客重构后的第一篇文章。</p><p>最近我把站点从单纯的博客首页，调整成了一个更接近作者个人站的结构：</p><ol><li>根路径是个人门户首页，用来承接访客和集中导航。</li><li><code>/blog/</code> 继续作为博客内容列表页。</li><li>全站同时兼顾手机端和桌面端浏览体验。</li></ol><p>后面这里会继续更新关于 Hexo、主题修改、部署和日常记录的内容。</p>]]></content:encoded>
       
+      <category domain="/tags/%E7%94%9F%E6%B4%BB/">生活</category>
       
-      <category domain="https://minmin0101.github.io/tags/%E7%94%9F%E6%B4%BB/">生活</category>
-      
-      <category domain="https://minmin0101.github.io/tags/%E5%BB%BA%E7%AB%99/">建站</category>
-      
+      <category domain="/tags/%E5%BB%BA%E7%AB%99/">建站</category>
       
       <comments>https://minmin0101.github.io/2026/01/23/hello-world/#disqus_thread</comments>
-      
     </item>
-    
   </channel>
 </rss>

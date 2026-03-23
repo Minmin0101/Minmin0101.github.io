@@ -1,0 +1,1564 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="Content-Language" content="zh-cn"><meta charset="utf-8"><title>个人博客运维手册（小白版） | 衰小孩 | 热爱分享 &amp; 生活记录</title><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#77AAFF"><meta name="apple-mobile-web-app-status-bar-style" content="#77AAFF"><meta name="msapplication-navbutton-color" content="#77AAFF"><meta name="keywords" content="建站,博客运维,README"><meta name="description" content="这篇文章直接同步站点根目录 README.md，集中记录个人博客的部署、发文、微博、相册和 GitHub Pages 运维流程。"><meta property="og:type" content="article"><meta property="og:title" content="个人博客运维手册（小白版）"><meta property="og:url" content="https://minmin0101.github.io/2026/03/23/blog-maintenance-readme/index.html"><meta property="og:site_name" content="衰小孩"><meta property="og:description" content="这篇文章直接同步站点根目录 README.md，集中记录个人博客的部署、发文、微博、相册和 GitHub Pages 运维流程。"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://minmin0101.github.io/img/img-loading.png"><meta property="og:image" content="https://minmin0101.github.io/img/img-loading.png"><meta property="og:image" content="https://minmin0101.github.io/img/img-loading.png"><meta property="article:published_time" content="2026-03-23T13:00:00.000Z"><meta property="article:modified_time" content="2026-03-23T13:00:00.000Z"><meta property="article:author" content="衰小孩"><meta property="article:tag" content="建站"><meta property="article:tag" content="博客运维"><meta property="article:tag" content="README"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://minmin0101.github.io/img/img-loading.png"><link rel="alternate" type="application/atom+xml" title="衰小孩" href="/rss2.xml"><link rel="shortcut icon" href="/img/favicon1.ico"><link id="style" rel="stylesheet" href="/css/style.css?v=3.0.64">
+  <link rel="stylesheet" href="/css/weibo-count-sync.css?v=20260319"><link rel="stylesheet" href="/vendor/katex/katex.min.css?v=3.0.64"><script>window.lazyScripts=[]</script><script>window.selectedColor="",window.themeColor=localStorage.getItem("theme-color")||"#77AAFF",window.changeColor=function(e){document.documentElement.style.setProperty("--theme-color",e),document.querySelector('meta[name="theme-color"]').setAttribute("content",e),document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]').setAttribute("content",e),document.querySelector('meta[name="msapplication-navbutton-color"]').setAttribute("content",e),localStorage.setItem("theme-color",e)},window.changeColor(window.themeColor),window.blogNightEnabled="1"===sessionStorage.getItem("night")||"1"===localStorage.getItem("blog-night-mode"),localStorage.getItem("blog-night-mode")&&(localStorage.removeItem("blog-night-mode"),sessionStorage.setItem("night",window.blogNightEnabled?"1":"0")),window.isPhone=/Android|iOS|iPhone|iPad|iPod|Windows Phone|KFAPWI/i.test(navigator.userAgent)||window.innerWidth<1300,window.isHome=!1,window.isPost=!0</script><meta name="generator" content="Hexo 8.1.1"></head><body class="blog-shell post-detail-page"><div id="loading" class="active"></div><aside id="menu" class="hide"><div class="inner flex-row-vertical"><a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off"><i class="icon icon-lg icon-close"></i></a><div class="brand-wrap"><div class="brand fade"><button type="button" class="avatar avatar-preview-trigger waves-effect waves-circle waves-light" aria-label="查看放大头像" aria-controls="avatarPreview" aria-haspopup="dialog"><img src="/img/avatar.png" alt="衰小孩 avatar"></button><div class="introduce"><h5 class="nickname" id="name">衰小孩</h5><div class="links-of-author fade"><span class="links-of-author-item"><a href="javascript:;" id="link-wechat" data-trigger="wechat" title="微信"><i class="icon icon-lg icon-wechat"></i> </a></span><span class="links-of-author-item"><a href="https://mail.qq.com/" target="_blank" rel="noopener noreferrer" title="QQ邮箱"><i class="icon icon-lg icon-envelope-o"></i> </a></span><span class="links-of-author-item"><a href="https://github.com/Minmin0101" target="_blank" title="Github"><i class="icon icon-lg icon-github"></i> </a></span><span class="links-of-author-item"><a href="https://weibo.com/u/x" target="_blank" title="微博"><i class="icon icon-lg icon-weibo"></i></a></span></div><div class="statistics"><ul><li><a class="total-link" href="/blog/weibo/"><div class="count">3</div><div class="type">微博</div></a></li><li><a class="total-link" href="/archives/"><div class="count">8</div><div class="type">文章</div></a></li><li><a class="total-link" href="/gallery/"><div class="count">9</div><div class="type">相册</div></a></li></ul></div></div></div></div><div class="scroll-wrap flex-col"><ul class="nav fade"><li class="items"><a href="/blog/"><i class="icon icon-lg icon-home"></i> <span>主 页</span> <i class="icon icon-lg icon-caret-left custom-caret-left"></i></a></li><li class="items"><a href="/archives/"><i class="icon icon-lg icon-archive"></i> <span>归 档</span> <i class="icon icon-lg icon-caret-left custom-caret-left"></i></a></li><li class="items"><a href="/tags/"><i class="icon icon-lg icon-tags"></i> <span>标 签</span> <i class="icon icon-lg icon-caret-left custom-caret-left"></i></a></li><li class="items"><a href="/blog/weibo/"><i class="icon icon-lg icon-weibo"></i> <span>微 博</span> <i class="icon icon-lg icon-caret-left custom-caret-left"></i></a></li><li class="items"><a href="/gallery/"><i class="icon icon-lg icon-camera-retro"></i> <span>相 册</span> <i class="icon icon-lg icon-caret-left custom-caret-left"></i></a></li><li class="items"><a href="/about/"><i class="icon icon-lg icon-user"></i> <span>关 于</span> <i class="icon icon-lg icon-caret-left custom-caret-left"></i></a></li><li class="items"><a href="/projects/"><i class="icon icon-lg icon-code"></i> <span>项 目</span> <i class="icon icon-lg icon-caret-left custom-caret-left"></i></a></li><li class="items"><a href="/thinking/"><i class="icon icon-lg icon-lightbulb-o"></i> <span>思 考</span> <i class="icon icon-lg icon-caret-left custom-caret-left"></i></a></li><li class="items"><a href="/"><i class="icon icon-lg icon-compass"></i> <span>导 航</span> <i class="icon icon-lg icon-caret-left custom-caret-left"></i></a></li><div class="sliding-bar"></div></ul><div class="nav-tool"><a class="nav-tool-item exchange" data-title="简繁互换" href="javascript:translatePage();"><i class="icon icon-lg icon-refresh"></i> </a><a class="nav-tool-item picker" data-title="调色板" href="javascript:;" id="color-picker-icon"><i class="icon icon-lg icon-eyedropper"></i> </a><a class="nav-tool-item light" data-title="关灯" href="javascript:switchNightMode();"><i class="icon icon-lg icon-lightbulb-o"></i></a></div></div></div></aside><main id="main"><header class="top-header in-post" id="header"><div class="flex-row"><a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle"><i class="icon icon-lg icon-navicon"></i></a><div class="flex-col"></div><div class="search-wrap" id="search-wrap"><a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back"><i class="icon icon-lg icon-chevron-left"></i> </a><input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字"> <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search"><i class="icon icon-lg icon-search"></i></a></div></div><div class="header-title ellipsis">个人博客运维手册（小白版）</div></header><header class="content-header post-header"><canvas class="flickering-grid-canvas" aria-hidden="true"></canvas><div class="container fade-scale"><div id="myheader"><h1 class="title"></h1><h5 class="subtitle"></h5></div></div></header><div class="container body-wrap"><aside class="post-widget"><nav class="post-toc-wrap fade" id="post-toc"><ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 先搞清楚：这个项目是什么</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. 这份手册怎么用</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3"><span class="post-toc-number">3.</span> <span class="post-toc-text">3. 推荐环境</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#31"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">3.1 必装软件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#32"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">3.2 选装软件</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#4"><span class="post-toc-number">4.</span> <span class="post-toc-text">4. 项目目录总览</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#41"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">4.1 关键文件一览表</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#42"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">4.2 一个很重要的小提示</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#5"><span class="post-toc-number">5.</span> <span class="post-toc-text">5. 环境搭建与本地预览</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#51"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">5.1 第一次打开项目</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#52"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">5.2 本地预览网站</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#53-4000"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">5.3 如果端口 4000 被占用</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#6"><span class="post-toc-number">6.</span> <span class="post-toc-text">6. 站点基础信息怎么改</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#61"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">6.1 修改站名</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_2"><span class="post-toc-number">6.1.1.</span> <span class="post-toc-text">首页门户名称</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_3"><span class="post-toc-number">6.1.2.</span> <span class="post-toc-text">博客和各内容页名称</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#62"><span class="post-toc-number">6.2.</span> <span class="post-toc-text">6.2 修改首页座右铭 / 句子</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#63"><span class="post-toc-number">6.3.</span> <span class="post-toc-text">6.3 修改首页入口标签名</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#64"><span class="post-toc-number">6.4.</span> <span class="post-toc-text">6.4 修改首页按钮文字</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#65"><span class="post-toc-number">6.5.</span> <span class="post-toc-text">6.5 修改头像</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#66-favicon"><span class="post-toc-number">6.6.</span> <span class="post-toc-text">6.6 修改网站图标 favicon</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#67"><span class="post-toc-number">6.7.</span> <span class="post-toc-text">6.7 修改微信二维码、打赏二维码</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#68"><span class="post-toc-number">6.8.</span> <span class="post-toc-text">6.8 修改左侧社交链接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_4"><span class="post-toc-number">6.8.1.</span> <span class="post-toc-text">这些链接分别代表什么</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#69"><span class="post-toc-number">6.9.</span> <span class="post-toc-text">6.9 修改左侧菜单栏标签</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_5"><span class="post-toc-number">6.9.1.</span> <span class="post-toc-text">推荐改法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_6"><span class="post-toc-number">6.9.2.</span> <span class="post-toc-text">需要重点检查的页面</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_7"><span class="post-toc-number">6.9.3.</span> <span class="post-toc-text">小提醒</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#7"><span class="post-toc-number">7.</span> <span class="post-toc-text">7. 各菜单页怎么改</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#71"><span class="post-toc-number">7.1.</span> <span class="post-toc-text">7.1 关于页</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#72"><span class="post-toc-number">7.2.</span> <span class="post-toc-text">7.2 项目页</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#73"><span class="post-toc-number">7.3.</span> <span class="post-toc-text">7.3 思考页</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#74"><span class="post-toc-number">7.4.</span> <span class="post-toc-text">7.4 相册页介绍</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#75"><span class="post-toc-number">7.5.</span> <span class="post-toc-text">7.5 微博页介绍</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#76"><span class="post-toc-number">7.6.</span> <span class="post-toc-text">7.6 博客首页介绍</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#8"><span class="post-toc-number">8.</span> <span class="post-toc-text">8. 如何写并发布博客文章</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#80-markdown"><span class="post-toc-number">8.1.</span> <span class="post-toc-text">8.0 现在最推荐的发文方式：只上传一个 Markdown 文件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#801"><span class="post-toc-number">8.2.</span> <span class="post-toc-text">8.0.1 小白最简单步骤</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_8"><span class="post-toc-number">8.2.1.</span> <span class="post-toc-text">第一步：复制模板文件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_9"><span class="post-toc-number">8.2.2.</span> <span class="post-toc-text">第二步：改这些字段</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_10"><span class="post-toc-number">8.2.3.</span> <span class="post-toc-text">第三步：写正文</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_11"><span class="post-toc-number">8.2.4.</span> <span class="post-toc-text">第四步：生成文章</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#802"><span class="post-toc-number">8.3.</span> <span class="post-toc-text">8.0.2 生成后你会看到什么</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#803"><span class="post-toc-number">8.4.</span> <span class="post-toc-text">8.0.3 以后你尽量不要再手改这些文件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#804"><span class="post-toc-number">8.5.</span> <span class="post-toc-text">8.0.4 旧方法还保留，但只当备用</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#81"><span class="post-toc-number">8.6.</span> <span class="post-toc-text">8.1 先理解博客文章的结构</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#82-html"><span class="post-toc-number">8.7.</span> <span class="post-toc-text">8.2 旧方法（备用）：手动复制现有 HTML 文章模板</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_12"><span class="post-toc-number">8.7.1.</span> <span class="post-toc-text">复制文章模板命令</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#83"><span class="post-toc-number">8.8.</span> <span class="post-toc-text">8.3 文章里通常要改哪些内容</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#84"><span class="post-toc-number">8.9.</span> <span class="post-toc-text">8.4 图片、动图、视频往哪里放</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#85"><span class="post-toc-number">8.10.</span> <span class="post-toc-text">8.5 只新增文章详情页还不够</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#86"><span class="post-toc-number">8.11.</span> <span class="post-toc-text">8.6 把新文章加到博客首页</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1_1"><span class="post-toc-number">8.11.1.</span> <span class="post-toc-text">1. 最新文章弹层</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2_1"><span class="post-toc-number">8.11.2.</span> <span class="post-toc-text">2. 主文章列表</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3_1"><span class="post-toc-number">8.11.3.</span> <span class="post-toc-text">3. 文章数量</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#87"><span class="post-toc-number">8.12.</span> <span class="post-toc-text">8.7 把新文章加到搜索里</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_13"><span class="post-toc-number">8.12.1.</span> <span class="post-toc-text">你要改什么</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_14"><span class="post-toc-number">8.12.2.</span> <span class="post-toc-text">最简单做法</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#88"><span class="post-toc-number">8.13.</span> <span class="post-toc-text">8.8 添加文章标签</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_15"><span class="post-toc-number">8.13.1.</span> <span class="post-toc-text">文章详情页标签</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_16"><span class="post-toc-number">8.13.2.</span> <span class="post-toc-text">博客首页卡片标签</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#89"><span class="post-toc-number">8.14.</span> <span class="post-toc-text">8.9 给标签建立独立页面</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_17"><span class="post-toc-number">8.14.1.</span> <span class="post-toc-text">如果你要新增一个从未存在过的新标签</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_18"><span class="post-toc-number">8.14.2.</span> <span class="post-toc-text">标签总览页</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#810"><span class="post-toc-number">8.15.</span> <span class="post-toc-text">8.10 更新归档页</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#811-rss-sitemap"><span class="post-toc-number">8.16.</span> <span class="post-toc-text">8.11 更新 RSS 和 sitemap</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_19"><span class="post-toc-number">8.16.1.</span> <span class="post-toc-text">为什么要改</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_20"><span class="post-toc-number">8.16.2.</span> <span class="post-toc-text">最低要求</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#812"><span class="post-toc-number">8.17.</span> <span class="post-toc-text">8.12 发布文章的完整流程图</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#9"><span class="post-toc-number">9.</span> <span class="post-toc-text">9. 如何写并发布微博</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#91"><span class="post-toc-number">9.1.</span> <span class="post-toc-text">9.1 微博对应哪个仓库</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#92-github-issue"><span class="post-toc-number">9.2.</span> <span class="post-toc-text">9.2 最简单的发微博方式：直接去 GitHub 发 Issue</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#93"><span class="post-toc-number">9.3.</span> <span class="post-toc-text">9.3 微博标题和正文怎么对应</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#94"><span class="post-toc-number">9.4.</span> <span class="post-toc-text">9.4 如何发图文微博</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#95"><span class="post-toc-number">9.5.</span> <span class="post-toc-text">9.5 如何添加微博标签</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#96"><span class="post-toc-number">9.6.</span> <span class="post-toc-text">9.6 微博为什么没显示</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#97"><span class="post-toc-number">9.7.</span> <span class="post-toc-text">9.7 微博页样式和交互去哪改</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#10"><span class="post-toc-number">10.</span> <span class="post-toc-text">10. 如何新建相册并上传图片</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#101"><span class="post-toc-number">10.1.</span> <span class="post-toc-text">10.1 相册相关文件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#102"><span class="post-toc-number">10.2.</span> <span class="post-toc-text">10.2 图片放哪里</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#103"><span class="post-toc-number">10.3.</span> <span class="post-toc-text">10.3 新建一个相册的步骤</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_21"><span class="post-toc-number">10.3.1.</span> <span class="post-toc-text">第一步：上传图片</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_22"><span class="post-toc-number">10.3.2.</span> <span class="post-toc-text">第二步：改相册页面正文卡片</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#windowgalleryalbums"><span class="post-toc-number">10.3.3.</span> <span class="post-toc-text">第三步：改 window.galleryAlbums</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#104"><span class="post-toc-number">10.4.</span> <span class="post-toc-text">10.4 修改相册总数和照片总数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#105"><span class="post-toc-number">10.5.</span> <span class="post-toc-text">10.5 相册页介绍文字去哪改</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#11"><span class="post-toc-number">11.</span> <span class="post-toc-text">11. 如何修改搜索框和搜索结果</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#111"><span class="post-toc-number">11.1.</span> <span class="post-toc-text">11.1 搜索数据来源</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#112"><span class="post-toc-number">11.2.</span> <span class="post-toc-text">11.2 搜索样式和逻辑在哪</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#113"><span class="post-toc-number">11.3.</span> <span class="post-toc-text">11.3 搜索框长什么样在哪改</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#12-github-pages"><span class="post-toc-number">12.</span> <span class="post-toc-text">12. 如何部署到 GitHub Pages</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#121-github"><span class="post-toc-number">12.1.</span> <span class="post-toc-text">12.1 如果你是第一次在 GitHub 上部署这个项目</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#github"><span class="post-toc-number">12.1.1.</span> <span class="post-toc-text">第一步：创建 GitHub 仓库</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_23"><span class="post-toc-number">12.1.2.</span> <span class="post-toc-text">第二步：把项目文件上传到仓库</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#github-pages"><span class="post-toc-number">12.1.3.</span> <span class="post-toc-text">第三步：开启 GitHub Pages</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#122"><span class="post-toc-number">12.2.</span> <span class="post-toc-text">12.2 日常更新后怎么推送上线</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#123"><span class="post-toc-number">12.3.</span> <span class="post-toc-text">12.3 部署后多久生效</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#13"><span class="post-toc-number">13.</span> <span class="post-toc-text">13. 如何打版本号</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#131"><span class="post-toc-number">13.1.</span> <span class="post-toc-text">13.1 查看当前状态</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#132"><span class="post-toc-number">13.2.</span> <span class="post-toc-text">13.2 正常提交流程</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#133"><span class="post-toc-number">13.3.</span> <span class="post-toc-text">13.3 打标签</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#134"><span class="post-toc-number">13.4.</span> <span class="post-toc-text">13.4 怎么看历史标签</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#135"><span class="post-toc-number">13.5.</span> <span class="post-toc-text">13.5 什么时候适合打版本号</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#14-github-oauth"><span class="post-toc-number">14.</span> <span class="post-toc-text">14. 微博登录与 GitHub OAuth 维护</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#141"><span class="post-toc-number">14.1.</span> <span class="post-toc-text">14.1 相关文件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#142"><span class="post-toc-number">14.2.</span> <span class="post-toc-text">14.2 目前微博页核心配置在哪</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#143-github-oauth-app"><span class="post-toc-number">14.3.</span> <span class="post-toc-text">14.3 GitHub OAuth App 后台怎么填</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_24"><span class="post-toc-number">14.3.1.</span> <span class="post-toc-text">正式站</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#_25"><span class="post-toc-number">14.3.2.</span> <span class="post-toc-text">本地调试</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#144-worker"><span class="post-toc-number">14.4.</span> <span class="post-toc-text">14.4 部署 Worker 的常用命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#145-worker"><span class="post-toc-number">14.5.</span> <span class="post-toc-text">14.5 更详细的 Worker 说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#15-git"><span class="post-toc-number">15.</span> <span class="post-toc-text">15. 常用 Git 命令备忘</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#151"><span class="post-toc-number">15.1.</span> <span class="post-toc-text">15.1 看当前改了什么</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#152"><span class="post-toc-number">15.2.</span> <span class="post-toc-text">15.2 看提交历史</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#153"><span class="post-toc-number">15.3.</span> <span class="post-toc-text">15.3 拉取远端最新代码</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#154"><span class="post-toc-number">15.4.</span> <span class="post-toc-text">15.4 提交并推送</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#155"><span class="post-toc-number">15.5.</span> <span class="post-toc-text">15.5 打标签并推送</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#16"><span class="post-toc-number">16.</span> <span class="post-toc-text">16. 日常维护的推荐顺序</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#17-10"><span class="post-toc-number">17.</span> <span class="post-toc-text">17. 小白最常见的 10 个问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#171"><span class="post-toc-number">17.1.</span> <span class="post-toc-text">17.1 为什么我改了文章，但博客首页没变</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#172"><span class="post-toc-number">17.2.</span> <span class="post-toc-text">17.2 为什么搜索不到新文章</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#173"><span class="post-toc-number">17.3.</span> <span class="post-toc-text">17.3 为什么标签点进去是空的</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#174"><span class="post-toc-number">17.4.</span> <span class="post-toc-text">17.4 为什么微博没显示</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#175"><span class="post-toc-number">17.5.</span> <span class="post-toc-text">17.5 为什么图片显示不出来</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#176"><span class="post-toc-number">17.6.</span> <span class="post-toc-text">17.6 为什么改完本地看不到</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#177"><span class="post-toc-number">17.7.</span> <span class="post-toc-text">17.7 为什么推送后线上没变</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#178"><span class="post-toc-number">17.8.</span> <span class="post-toc-text">17.8 为什么微博登录坏了</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#179"><span class="post-toc-number">17.9.</span> <span class="post-toc-text">17.9 为什么菜单改了一个页面，其他页面没变</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1710"><span class="post-toc-number">17.10.</span> <span class="post-toc-text">17.10 为什么文件打开后一整行</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#18"><span class="post-toc-number">18.</span> <span class="post-toc-text">18. 一张“去哪改什么”的总表</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#19"><span class="post-toc-number">19.</span> <span class="post-toc-text">19. 我最推荐你的实际操作习惯</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#20"><span class="post-toc-number">20.</span> <span class="post-toc-text">20. 最后给你的建议</span></a></li></ol></nav></aside><article id="post-post-interaction-long-test" class="post-article article-type-post fade" itemprop="blogPost"><div class="post-card"><h1 class="post-card-title" data-title="个人博客运维手册（小白版）">个人博客运维手册（小白版）</h1><div class="post-meta"><div class="post-meta-info"><span><i class="icon icon-calendar"></i><time class="post-time" title="2026-03-23 21:00:00" datetime="2026-03-23T13:00:00.000Z" itemprop="datePublished">2026-03-23</time> </span><span><i class="icon icon-clock-o"></i>55 分钟阅读</span> <span><i class="icon icon-file-text-o"></i>21.8k 字</span></div></div><div class="post-content" id="post-content" itemprop="postContent"><p>这是一份给“完全不懂代码也能照着做”的博客维护说明书。<br>
+你当前博客项目的本地目录是：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io
+</code></pre>
+<p>如果你后面忘了某个内容该去哪里改，先回到这份 <code>README.md</code> 看，一般都能找到。
+为了方便你直接在电脑里定位文件，下面文中提到的关键文件路径，我都尽量改成了你本机可用的绝对路径显示。</p>
+<p><img alt="当前头像示例" src="/img/avatar.png"></p>
+<hr>
+<h2 id="1">1. 先搞清楚：这个项目是什么</h2>
+<p>这个仓库 <strong>不是“Hexo 源码工程”</strong>，而是一个已经生成好的 <strong>静态网站成品</strong>。</p>
+<p>这句话很重要，它意味着：</p>
+<ol>
+<li>你改的是网页文件本身，不是“配置完自动生成”的源码。</li>
+<li>很多页面内容是重复写死在不同 HTML 文件里的。</li>
+<li>这里现在有两套发文方式：
+   - 如果你走旧的“手工改 HTML”方式，新文章不会自动更新博客列表、标签页、搜索索引、站点地图，通常需要你手动补几处文件。
+   - 如果你走现在推荐的“Markdown 发文流程”，只要把文章放进 <code>D:\blog\Minmin0101.github.io\markdown-posts</code>，再运行 <code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code>，或者直接推送到 GitHub，博客首页、最新文章、标签页、归档页、搜索索引、RSS、站点地图都会自动更新。</li>
+</ol>
+<p>你可以把它理解成：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\index.html</code> 是首页门户</li>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code> 是博客首页</li>
+<li><code>D:\blog\Minmin0101.github.io\2026\...\index.html</code> 是每一篇文章详情页</li>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code> 是微博页</li>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code> 是相册页</li>
+<li><code>D:\blog\Minmin0101.github.io\about\index.html</code>、<code>D:\blog\Minmin0101.github.io\projects\index.html</code>、<code>D:\blog\Minmin0101.github.io\thinking\index.html</code> 是独立菜单页</li>
+</ul>
+<hr>
+<h2 id="2">2. 这份手册怎么用</h2>
+<p>如果你只想做某一件事，可以直接跳到对应章节：</p>
+<ul>
+<li>修改站名、座右铭、入口按钮、头像：看“5. 站点基础信息怎么改”</li>
+<li>修改每个菜单页的介绍：看“6. 各菜单页怎么改”</li>
+<li>发布博客文章：看“7. 如何写并发布博客文章”</li>
+<li>添加标签：看“8. 如何添加标签”</li>
+<li>发布微博：看“9. 如何写并发布微博”</li>
+<li>新建相册、上传图片：看“10. 如何新建相册并上传图片”</li>
+<li>发布到 GitHub Pages：看“12. 如何部署到 GitHub Pages”</li>
+<li>打版本号：看“13. 如何打版本号”</li>
+<li>微博登录坏了：看“14. 微博登录与 GitHub OAuth 维护”</li>
+</ul>
+<hr>
+<h2 id="3">3. 推荐环境</h2>
+<p>为了后续维护轻松一些，建议你电脑上至少装这 4 个东西。</p>
+<h3 id="31">3.1 必装软件</h3>
+<ol>
+<li>
+<p><code>Git for Windows</code>
+   用来提交、推送代码到 GitHub。</p>
+</li>
+<li>
+<p><code>VS Code</code>
+   用来打开和编辑项目文件。</p>
+</li>
+<li>
+<p><code>Python 3</code>
+   用来本地预览网站。</p>
+</li>
+<li>
+<p><code>浏览器</code>
+   推荐 Edge 或 Chrome。</p>
+</li>
+</ol>
+<h3 id="32">3.2 选装软件</h3>
+<ol>
+<li>
+<p><code>Node.js</code>
+   只有你维护微博登录的 Cloudflare Worker 时才需要。</p>
+</li>
+<li>
+<p><code>Cloudflare 账号</code>
+   只有你维护微博页 GitHub 登录时才需要。</p>
+</li>
+</ol>
+<hr>
+<h2 id="4">4. 项目目录总览</h2>
+<p>下面这张“地图”非常重要，后面所有修改基本都围绕这些目录展开。</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io\
+├─ index.html                          # 根首页 / 个人门户页
+├─ blog/
+│  ├─ index.html                       # 博客首页
+│  └─ weibo/
+│     ├─ index.html                    # 微博页
+│     ├─ issues-cache.json             # 微博缓存数据
+│     ├─ comments-cache.json           # 微博评论缓存数据
+│     └─ oauth-callback/
+│        └─ index.html                 # 微博登录回调页
+├─ 2026/                               # 博客文章详情页目录
+├─ about/index.html                    # 关于页
+├─ projects/index.html                 # 项目页
+├─ thinking/index.html                 # 思考页
+├─ gallery/index.html                  # 相册页
+├─ archives/                           # 归档页
+├─ tags/                               # 标签页总目录
+├─ img/                                # 常规图片资源
+├─ media/                              # 动图、视频等资源
+├─ css/                                # 全站样式
+├─ js/                                 # 全站脚本
+├─ content.json                        # 搜索索引
+├─ rss2.xml                            # RSS
+├─ sitemap.xml                         # 站点地图
+├─ sitemap.txt                         # 简版站点地图
+└─ serverless/
+   └─ github-oauth-worker/             # 微博页 GitHub 登录 Worker
+</code></pre>
+<h3 id="41">4.1 关键文件一览表</h3>
+<table>
+<thead>
+<tr>
+<th>你要做什么</th>
+<th>主要文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>改首页站名、座右铭、入口按钮</td>
+<td><code>D:\blog\Minmin0101.github.io\index.html</code></td>
+</tr>
+<tr>
+<td>改博客首页文案</td>
+<td><code>D:\blog\Minmin0101.github.io\blog\index.html</code></td>
+</tr>
+<tr>
+<td>改微博页文案与配置</td>
+<td><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></td>
+</tr>
+<tr>
+<td>改微博样式与交互</td>
+<td><code>D:\blog\Minmin0101.github.io\css\weibo-gwitter.css</code>、<code>D:\blog\Minmin0101.github.io\js\weibo-gwitter.js</code></td>
+</tr>
+<tr>
+<td>改相册内容</td>
+<td><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></td>
+</tr>
+<tr>
+<td>改关于页</td>
+<td><code>D:\blog\Minmin0101.github.io\about\index.html</code></td>
+</tr>
+<tr>
+<td>改项目页</td>
+<td><code>D:\blog\Minmin0101.github.io\projects\index.html</code></td>
+</tr>
+<tr>
+<td>改思考页</td>
+<td><code>D:\blog\Minmin0101.github.io\thinking\index.html</code></td>
+</tr>
+<tr>
+<td>改搜索</td>
+<td><code>D:\blog\Minmin0101.github.io\content.json</code>、<code>D:\blog\Minmin0101.github.io\js\search-fuzzy.js</code>、<code>D:\blog\Minmin0101.github.io\css\search-fuzzy.css</code></td>
+</tr>
+<tr>
+<td>改头像</td>
+<td><code>D:\blog\Minmin0101.github.io\img\avatar.png</code></td>
+</tr>
+<tr>
+<td>改网站图标</td>
+<td><code>D:\blog\Minmin0101.github.io\img\favicon1.ico</code></td>
+</tr>
+<tr>
+<td>改微信二维码</td>
+<td><code>D:\blog\Minmin0101.github.io\img\wechat_channel.jpg</code></td>
+</tr>
+<tr>
+<td>改打赏二维码</td>
+<td><code>D:\blog\Minmin0101.github.io\img\wechatpay.png</code>、<code>D:\blog\Minmin0101.github.io\img\alipay.png</code></td>
+</tr>
+<tr>
+<td>改微博登录 Worker</td>
+<td><code>D:\blog\Minmin0101.github.io\serverless\github-oauth-worker</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="42">4.2 一个很重要的小提示</h3>
+<p>这个项目里很多 HTML 文件是 <strong>压缩成一行</strong> 的，所以你打开时会觉得很乱。<br>
+这不是你弄坏了，是文件本来就这样。</p>
+<p>建议操作方式：</p>
+<ol>
+<li>在 VS Code 里打开项目</li>
+<li>直接用“全局搜索”找关键词</li>
+<li>找到后改文字，不要执着于行号</li>
+</ol>
+<p>常用搜索关键词：</p>
+<ul>
+<li><code>衰小孩</code></li>
+<li><code>热爱分享</code></li>
+<li><code>PRESS START</code></li>
+<li><code>为什么要记录微博</code></li>
+<li><code>文章记录 / 生活切片 / 思考沉淀</code></li>
+<li><code>欢迎添加我的微信</code></li>
+<li><code>mail.qq.com</code></li>
+<li><code>https://github.com/Minmin0101</code></li>
+</ul>
+<hr>
+<h2 id="5">5. 环境搭建与本地预览</h2>
+<h3 id="51">5.1 第一次打开项目</h3>
+<p>在 PowerShell 里执行：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+code .
+</code></pre>
+<p>如果 <code>code .</code> 没反应，就直接手动打开 VS Code，然后“文件 -&gt; 打开文件夹”，选择：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io
+</code></pre>
+<h3 id="52">5.2 本地预览网站</h3>
+<p>推荐最简单的预览方式：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+python -m http.server 4000
+</code></pre>
+<p>然后浏览器打开：</p>
+<pre><code class="language-text">http://127.0.0.1:4000/
+</code></pre>
+<p>常用页面地址：</p>
+<ul>
+<li>首页：<code>http://127.0.0.1:4000/</code></li>
+<li>博客：<code>http://127.0.0.1:4000/blog/</code></li>
+<li>微博：<code>http://127.0.0.1:4000/blog/weibo/</code></li>
+<li>相册：<code>http://127.0.0.1:4000/gallery/</code></li>
+</ul>
+<h3 id="53-4000">5.3 如果端口 4000 被占用</h3>
+<p>可以换成别的端口，比如 4010：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+python -m http.server 4010
+</code></pre>
+<p>然后打开：</p>
+<pre><code class="language-text">http://127.0.0.1:4010/
+</code></pre>
+<hr>
+<h2 id="6">6. 站点基础信息怎么改</h2>
+<p>这一章解决这些问题：</p>
+<ul>
+<li>怎么改站名</li>
+<li>怎么改首页句子 / 座右铭</li>
+<li>怎么改入口标签名</li>
+<li>怎么改头像</li>
+<li>怎么改 favicon</li>
+<li>怎么改邮箱 / GitHub / 微博链接</li>
+<li>怎么改左侧菜单栏文字</li>
+</ul>
+<h3 id="61">6.1 修改站名</h3>
+<p>最常改的地方有 2 组：</p>
+<ol>
+<li>首页门户名称</li>
+<li>博客和其他页面左侧侧边栏名称</li>
+</ol>
+<h4 id="_2">首页门户名称</h4>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\index.html</code></li>
+</ul>
+<p>搜索这些关键词：</p>
+<pre><code class="language-html">&lt;title&gt;衰小孩 | 热爱分享 &amp; 生活记录&lt;/title&gt;
+&lt;h2 class=&quot;content-title&quot;&gt;衰小孩&lt;/h2&gt;
+&lt;h1&gt;衰小孩&lt;/h1&gt;
+</code></pre>
+<p>把 <code>衰小孩</code> 改成你想要的新名字即可。</p>
+<h4 id="_3">博客和各内容页名称</h4>
+<p>文件通常包括：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\about\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\projects\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\thinking\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></li>
+<li>各文章页 <code>2026/.../index.html</code></li>
+</ul>
+<p>搜索关键词：</p>
+<pre><code class="language-text">衰小孩
+</code></pre>
+<p>把页面里的名字替换成你的新站名即可。</p>
+<h3 id="62">6.2 修改首页座右铭 / 句子</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\index.html</code></li>
+</ul>
+<p>搜索这两个字段：</p>
+<pre><code class="language-html">&lt;h3 class=&quot;content-subtitle&quot; original-content=&quot;“如果你有勇气，我就陪你打断婚车的车轴”--《龙族》楚子航&quot;&gt;
+&lt;h2 id=&quot;signature&quot; original-content=&quot;「热爱分享 | 生活记录」&quot;&gt;
+</code></pre>
+<p>你可以把 <code>original-content</code> 里的内容改成自己的。</p>
+<p>例如：</p>
+<pre><code class="language-html">&lt;h3 class=&quot;content-subtitle&quot; original-content=&quot;想把今天的风和心情都认真存档。&quot;&gt;
+&lt;h2 id=&quot;signature&quot; original-content=&quot;「生活记录 | 学习分享 | 慢慢生长」&quot;&gt;
+</code></pre>
+<h3 id="63">6.3 修改首页入口标签名</h3>
+<p>首页的入口按钮在：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\index.html</code></li>
+</ul>
+<p>搜索：</p>
+<pre><code class="language-html">&lt;ul class=&quot;portal-links&quot;&gt;
+</code></pre>
+<p>你会看到类似内容：</p>
+<pre><code class="language-html">&lt;span class=&quot;nav-text&quot;&gt;博客&lt;/span&gt;
+&lt;span class=&quot;nav-text&quot;&gt;微博&lt;/span&gt;
+&lt;span class=&quot;nav-text&quot;&gt;关于&lt;/span&gt;
+&lt;span class=&quot;nav-text&quot;&gt;相册&lt;/span&gt;
+&lt;span class=&quot;nav-text&quot;&gt;项目&lt;/span&gt;
+&lt;span class=&quot;nav-text&quot;&gt;思考&lt;/span&gt;
+</code></pre>
+<p>把这些文字改成你想要的名字即可。</p>
+<p>例如：</p>
+<ul>
+<li><code>博客</code> 改成 <code>文章</code></li>
+<li><code>思考</code> 改成 <code>碎碎念</code></li>
+<li><code>项目</code> 改成 <code>作品</code></li>
+</ul>
+<h3 id="64">6.4 修改首页按钮文字</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\index.html</code></li>
+</ul>
+<p>搜索：</p>
+<pre><code class="language-html">PRESS START
+</code></pre>
+<p>比如可以改成：</p>
+<pre><code class="language-html">ENTER
+开始进入
+点我开始
+</code></pre>
+<h3 id="65">6.5 修改头像</h3>
+<p>最省事的做法不是改代码，而是 <strong>直接替换同名文件</strong>。</p>
+<p>当前头像文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\img\avatar.png</code></li>
+</ul>
+<p>建议操作：</p>
+<ol>
+<li>准备一张新的头像图片</li>
+<li>把它改名为 <code>avatar.png</code></li>
+<li>直接覆盖项目里的这个文件</li>
+</ol>
+<p>这样做的好处：</p>
+<ul>
+<li>不需要全站到处改图片路径</li>
+<li>首页、博客、关于页、相册页、头像预览会一起更新</li>
+</ul>
+<h3 id="66-favicon">6.6 修改网站图标 favicon</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\img\favicon1.ico</code></li>
+</ul>
+<p>最简单做法：</p>
+<ol>
+<li>准备新的 <code>.ico</code> 图标</li>
+<li>命名成 <code>favicon1.ico</code></li>
+<li>覆盖原文件</li>
+</ol>
+<h3 id="67">6.7 修改微信二维码、打赏二维码</h3>
+<p>微信二维码：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\img\wechat_channel.jpg</code></li>
+</ul>
+<p>微信打赏码：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\img\wechatpay.png</code></li>
+</ul>
+<p>支付宝打赏码：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\img\alipay.png</code></li>
+</ul>
+<p>同样建议直接用同名图片覆盖。</p>
+<h3 id="68">6.8 修改左侧社交链接</h3>
+<p>当前常见链接分布在很多 HTML 页面中，最简单的方法是 <strong>全局搜索并替换</strong>。</p>
+<p>常见值：</p>
+<pre><code class="language-text">https://mail.qq.com/
+https://github.com/Minmin0101
+https://weibo.com/u/x
+</code></pre>
+<p>推荐在 VS Code 里按：</p>
+<pre><code class="language-text">Ctrl + Shift + F
+</code></pre>
+<p>然后搜索并替换。</p>
+<h4 id="_4">这些链接分别代表什么</h4>
+<ul>
+<li><code>https://mail.qq.com/</code>：邮箱入口</li>
+<li><code>https://github.com/Minmin0101</code>：GitHub 主页</li>
+<li><code>https://weibo.com/u/x</code>：微博主页</li>
+</ul>
+<h3 id="69">6.9 修改左侧菜单栏标签</h3>
+<p>左侧菜单不是只在一个文件里，而是很多页面都各自写了一份。</p>
+<p>常见菜单文字：</p>
+<pre><code class="language-text">主 页
+归 档
+标 签
+微 博
+相 册
+关 于
+项 目
+思 考
+导 航
+</code></pre>
+<h4 id="_5">推荐改法</h4>
+<p>用 VS Code 全局搜索这些词，然后统一替换。</p>
+<h4 id="_6">需要重点检查的页面</h4>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\about\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\projects\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\thinking\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></li>
+<li>所有文章详情页 <code>2026/.../index.html</code></li>
+</ul>
+<h4 id="_7">小提醒</h4>
+<p>改菜单名字后，最好每个页面都本地点一遍，避免某些页面菜单文字没同步。</p>
+<hr>
+<h2 id="7">7. 各菜单页怎么改</h2>
+<p>这一章对应：</p>
+<ul>
+<li>关于页</li>
+<li>项目页</li>
+<li>思考页</li>
+<li>相册页</li>
+<li>微博页介绍文字</li>
+<li>博客首页介绍文字</li>
+</ul>
+<hr>
+<h3 id="71">7.1 关于页</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\about\index.html</code></li>
+</ul>
+<p>重点改 3 处：</p>
+<ol>
+<li>页面标题</li>
+<li>页面副标题</li>
+<li>页面正文介绍</li>
+</ol>
+<p>搜索关键词：</p>
+<pre><code class="language-text">认识一下我和这个博客
+你好，我是
+这个博客主要用来记录三类内容
+</code></pre>
+<p>真正的正文区域是：</p>
+<pre><code class="language-html">&lt;div class=&quot;post-content page-content&quot; id=&quot;page-content&quot;&gt;
+</code></pre>
+<p>你想改介绍内容，主要就是改这个区域里的 HTML。</p>
+<hr>
+<h3 id="72">7.2 项目页</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\projects\index.html</code></li>
+</ul>
+<p>搜索关键词：</p>
+<pre><code class="language-text">做过的项目、练习与长期更新计划
+</code></pre>
+<p>正文内容同样在：</p>
+<pre><code class="language-html">&lt;div class=&quot;post-content page-content&quot; id=&quot;page-content&quot;&gt;
+</code></pre>
+<hr>
+<h3 id="73">7.3 思考页</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\thinking\index.html</code></li>
+</ul>
+<p>搜索关键词：</p>
+<pre><code class="language-text">稍微慢一点写下来的想法与阶段总结
+这里适合放更完整的阶段总结
+</code></pre>
+<hr>
+<h3 id="74">7.4 相册页介绍</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></li>
+</ul>
+<p>可以改的地方包括：</p>
+<ul>
+<li>页面副标题</li>
+<li>相册总览说明</li>
+<li>相册统计文字</li>
+<li>相册说明段落</li>
+</ul>
+<p>搜索关键词：</p>
+<pre><code class="language-text">这里放生活切片、界面草稿和想留下来的旅途画面。
+把生活碎片收进相册里，想看的时候就翻出来。
+目前收录
+每一本相册都可以继续往里加照片
+</code></pre>
+<hr>
+<h3 id="75">7.5 微博页介绍</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></li>
+</ul>
+<p>你现在能直接改到这些位置：</p>
+<ul>
+<li>顶部引导文案</li>
+<li>折叠介绍标题</li>
+<li>折叠介绍正文</li>
+<li>标签云</li>
+</ul>
+<p>搜索关键词：</p>
+<pre><code class="language-text">终于明白为什么有人会说
+为什么要记录微博
+为什么要记录生活
+都有什么内容
+</code></pre>
+<hr>
+<h3 id="76">7.6 博客首页介绍</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+</ul>
+<p>搜索关键词：</p>
+<pre><code class="language-text">文章记录 / 生活切片 / 思考沉淀
+沿着时间往下翻，就是这段时间留下来的思考与记录。
+目前共收录
+</code></pre>
+<p>你可以修改：</p>
+<ul>
+<li>博客页副标题</li>
+<li>博客首页介绍句</li>
+<li>文章数量显示文字</li>
+</ul>
+<hr>
+<h2 id="8">8. 如何写并发布博客文章</h2>
+<p>先看最重要的一句：</p>
+<p>现在这套博客已经支持“小白模式”发文了。
+以后默认新增一篇博客文章，你只需要：</p>
+<ol>
+<li>在 <code>D:\blog\Minmin0101.github.io\markdown-posts</code> 里新增 1 个 <code>.md</code> 文件</li>
+<li>改好标题、日期、标签和正文</li>
+<li>本地双击 <code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code>，或者直接推送到 GitHub</li>
+</ol>
+<p>脚本会自动帮你生成：</p>
+<ul>
+<li>新文章详情页</li>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code> 里的文章卡片</li>
+<li><code>D:\blog\Minmin0101.github.io\archives\index.html</code> 归档</li>
+<li><code>D:\blog\Minmin0101.github.io\tags\index.html</code> 和对应标签页</li>
+<li><code>D:\blog\Minmin0101.github.io\content.json</code> 搜索索引</li>
+<li><code>D:\blog\Minmin0101.github.io\rss2.xml</code></li>
+<li><code>D:\blog\Minmin0101.github.io\sitemap.xml</code></li>
+<li><code>D:\blog\Minmin0101.github.io\sitemap.txt</code></li>
+</ul>
+<p>而且会继续复用你现在博客的现有页面结构，所以 PC、移动端、iOS 端样式都会跟现有文章页保持一致。</p>
+<h3 id="80-markdown">8.0 现在最推荐的发文方式：只上传一个 Markdown 文件</h3>
+<p>你只需要记住这 4 个位置：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\markdown-posts</code>
+  这里放你以后新写的 Markdown 文章</li>
+<li><code>D:\blog\Minmin0101.github.io\markdown-posts\_template.md</code>
+  这是写新文章时直接复制的模板</li>
+<li><code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code>
+  本地一键生成文章的脚本</li>
+<li><code>D:\blog\Minmin0101.github.io\.github\workflows\build-markdown-posts.yml</code>
+  推到 GitHub 后自动生成文章的工作流</li>
+</ul>
+<h3 id="801">8.0.1 小白最简单步骤</h3>
+<h4 id="_8">第一步：复制模板文件</h4>
+<p>把这个文件复制一份：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\markdown-posts\_template.md</code></li>
+</ul>
+<p>例如你可以复制成：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\markdown-posts\2026-03-23-我的新文章.md</code></li>
+</ul>
+<h4 id="_9">第二步：改这些字段</h4>
+<p>模板开头这段叫 front matter：</p>
+<pre><code class="language-yaml">---
+title: 你的文章标题
+date: 2026-03-23 20:00
+updated: 2026-03-23 20:00
+slug: my-new-post
+summary: 这里写摘要
+tags:
+  - 生活记录
+  - 随笔
+cover: /img/posts/your-cover.jpg
+cover_alt: 文章封面
+---
+</code></pre>
+<p>这些字段分别是什么意思：</p>
+<ul>
+<li><code>title</code>
+  文章标题，会显示在文章页、博客首页、归档页、搜索结果里</li>
+<li><code>date</code>
+  发布时间，决定文章排序和文章 URL 里的年月日</li>
+<li><code>updated</code>
+  最后更新时间</li>
+<li><code>slug</code>
+  文章网址最后那一段，建议只写英文、数字、中划线</li>
+<li><code>summary</code>
+  摘要，会显示在博客列表和搜索结果里</li>
+<li><code>tags</code>
+  标签列表，会自动生成到标签页里</li>
+<li><code>cover</code>
+  封面图路径，可留空；如果留空，系统会自动用现有博客卡片那种画布封面</li>
+<li><code>cover_alt</code>
+  封面图描述文字</li>
+</ul>
+<p>封面图现在怎么改最省事：</p>
+<ul>
+<li>新文章：直接改你这篇 Markdown 文章开头的 <code>cover:</code> 和 <code>cover_alt:</code></li>
+<li>封面图片文件建议先放到 <code>D:\blog\Minmin0101.github.io\img\posts\你的文章目录\</code></li>
+<li>例如你先把图片放到 <code>D:\blog\Minmin0101.github.io\img\posts\2026-03-23-my-first-post\cover.jpg</code></li>
+<li>然后在文章 front matter 里写：<code>cover: /img/posts/2026-03-23-my-first-post/cover.jpg</code></li>
+<li>README 这篇文章当前就改这里：<code>D:\blog\Minmin0101.github.io\markdown-posts\2026-03-23-blog-maintenance-readme.md</code></li>
+</ul>
+<p>要注意一件事：</p>
+<ul>
+<li>现在旧文章首页卡片也已经统一切到 Markdown 生成卡片了</li>
+<li>也就是说，你现在改旧文章 Markdown 里的 <code>cover:</code>，博客首页卡片封面也会一起跟着变</li>
+<li>如果 <code>cover:</code> 留空，首页卡片就会自动回退到当前博客那种画布封面</li>
+</ul>
+<h4 id="_10">第三步：写正文</h4>
+<p>front matter 下面就是正常 Markdown 正文，你可以直接写：</p>
+<ul>
+<li>标题</li>
+<li>段落</li>
+<li>图片</li>
+<li>代码块</li>
+<li>表格</li>
+<li>数学公式</li>
+</ul>
+<p>如果要插图片，推荐先把图片放到：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\img</code></li>
+<li><code>D:\blog\Minmin0101.github.io\media</code></li>
+</ul>
+<p>例如：</p>
+<pre><code class="language-markdown">![今天拍到的天空](/img/avatar.png)
+</code></pre>
+<h4 id="_11">第四步：生成文章</h4>
+<p>你有两种方法。</p>
+<p>方法 A：本地生成</p>
+<p>直接双击：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code></li>
+</ul>
+<p>或者命令行运行：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+.\build-markdown-posts.bat
+</code></pre>
+<p>方法 B：直接推送到 GitHub</p>
+<p>只要你把新 Markdown 文件推到仓库，GitHub Actions 就会自动运行：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\.github\workflows\build-markdown-posts.yml</code></li>
+</ul>
+<p>它会自动生成新文章页面并提交回仓库。</p>
+<h3 id="802">8.0.2 生成后你会看到什么</h3>
+<p>如果你新建了：</p>
+<ul>
+<li><code>markdown-posts/2026-03-23-我的新文章.md</code></li>
+</ul>
+<p>并且里面写的是：</p>
+<ul>
+<li><code>date: 2026-03-23 20:00</code></li>
+<li><code>slug: my-new-post</code></li>
+</ul>
+<p>那么脚本会自动生成：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\2026\03\23</code></li>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\archives\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\tags\index.html</code></li>
+<li>对应标签页，比如 <code>D:\blog\Minmin0101.github.io\tags\生活记录\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\content.json</code></li>
+<li><code>D:\blog\Minmin0101.github.io\rss2.xml</code></li>
+<li><code>D:\blog\Minmin0101.github.io\sitemap.xml</code></li>
+</ul>
+<h3 id="803">8.0.3 以后你尽量不要再手改这些文件</h3>
+<p>用了这套 Markdown 发文流程后，新增文章时尽量不要再手改下面这些文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\archives\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\tags\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\content.json</code></li>
+<li><code>D:\blog\Minmin0101.github.io\rss2.xml</code></li>
+<li><code>D:\blog\Minmin0101.github.io\sitemap.xml</code></li>
+</ul>
+<p>因为这些文件现在会由脚本自动维护。</p>
+<h3 id="804">8.0.4 旧方法还保留，但只当备用</h3>
+<p>下面 8.1 到 8.12 里原来的手工 HTML 做法我先保留着，主要是为了你以后万一要修旧文章、抢救页面或者手工排查时还能参考。
+但以后“新增一篇新文章”，默认优先走上面这套 Markdown 流程就够了。</p>
+<p>这是整个站最需要你熟悉的一章。</p>
+<h3 id="81">8.1 先理解博客文章的结构</h3>
+<p>每篇文章都有自己的独立目录，路径长这样：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io\2026\03\12\post-interaction-long-test\index.html
+</code></pre>
+<p>也就是：</p>
+<pre><code class="language-text">年 / 月 / 日 / 文章英文路径 / index.html
+</code></pre>
+<p>例如一篇新文章可以做成：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io\2026\03\23\my-first-post\index.html
+</code></pre>
+<h3 id="82-html">8.2 旧方法（备用）：手动复制现有 HTML 文章模板</h3>
+<p>最简单的方法是复制一篇现有文章，然后改里面的标题和正文。</p>
+<p>推荐拿这篇做模板：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\2026\01\23\hello-world\index.html</code></li>
+</ul>
+<h4 id="_12">复制文章模板命令</h4>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+Copy-Item -Recurse &quot;.\2026\01\23\hello-world&quot; &quot;.\2026\03\23\my-first-post&quot;
+</code></pre>
+<p>然后去改新文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\2026\03\23\my-first-post\index.html</code></li>
+</ul>
+<h3 id="83">8.3 文章里通常要改哪些内容</h3>
+<p>打开新文章后，搜索这些关键词并替换：</p>
+<pre><code class="language-text">你好，世界
+这是博客重构后的第一篇文章
+2026-01-23
+衰小孩
+生活
+建站
+</code></pre>
+<p>一般要改的内容包括：</p>
+<ol>
+<li>页面 <code>&lt;title&gt;</code></li>
+<li><code>meta description</code></li>
+<li>文章标题</li>
+<li>发布时间</li>
+<li>正文内容</li>
+<li>标签</li>
+<li>封面图</li>
+</ol>
+<h3 id="84">8.4 图片、动图、视频往哪里放</h3>
+<p>推荐放在：</p>
+<ul>
+<li><code>img/</code>：普通图片</li>
+<li><code>media/</code>：GIF、MP4、较大的媒体资源</li>
+</ul>
+<p>建议你自己整理子目录，后面不容易乱。</p>
+<p>例如：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io\img\posts\2026-03-23-my-first-post\cover.jpg
+D:\blog\Minmin0101.github.io\img\posts\2026-03-23-my-first-post\figure-1.jpg
+D:\blog\Minmin0101.github.io\media\posts\2026-03-23-my-first-post\demo.gif
+D:\blog\Minmin0101.github.io\media\posts\2026-03-23-my-first-post\demo.mp4
+</code></pre>
+<p>然后在文章里引用：</p>
+<pre><code class="language-html">&lt;img src=&quot;/D:\blog\Minmin0101.github.io\img\posts\2026-03-23-my-first-post\cover.jpg&quot; alt=&quot;文章封面&quot;&gt;
+</code></pre>
+<h3 id="85">8.5 只新增文章详情页还不够</h3>
+<p>因为这是静态站，<strong>新文章不会自动出现在博客首页</strong>。<br>
+你还需要至少补这几处：</p>
+<ol>
+<li>博客首页文章卡片</li>
+<li>博客首页“最新文章”列表</li>
+<li>搜索索引 <code>content.json</code></li>
+<li>标签页</li>
+<li>归档页</li>
+<li>站点地图</li>
+<li>RSS</li>
+</ol>
+<p>下面一项一项讲。</p>
+<hr>
+<h3 id="86">8.6 把新文章加到博客首页</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+</ul>
+<p>你需要改 3 个地方：</p>
+<h4 id="1_1">1. 最新文章弹层</h4>
+<p>搜索：</p>
+<pre><code class="language-text">latest-posts-list
+</code></pre>
+<p>你会看到类似：</p>
+<pre><code class="language-html">&lt;li class=&quot;latest-posts-item&quot;&gt;
+  &lt;a class=&quot;latest-posts-link&quot; href=&quot;/2026/03/12/post-interaction-long-test/&quot;&gt;
+</code></pre>
+<p>照着新增一条即可。</p>
+<h4 id="2_1">2. 主文章列表</h4>
+<p>搜索：</p>
+<pre><code class="language-text">&lt;ul class=&quot;post-list rich-post-list&quot;
+</code></pre>
+<p>这里面每个 <code>&lt;li class="post-list-item"&gt;</code> 就是一篇文章卡片。</p>
+<p>你可以复制一整块文章卡片，改成新文章的信息。</p>
+<h4 id="3_1">3. 文章数量</h4>
+<p>搜索：</p>
+<pre><code class="language-text">目前共收录 6 篇文章
+</code></pre>
+<p>如果新增一篇，就改成：</p>
+<pre><code class="language-text">目前共收录 7 篇文章
+</code></pre>
+<hr>
+<h3 id="87">8.7 把新文章加到搜索里</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\content.json</code></li>
+</ul>
+<p>这个文件决定搜索框能不能搜到你的新文章。</p>
+<p>结构长这样：</p>
+<pre><code class="language-json">{
+  &quot;posts&quot;: [
+    {
+      &quot;title&quot;: &quot;文章标题&quot;,
+      &quot;path&quot;: &quot;2026/03/23/my-first-post/&quot;,
+      &quot;date&quot;: &quot;2026-03-23T10:00:00.000Z&quot;,
+      &quot;tags&quot;: [
+        { &quot;name&quot;: &quot;生活记录&quot; },
+        { &quot;name&quot;: &quot;随笔&quot; }
+      ],
+      &quot;text&quot;: &quot;文章摘要和正文关键内容&quot;
+    }
+  ]
+}
+</code></pre>
+<h4 id="_13">你要改什么</h4>
+<p>在 <code>posts</code> 数组里新增一项，至少写上：</p>
+<ol>
+<li><code>title</code></li>
+<li><code>path</code></li>
+<li><code>date</code></li>
+<li><code>tags</code></li>
+<li><code>text</code></li>
+</ol>
+<h4 id="_14">最简单做法</h4>
+<p>复制最后一篇文章对象，改成你的内容。</p>
+<hr>
+<h3 id="88">8.8 添加文章标签</h3>
+<p>文章标签会出现 3 个地方：</p>
+<ol>
+<li>文章详情页</li>
+<li>博客首页卡片</li>
+<li>标签页</li>
+</ol>
+<h4 id="_15">文章详情页标签</h4>
+<p>在文章自己的 <code>index.html</code> 里搜索：</p>
+<pre><code class="language-text">article-tag-list
+</code></pre>
+<p>复制已有标签链接改名字即可。</p>
+<h4 id="_16">博客首页卡片标签</h4>
+<p>在 <code>D:\blog\Minmin0101.github.io\blog\index.html</code> 的对应文章卡片中，搜索：</p>
+<pre><code class="language-text">article-tag-list-link
+</code></pre>
+<p>照着新增或修改。</p>
+<hr>
+<h3 id="89">8.9 给标签建立独立页面</h3>
+<p>标签目录在：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\tags</code></li>
+</ul>
+<p>现有标签有这些：</p>
+<pre><code class="language-text">CSS
+Hexo
+Markdown
+主题改造
+化学符号
+响应式
+多媒体
+建站
+数学公式
+测试文章
+生活
+生活记录
+随笔
+</code></pre>
+<h4 id="_17">如果你要新增一个从未存在过的新标签</h4>
+<p>比如你要新增标签 <code>旅行</code>，推荐做法：</p>
+<ol>
+<li>复制一个已有标签目录</li>
+<li>改成新标签名</li>
+<li>修改标签页里的标题与文章列表</li>
+</ol>
+<p>例如：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+Copy-Item -Recurse &quot;.\tags\生活&quot; &quot;.\tags\旅行&quot;
+</code></pre>
+<p>然后编辑：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\tags\旅行\index.html</code></li>
+</ul>
+<p>把里面的：</p>
+<ul>
+<li>标签名字</li>
+<li>标签文章数量</li>
+<li>标签下的文章列表</li>
+</ul>
+<p>改成你的新标签内容。</p>
+<h4 id="_18">标签总览页</h4>
+<p>总标签页在：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\tags\index.html</code></li>
+</ul>
+<p>如果你新增了标签，也要把总览页一起补上。</p>
+<hr>
+<h3 id="810">8.10 更新归档页</h3>
+<p>归档页目录：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\archives</code></li>
+</ul>
+<p>常用文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\archives\index.html</code></li>
+</ul>
+<p>如果新增文章，建议同步补到归档页里。</p>
+<p>搜索关键词：</p>
+<pre><code class="language-text">文章标题
+2026
+03
+</code></pre>
+<p>通常复制现有归档条目，改标题和链接即可。</p>
+<hr>
+<h3 id="811-rss-sitemap">8.11 更新 RSS 和 sitemap</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\rss2.xml</code></li>
+<li><code>D:\blog\Minmin0101.github.io\sitemap.xml</code></li>
+<li><code>D:\blog\Minmin0101.github.io\sitemap.txt</code></li>
+</ul>
+<h4 id="_19">为什么要改</h4>
+<ul>
+<li>RSS：订阅器会用到</li>
+<li>sitemap：搜索引擎会用到</li>
+</ul>
+<h4 id="_20">最低要求</h4>
+<p>新增文章后，把文章 URL 至少加进：</p>
+<ul>
+<li><code>sitemap.xml</code></li>
+<li><code>sitemap.txt</code></li>
+</ul>
+<p>例如：</p>
+<pre><code class="language-text">https://minmin0101.github.io/2026/03/23/my-first-post/
+</code></pre>
+<hr>
+<h3 id="812">8.12 发布文章的完整流程图</h3>
+<pre><code class="language-mermaid">flowchart TD
+    A[&quot;复制一篇旧文章做模板&quot;] --&gt; B[&quot;修改新文章 index.html&quot;]
+    B --&gt; C[&quot;上传图片到 img/ 或 media/&quot;]
+    C --&gt; D[&quot;把文章卡片加到 blog/index.html&quot;]
+    D --&gt; E[&quot;把文章加入 content.json 搜索索引&quot;]
+    E --&gt; F[&quot;更新标签页 / 归档页&quot;]
+    F --&gt; G[&quot;更新 sitemap / RSS&quot;]
+    G --&gt; H[&quot;本地预览&quot;]
+    H --&gt; I[&quot;git add / commit / push&quot;]
+</code></pre>
+<hr>
+<h2 id="9">9. 如何写并发布微博</h2>
+<p>你的微博页不是传统微博后台，而是：</p>
+<p><strong>GitHub Issues = 微博内容源</strong></p>
+<p>也就是说：</p>
+<ul>
+<li>你在 GitHub 仓库里新建一条 Issue</li>
+<li>它就会显示在微博页里</li>
+</ul>
+<h3 id="91">9.1 微博对应哪个仓库</h3>
+<p>当前微博页配置在：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></li>
+</ul>
+<p>其中这段配置决定仓库：</p>
+<pre><code class="language-js">window.MINMIN_WEIBO_CONFIG = {
+  owner: &quot;Minmin0101&quot;,
+  repo: &quot;Minmin0101.github.io&quot;
+}
+</code></pre>
+<p>也就是这个仓库：</p>
+<ul>
+<li><code>Minmin0101/Minmin0101.github.io</code></li>
+</ul>
+<h3 id="92-github-issue">9.2 最简单的发微博方式：直接去 GitHub 发 Issue</h3>
+<p>打开这个地址：</p>
+<p><code>D:\blog\Minmin0101.github.io\issues</code></p>
+<p>然后：</p>
+<ol>
+<li>点 <code>New issue</code></li>
+<li>输入标题</li>
+<li>在正文写内容</li>
+<li>加标签</li>
+<li>点 <code>Create issue</code></li>
+</ol>
+<h3 id="93">9.3 微博标题和正文怎么对应</h3>
+<p>一般规则：</p>
+<ul>
+<li><code>Issue 标题</code> = 微博标题</li>
+<li><code>Issue 正文</code> = 微博正文</li>
+<li><code>Issue Labels</code> = 微博标签</li>
+</ul>
+<h3 id="94">9.4 如何发图文微博</h3>
+<p>在 GitHub Issue 编辑器里：</p>
+<ol>
+<li>直接把图片拖进去</li>
+<li>GitHub 会自动生成图片 Markdown</li>
+<li>发布后微博页就会显示图片</li>
+</ol>
+<p>例如正文里会出现：</p>
+<pre><code class="language-markdown">![随手拍](https://user-images.githubusercontent.com/xxxx/xxxx.png)
+</code></pre>
+<h3 id="95">9.5 如何添加微博标签</h3>
+<p>在 GitHub 仓库的 Issues 页面里，点：</p>
+<pre><code class="language-text">Labels
+</code></pre>
+<p>然后新建标签。</p>
+<p>建议你给生活类微博创建一组固定标签，比如：</p>
+<ul>
+<li>日常</li>
+<li>通勤</li>
+<li>夜晚</li>
+<li>咖啡</li>
+<li>城市</li>
+<li>碎碎念</li>
+<li>散步</li>
+<li>心情</li>
+<li>阅读</li>
+<li>随手拍</li>
+</ul>
+<p>标签颜色会直接影响微博页里的标签颜色。</p>
+<h3 id="96">9.6 微博为什么没显示</h3>
+<p>最常见原因有这几个：</p>
+<ol>
+<li>你发的是 <code>Draft</code> 或没成功创建</li>
+<li>Issue 被关闭了</li>
+<li>GitHub 接口限流</li>
+<li>浏览器缓存</li>
+<li>微博缓存文件还是旧的</li>
+</ol>
+<p>可以先做这些排查：</p>
+<ol>
+<li>确认 Issue 是 <code>Open</code></li>
+<li>刷新微博页</li>
+<li>强刷浏览器：<code>Ctrl + F5</code></li>
+<li>看微博页：<code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code> 配置的仓库是不是对的</li>
+</ol>
+<h3 id="97">9.7 微博页样式和交互去哪改</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\css\weibo-gwitter.css</code></li>
+<li><code>D:\blog\Minmin0101.github.io\js\weibo-gwitter.js</code></li>
+</ul>
+<p>分别负责：</p>
+<ul>
+<li><code>index.html</code>：文案、配置、页面骨架</li>
+<li><code>weibo-gwitter.css</code>：卡片样式、间距、颜色、移动端适配</li>
+<li><code>weibo-gwitter.js</code>：加载微博、点赞、评论、跳转、登录逻辑</li>
+</ul>
+<hr>
+<h2 id="10">10. 如何新建相册并上传图片</h2>
+<p>相册页是纯静态页，不会自动从某个图库后台读取。</p>
+<p>也就是说：</p>
+<ol>
+<li>你先把图片放进项目目录</li>
+<li>再去改 <code>gallery/index.html</code></li>
+</ol>
+<h3 id="101">10.1 相册相关文件</h3>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\js\gallery-viewer.js</code></li>
+</ul>
+<p>真正的数据写在：</p>
+<pre><code class="language-html">&lt;script&gt;
+window.galleryAlbums = [...]
+&lt;/script&gt;
+</code></pre>
+<h3 id="102">10.2 图片放哪里</h3>
+<p>推荐自己建立更整齐的目录。</p>
+<p>比如：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip\01.jpg
+D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip\02.jpg
+D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip\03.jpg
+</code></pre>
+<p>或者：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io\media\gallery\2026-spring-trip\01.jpg
+</code></pre>
+<h3 id="103">10.3 新建一个相册的步骤</h3>
+<h4 id="_21">第一步：上传图片</h4>
+<p>把图片复制到你准备好的目录里。</p>
+<h4 id="_22">第二步：改相册页面正文卡片</h4>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></li>
+</ul>
+<p>搜索：</p>
+<pre><code class="language-text">gallery-album-list
+</code></pre>
+<p>你会看到每本相册的卡片 HTML，大概长这样：</p>
+<pre><code class="language-html">&lt;article class=&quot;gallery-album&quot; data-album=&quot;0&quot;&gt;
+</code></pre>
+<p>复制一整块，改成你的新相册：</p>
+<ul>
+<li>相册名</li>
+<li>相册简介</li>
+<li>封面图</li>
+<li>相册照片数量</li>
+</ul>
+<h4 id="windowgalleryalbums">第三步：改 <code>window.galleryAlbums</code></h4>
+<p>同样在 <code>D:\blog\Minmin0101.github.io\gallery\index.html</code> 搜索：</p>
+<pre><code class="language-text">window.galleryAlbums=
+</code></pre>
+<p>结构是：</p>
+<pre><code class="language-js">{
+  title: &quot;相册标题&quot;,
+  subtitle: &quot;相册副标题&quot;,
+  photos: [
+    {
+      src: &quot;/D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip\01.jpg&quot;,
+      thumb: &quot;/D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip\01.jpg&quot;,
+      title: &quot;照片标题&quot;,
+      description: &quot;照片说明&quot;
+    }
+  ]
+}
+</code></pre>
+<p>你每加一本相册，都要把这里的数据同步补上。</p>
+<h3 id="104">10.4 修改相册总数和照片总数</h3>
+<p>在 <code>D:\blog\Minmin0101.github.io\gallery\index.html</code> 搜索：</p>
+<pre><code class="language-text">目前收录
+</code></pre>
+<p>例如当前是：</p>
+<pre><code class="language-text">目前收录 3 本相册，9 张照片
+</code></pre>
+<p>如果你新加 1 本相册、3 张图，就改成：</p>
+<pre><code class="language-text">目前收录 4 本相册，12 张照片
+</code></pre>
+<h3 id="105">10.5 相册页介绍文字去哪改</h3>
+<p>搜索：</p>
+<pre><code class="language-text">这里放生活切片、界面草稿和想留下来的旅途画面。
+把生活碎片收进相册里，想看的时候就翻出来。
+每一本相册都可以继续往里加照片
+</code></pre>
+<p>都在：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></li>
+</ul>
+<hr>
+<h2 id="11">11. 如何修改搜索框和搜索结果</h2>
+<h3 id="111">11.1 搜索数据来源</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\content.json</code></li>
+</ul>
+<p>如果你新增文章，但没更新这个文件，搜索一般搜不到。</p>
+<h3 id="112">11.2 搜索样式和逻辑在哪</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\js\search-fuzzy.js</code></li>
+<li><code>D:\blog\Minmin0101.github.io\css\search-fuzzy.css</code></li>
+</ul>
+<p>分别控制：</p>
+<ul>
+<li>搜索模糊匹配</li>
+<li>搜索结果布局</li>
+<li>搜索字体大小</li>
+<li>搜索结果左对齐</li>
+</ul>
+<h3 id="113">11.3 搜索框长什么样在哪改</h3>
+<p>页面里搜索输入框骨架分布在很多 HTML 页面里，搜索关键词：</p>
+<pre><code class="language-text">search-wrap
+search-input
+输入感兴趣的关键字
+</code></pre>
+<p>常见页面：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\about\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\projects\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\thinking\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></li>
+</ul>
+<hr>
+<h2 id="12-github-pages">12. 如何部署到 GitHub Pages</h2>
+<p>这是最关键的发布流程。</p>
+<hr>
+<h3 id="121-github">12.1 如果你是第一次在 GitHub 上部署这个项目</h3>
+<h4 id="github">第一步：创建 GitHub 仓库</h4>
+<p>仓库名必须是：</p>
+<pre><code class="language-text">你的 GitHub 用户名.github.io
+</code></pre>
+<p>例如你的用户名是 <code>Minmin0101</code>，仓库名就要叫：</p>
+<pre><code class="language-text">Minmin0101.github.io
+</code></pre>
+<h4 id="_23">第二步：把项目文件上传到仓库</h4>
+<p>推荐用 Git 命令，不建议只靠网页上传。</p>
+<h4 id="github-pages">第三步：开启 GitHub Pages</h4>
+<p>进入 GitHub 仓库：</p>
+<pre><code class="language-text">Settings -&gt; Pages
+</code></pre>
+<p>一般选择：</p>
+<ul>
+<li><code>Deploy from a branch</code></li>
+<li>Branch：<code>main</code></li>
+<li>Folder：<code>/ (root)</code></li>
+</ul>
+<p>保存后，GitHub Pages 会自动部署。</p>
+<hr>
+<h3 id="122">12.2 日常更新后怎么推送上线</h3>
+<p>进入项目目录：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+</code></pre>
+<p>查看改了哪些文件：</p>
+<pre><code class="language-powershell">git status
+</code></pre>
+<p>把所有改动加入暂存区：</p>
+<pre><code class="language-powershell">git add .
+</code></pre>
+<p>提交：</p>
+<pre><code class="language-powershell">git commit -m &quot;feat: update blog content&quot;
+</code></pre>
+<p>推送：</p>
+<pre><code class="language-powershell">git push origin main
+</code></pre>
+<h3 id="123">12.3 部署后多久生效</h3>
+<p>通常：</p>
+<ul>
+<li>1 到 5 分钟内生效</li>
+</ul>
+<p>如果没看到变化：</p>
+<ol>
+<li>等几分钟</li>
+<li>强刷浏览器 <code>Ctrl + F5</code></li>
+<li>开隐身窗口看</li>
+</ol>
+<hr>
+<h2 id="13">13. 如何打版本号</h2>
+<p>当你做完一次比较完整的更新时，建议打一个 Git 标签，方便以后回滚和留档。</p>
+<h3 id="131">13.1 查看当前状态</h3>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+git status
+</code></pre>
+<h3 id="132">13.2 正常提交流程</h3>
+<pre><code class="language-powershell">git add .
+git commit -m &quot;feat: update search and content&quot;
+git push origin main
+</code></pre>
+<h3 id="133">13.3 打标签</h3>
+<p>例如你要打一个版本：</p>
+<pre><code class="language-text">v2026.03.23-my-update
+</code></pre>
+<p>执行：</p>
+<pre><code class="language-powershell">git tag -a v2026.03.23-my-update -m &quot;2026-03-23 内容与样式更新&quot;
+git push origin v2026.03.23-my-update
+</code></pre>
+<h3 id="134">13.4 怎么看历史标签</h3>
+<pre><code class="language-powershell">git tag
+</code></pre>
+<h3 id="135">13.5 什么时候适合打版本号</h3>
+<p>推荐这些场景：</p>
+<ol>
+<li>主题大改版</li>
+<li>微博页改版</li>
+<li>搜索功能改版</li>
+<li>相册结构调整</li>
+<li>上线前备份</li>
+</ol>
+<hr>
+<h2 id="14-github-oauth">14. 微博登录与 GitHub OAuth 维护</h2>
+<p>这一章是高级内容。<br>
+如果你只是写文章、发微博、改相册，可以先不看。</p>
+<p>微博页“登录 GitHub / 退出 GitHub / 点赞 / 评论”相关逻辑，目前用的是：</p>
+<ul>
+<li>GitHub OAuth App</li>
+<li>Cloudflare Worker</li>
+</ul>
+<h3 id="141">14.1 相关文件</h3>
+<p>前端页面：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\oauth-callback\index.html</code></li>
+</ul>
+<p>前端脚本：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\js\weibo-oauth-client.js</code></li>
+<li><code>D:\blog\Minmin0101.github.io\js\weibo-oauth-callback.js</code></li>
+<li><code>D:\blog\Minmin0101.github.io\js\weibo-gwitter.js</code></li>
+</ul>
+<p>Worker：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\serverless\github-oauth-worker\src\index.js</code></li>
+<li><code>D:\blog\Minmin0101.github.io\serverless\github-oauth-worker\wrangler.toml</code></li>
+<li><code>D:\blog\Minmin0101.github.io\serverless\github-oauth-worker\README.md</code></li>
+</ul>
+<h3 id="142">14.2 目前微博页核心配置在哪</h3>
+<p>文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></li>
+</ul>
+<p>搜索：</p>
+<pre><code class="language-js">window.MINMIN_WEIBO_CONFIG
+</code></pre>
+<p>其中重要字段有：</p>
+<pre><code class="language-js">oauth: {
+  prod: {
+    clientID: &quot;...&quot;,
+    exchangeURL: &quot;...&quot;,
+    callback: &quot;https://minmin0101.github.io/blog/weibo/oauth-callback/&quot;
+  },
+  dev: {
+    clientID: &quot;...&quot;,
+    exchangeURL: &quot;http://127.0.0.1:8787/oauth/github/exchange&quot;,
+    callback: &quot;http://127.0.0.1:4000/blog/weibo/oauth-callback/&quot;
+  }
+}
+</code></pre>
+<h3 id="143-github-oauth-app">14.3 GitHub OAuth App 后台怎么填</h3>
+<p>在 GitHub 的 OAuth App 里，最重要的是：</p>
+<ul>
+<li><code>Homepage URL</code></li>
+<li><code>Authorization callback URL</code></li>
+</ul>
+<p>推荐填写：</p>
+<h4 id="_24">正式站</h4>
+<pre><code class="language-text">Homepage URL:
+https://minmin0101.github.io/blog/weibo/
+
+Authorization callback URL:
+https://minmin0101.github.io/blog/weibo/oauth-callback/
+</code></pre>
+<h4 id="_25">本地调试</h4>
+<p>如果你单独新建本地 OAuth App，可以填：</p>
+<pre><code class="language-text">Homepage URL:
+http://127.0.0.1:4000/blog/weibo/
+
+Authorization callback URL:
+http://127.0.0.1:4000/blog/weibo/oauth-callback/
+</code></pre>
+<h3 id="144-worker">14.4 部署 Worker 的常用命令</h3>
+<p>进入 Worker 目录：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io\serverless\github-oauth-worker
+</code></pre>
+<p>登录 Cloudflare：</p>
+<pre><code class="language-powershell">wrangler login
+</code></pre>
+<p>写入 GitHub OAuth 密钥：</p>
+<pre><code class="language-powershell">wrangler secret put GITHUB_CLIENT_ID
+wrangler secret put GITHUB_CLIENT_SECRET
+</code></pre>
+<p>本地调试：</p>
+<pre><code class="language-powershell">wrangler dev
+</code></pre>
+<p>部署：</p>
+<pre><code class="language-powershell">wrangler deploy
+</code></pre>
+<h3 id="145-worker">14.5 更详细的 Worker 说明</h3>
+<p>直接看这个文件：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\serverless\github-oauth-worker\README.md</code></li>
+</ul>
+<hr>
+<h2 id="15-git">15. 常用 Git 命令备忘</h2>
+<h3 id="151">15.1 看当前改了什么</h3>
+<pre><code class="language-powershell">git status
+</code></pre>
+<h3 id="152">15.2 看提交历史</h3>
+<pre><code class="language-powershell">git log --oneline -20
+</code></pre>
+<h3 id="153">15.3 拉取远端最新代码</h3>
+<pre><code class="language-powershell">git pull origin main
+</code></pre>
+<h3 id="154">15.4 提交并推送</h3>
+<pre><code class="language-powershell">git add .
+git commit -m &quot;feat: update homepage copy&quot;
+git push origin main
+</code></pre>
+<h3 id="155">15.5 打标签并推送</h3>
+<pre><code class="language-powershell">git tag -a v2026.03.23-example -m &quot;example release&quot;
+git push origin v2026.03.23-example
+</code></pre>
+<hr>
+<h2 id="16">16. 日常维护的推荐顺序</h2>
+<p>每次修改博客，尽量都按这个顺序来：</p>
+<pre><code class="language-mermaid">flowchart TD
+    A[&quot;先备份 / git status&quot;] --&gt; B[&quot;本地修改文件&quot;]
+    B --&gt; C[&quot;python -m http.server 4000 本地预览&quot;]
+    C --&gt; D[&quot;浏览器逐页检查&quot;]
+    D --&gt; E[&quot;git add .&quot;]
+    E --&gt; F[&quot;git commit -m ...&quot;]
+    F --&gt; G[&quot;git push origin main&quot;]
+    G --&gt; H[&quot;需要时再打标签&quot;]
+</code></pre>
+<p>最稳妥的习惯是：</p>
+<ol>
+<li>改之前先 <code>git status</code></li>
+<li>改完先本地看</li>
+<li>确认没问题再推 GitHub</li>
+</ol>
+<hr>
+<h2 id="17-10">17. 小白最常见的 10 个问题</h2>
+<h3 id="171">17.1 为什么我改了文章，但博客首页没变</h3>
+<p>因为这个项目不是自动生成的。<br>
+你还要手动改：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
+<li><code>D:\blog\Minmin0101.github.io\content.json</code></li>
+<li>可能还要改 <code>D:\blog\Minmin0101.github.io\tags</code>、<code>D:\blog\Minmin0101.github.io\archives</code></li>
+</ul>
+<h3 id="172">17.2 为什么搜索不到新文章</h3>
+<p>因为没更新：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\content.json</code></li>
+</ul>
+<h3 id="173">17.3 为什么标签点进去是空的</h3>
+<p>因为你只在文章里写了标签，但没建：</p>
+<ul>
+<li><code>tags/你的标签名/index.html</code></li>
+</ul>
+<h3 id="174">17.4 为什么微博没显示</h3>
+<p>先确认：</p>
+<ol>
+<li>GitHub Issue 是 <code>Open</code></li>
+<li>发在正确仓库</li>
+<li>浏览器强刷了</li>
+<li>微博页配置没改错</li>
+</ol>
+<h3 id="175">17.5 为什么图片显示不出来</h3>
+<p>常见原因：</p>
+<ol>
+<li>路径写错</li>
+<li>图片没放进项目目录</li>
+<li>文件名大小写不一致</li>
+</ol>
+<h3 id="176">17.6 为什么改完本地看不到</h3>
+<p>可能是：</p>
+<ol>
+<li>你开的不是正确端口</li>
+<li>浏览器缓存了</li>
+<li>本地服务没重启</li>
+</ol>
+<h3 id="177">17.7 为什么推送后线上没变</h3>
+<p>先做这几步：</p>
+<ol>
+<li><code>git status</code> 看有没有漏提交</li>
+<li><code>git push origin main</code></li>
+<li>去 GitHub 看提交是否真的上去了</li>
+<li>等 1 到 5 分钟</li>
+</ol>
+<h3 id="178">17.8 为什么微博登录坏了</h3>
+<p>优先检查：</p>
+<ol>
+<li>GitHub OAuth App callback URL</li>
+<li>Worker 是否在线</li>
+<li><code>blog/weibo/index.html</code> 里的 <code>exchangeURL</code></li>
+</ol>
+<h3 id="179">17.9 为什么菜单改了一个页面，其他页面没变</h3>
+<p>因为菜单是很多页面各自写了一份。<br>
+要用全局搜索统一改。</p>
+<h3 id="1710">17.10 为什么文件打开后一整行</h3>
+<p>因为很多 HTML 是压缩过的静态文件。<br>
+正常，不是坏了。直接搜关键词改就行。</p>
+<hr>
+<h2 id="18">18. 一张“去哪改什么”的总表</h2>
+<table>
+<thead>
+<tr>
+<th>需求</th>
+<th>去哪里改</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>站名</td>
+<td><code>D:\blog\Minmin0101.github.io\index.html</code> + 各页面 HTML</td>
+</tr>
+<tr>
+<td>首页大标题、副标题、签名</td>
+<td><code>D:\blog\Minmin0101.github.io\index.html</code></td>
+</tr>
+<tr>
+<td>首页入口标签名</td>
+<td><code>D:\blog\Minmin0101.github.io\index.html</code></td>
+</tr>
+<tr>
+<td>头像</td>
+<td><code>D:\blog\Minmin0101.github.io\img\avatar.png</code></td>
+</tr>
+<tr>
+<td>网站图标</td>
+<td><code>D:\blog\Minmin0101.github.io\img\favicon1.ico</code></td>
+</tr>
+<tr>
+<td>微信二维码</td>
+<td><code>D:\blog\Minmin0101.github.io\img\wechat_channel.jpg</code></td>
+</tr>
+<tr>
+<td>打赏二维码</td>
+<td><code>D:\blog\Minmin0101.github.io\img\wechatpay.png</code>、<code>D:\blog\Minmin0101.github.io\img\alipay.png</code></td>
+</tr>
+<tr>
+<td>博客首页副标题与介绍</td>
+<td><code>D:\blog\Minmin0101.github.io\blog\index.html</code></td>
+</tr>
+<tr>
+<td>博客文章列表</td>
+<td><code>D:\blog\Minmin0101.github.io\blog\index.html</code></td>
+</tr>
+<tr>
+<td>博客文章详情</td>
+<td><code>2026/年/月/日/slug/index.html</code></td>
+</tr>
+<tr>
+<td>搜索内容</td>
+<td><code>D:\blog\Minmin0101.github.io\content.json</code></td>
+</tr>
+<tr>
+<td>微博页文案</td>
+<td><code>D:\blog\Minmin0101.github.io\blog\weibo\index.html</code></td>
+</tr>
+<tr>
+<td>微博样式</td>
+<td><code>D:\blog\Minmin0101.github.io\css\weibo-gwitter.css</code></td>
+</tr>
+<tr>
+<td>微博逻辑</td>
+<td><code>D:\blog\Minmin0101.github.io\js\weibo-gwitter.js</code></td>
+</tr>
+<tr>
+<td>微博登录</td>
+<td><code>D:\blog\Minmin0101.github.io\js\weibo-oauth-client.js</code>、<code>D:\blog\Minmin0101.github.io\serverless\github-oauth-worker</code></td>
+</tr>
+<tr>
+<td>相册卡片和数据</td>
+<td><code>D:\blog\Minmin0101.github.io\gallery\index.html</code></td>
+</tr>
+<tr>
+<td>关于页内容</td>
+<td><code>D:\blog\Minmin0101.github.io\about\index.html</code></td>
+</tr>
+<tr>
+<td>项目页内容</td>
+<td><code>D:\blog\Minmin0101.github.io\projects\index.html</code></td>
+</tr>
+<tr>
+<td>思考页内容</td>
+<td><code>D:\blog\Minmin0101.github.io\thinking\index.html</code></td>
+</tr>
+<tr>
+<td>标签总览页</td>
+<td><code>D:\blog\Minmin0101.github.io\tags\index.html</code></td>
+</tr>
+<tr>
+<td>单个标签页</td>
+<td><code>tags/标签名/index.html</code></td>
+</tr>
+<tr>
+<td>归档页</td>
+<td><code>D:\blog\Minmin0101.github.io\archives\index.html</code></td>
+</tr>
+<tr>
+<td>RSS</td>
+<td><code>D:\blog\Minmin0101.github.io\rss2.xml</code></td>
+</tr>
+<tr>
+<td>站点地图</td>
+<td><code>D:\blog\Minmin0101.github.io\sitemap.xml</code>、<code>D:\blog\Minmin0101.github.io\sitemap.txt</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="19">19. 我最推荐你的实际操作习惯</h2>
+<p>如果你后面想轻松维护博客，最省心的做法是：</p>
+<ol>
+<li>图片尽量覆盖原文件，不轻易改路径</li>
+<li>发文章先复制旧文章模板</li>
+<li>发微博直接去 GitHub Issues</li>
+<li>相册统一把图片放到自己新建的子目录里</li>
+<li>每次改完先本地看，再推 GitHub</li>
+<li>每做完一次大改就打一个版本号</li>
+</ol>
+<hr>
+<h2 id="20">20. 最后给你的建议</h2>
+<p>你现在维护的不是“一个后台系统”，而是“一个已经完成的静态网站作品”。<br>
+所以后面运维的核心思路就 4 句话：</p>
+<ol>
+<li><strong>知道在哪个文件里改</strong></li>
+<li><strong>改完先本地预览</strong></li>
+<li><strong>确认没问题再推 GitHub</strong></li>
+<li><strong>重要版本记得打标签</strong></li>
+</ol>
+<p>如果以后你想把这个项目升级成“真正的 Hexo 源码仓库 + 自动生成静态站”的模式，我也可以继续帮你把它重构成更好维护的版本。那样你发文章、加标签、归档、搜索这些都会轻松很多。</p></div><blockquote class="post-copyright"><div class="content"><span class="post-time">最后更新：<time datetime="2026-03-23T13:00:00.000Z" itemprop="dateUpdated">2026-03-23 21:00:00</time> </span>原文链接：<a href="/2026/03/23/blog-maintenance-readme/" target="_blank" rel="external">https://minmin0101.github.io/2026/03/23/blog-maintenance-readme/</a></div><footer><ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BB%BA%E7%AB%99/">建站</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E8%BF%90%E7%BB%B4/">博客运维</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/README/">README</a></li></ul><div onclick='location.href="/about/"'><img src="/img/avatar.png" alt="衰小孩"> <a href="/about/">衰小孩</a></div></footer></blockquote><div class="page-reward"><nav class="myreward"><button id="rewardBtn" class="reward-trigger" type="button"><span>打&nbsp;赏</span><span>装成好像很多人打赏的样子</span></button></nav></div><div class="post-footer"><ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BB%BA%E7%AB%99/" rel="tag">建站</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E8%BF%90%E7%BB%B4/" rel="tag">博客运维</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/README/" rel="tag">README</a></li></ul><div class="page-share-wrap"><div class="page-share" id="pageShare"><ul class="reset share-icons"><li><a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://minmin0101.github.io/2026/03/12/post-interaction-long-test/&title=《文章页目录与返回顶部长文测试》 — 衰小孩&pic=https://minmin0101.github.io/img/avatar.png" data-title="微博"><i class="icon icon-weibo"></i></a></li><li><a class="weixin share-sns wxFab" href="javascript:;" data-title="微信"><i class="icon icon-weixin"></i></a></li><li><a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://minmin0101.github.io/2026/03/12/post-interaction-long-test/&title=《文章页目录与返回顶部长文测试》 — 衰小孩&source=这篇文章专门保留下来做回归测试，用来检查文章页右侧目录栏、返回顶部按钮、图片、动图、视频、数学公式、化学式、表格和代码块的实际显示效果。" data-title=" QQ"><i class="icon icon-qq"></i></a></li><li><a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://minmin0101.github.io/2026/03/12/post-interaction-long-test/" data-title=" Facebook"><i class="icon icon-facebook"></i></a></li><li><a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《文章页目录与返回顶部长文测试》 — 衰小孩&url=https://minmin0101.github.io/2026/03/12/post-interaction-long-test/&via=https://minmin0101.github.io" data-title=" Twitter"><i class="icon icon-twitter"></i></a></li><li><a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://minmin0101.github.io/2026/03/12/post-interaction-long-test/" data-title=" Google+"><i class="icon icon-google-plus"></i></a></li></ul></div><a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle"><i class="icon icon-share-alt icon-lg"></i></a></div></div></div><nav class="post-nav flex-row flex-justify-between"><div class="waves-block waves-effect prev"><a href="/2026/03/23/markdown-all-features-lab/" id="post-prev" class="post-nav-link"><h4 class="title">上一篇：Markdown 全功能长文实验室</h4></a></div><div class="waves-block waves-effect next"><a href="/2026/03/12/post-interaction-long-test/" id="post-next" class="post-nav-link"><h4 class="title">下一篇：文章页目录与返回顶部长文测试</h4></a></div></nav></article></div><footer class="footer"><div class="footer-content"><span class="power"><i class="icon icon-lg icon-copyright"></i> 2021 <i class="icon icon-lg icon-heart"></i> <a href="https://minmin0101.github.io">衰小孩</a><br>Power by <a href="https://hexo.io/" target="_blank" rel="external nofollow">Hexo</a>&nbsp;·&nbsp; Theme <a class="tomotoeslink" href="https://github.com/tomotoes/hexo-theme-tomotoes/" target="_blank" rel="external nofollow">tomotoes</a></span><br><span id="RunTime" style="color:#a7a7a2"></span><br><span><i class="icon icon-lg icon-user"><span id="busuanzi_container_site_uv" style="display:none">访问用户：<span id="busuanzi_value_site_uv"></span> </span>人</i> · <i class="icon icon-lg icon-eye"><span id="busuanzi_container_site_pv" style="display:none">访问次数：<span id="busuanzi_value_site_pv"></span> </span>次</i></span><br><span class="license"><a target="_blank" rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">博客内容遵循 知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span></div></footer></main><div id="reward" class="page-modal reward-lay"><a class="close" href="javascript:;"><i class="icon icon-close"></i></a><h3 class="reward-title"><i class="icon icon-quote-left"></i> <span>感谢你的鼓励支持！</span> <i class="icon icon-quote-right"></i></h3><div class="reward-content"><div class="reward-code"><img id="rewardCode" data-img="/img/dog.png" alt="打赏二维码"></div><div class="reward-toggle" role="tablist" aria-label="打赏方式切换"><button type="button" class="reward-toggle-item reward-toggle-button wechatPay" data-method="wechat" data-img="/img/wechatpay.png" aria-pressed="false">微信</button> <button type="button" class="reward-toggle-item reward-toggle-button alipayPay" data-method="alipay" data-img="/img/alipay.png" aria-pressed="false">支付宝</button></div><i class="icon icon-caret-up"></i></div></div><div class="mask" id="mask"></div><a href="javascript:;" id="gotop" class="fade-scale waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a><div class="global-share" id="globalShare"><ul class="reset share-icons"><li><a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://minmin0101.github.io/2026/03/12/post-interaction-long-test/&title=《文章页目录与返回顶部长文测试》 — 衰小孩&pic=https://minmin0101.github.io/img/avatar.png" data-title="微博"><i class="icon icon-weibo"></i></a></li><li><a class="weixin share-sns wxFab" href="javascript:;" data-title="微信"><i class="icon icon-weixin"></i></a></li><li><a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://minmin0101.github.io/2026/03/12/post-interaction-long-test/&title=《文章页目录与返回顶部长文测试》 — 衰小孩&source=这篇文章专门保留下来做回归测试，用来检查文章页右侧目录栏、返回顶部按钮、图片、动图、视频、数学公式、化学式、表格和代码块的实际显示效果。" data-title=" QQ"><i class="icon icon-qq"></i></a></li><li><a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://minmin0101.github.io/2026/03/12/post-interaction-long-test/" data-title=" Facebook"><i class="icon icon-facebook"></i></a></li><li><a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《文章页目录与返回顶部长文测试》 — 衰小孩&url=https://minmin0101.github.io/2026/03/12/post-interaction-long-test/&via=https://minmin0101.github.io" data-title=" Twitter"><i class="icon icon-twitter"></i></a></li><li><a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://minmin0101.github.io/2026/03/12/post-interaction-long-test/" data-title=" Google+"><i class="icon icon-google-plus"></i></a></li></ul></div><div class="page-modal wx-share" id="wxShare"><a class="close" href="javascript:;"><i class="icon icon-close"></i></a><p class="wechatshare">扫一扫，分享到微信</p><img src="//api.qrserver.com/v1/create-qr-code/?data=https://minmin0101.github.io/2026/03/12/post-interaction-long-test/" alt="微信分享二维码"></div><div id="color-picker" class="page-modal"><a class="close" href="javascript:;"><i class="icon icon-lg icon-close"></i></a><h4>RGB 调色实验室</h4><div class="color-picker-body"><input type="color" id="theme-color-input" value="#77AAFF"><div class="color-presets"><button type="button" class="color-swatch" data-color="#5275b0" style="--swatch:#5275b0"></button> <button type="button" class="color-swatch" data-color="#8f4d76" style="--swatch:#8f4d76"></button> <button type="button" class="color-swatch" data-color="#2f6a53" style="--swatch:#2f6a53"></button> <button type="button" class="color-swatch" data-color="#bd6a3c" style="--swatch:#bd6a3c"></button> <button type="button" class="color-swatch" data-color="#6a5acd" style="--swatch:#6a5acd"></button></div><p class="color-picker-tip">挑一个你喜欢的主色，顶部、按钮和高亮会一起切换。</p></div></div><div id="wechat" class="page-modal wechat-wrap"><a class="close" href="javascript:;"><i class="icon icon-lg icon-close"></i></a><h4 class="wechat-title">欢迎添加我的微信</h4><img id="wechat_img" src="/img/wechat_channel.jpg" alt="wechat qr"></div><div id="avatarPreview" class="avatar-preview-modal" role="dialog" aria-modal="true" aria-label="头像预览"><div class="avatar-preview-stage"><div class="avatar-preview-frame"><img src="/img/avatar.png" alt="衰小孩 avatar preview"></div></div></div><div id="landlord" class="fade-scale"><div class="live2dtool"><a class="live2dplane" href="javascript:takePicture();" aria-label="截图"><i class="icon icon-lg icon-camera custom-camera"></i> </a><a class="live2dview" href="javascript:loadLiveModel();" aria-label="换装"><i class="icon icon-lg icon-refresh custom-clothes"></i> </a><a class="live2dchat" href="javascript:showHitokoto();" aria-label="对话"><i class="icon icon-lg icon-commenting-o custom-comment"></i></a></div><div class="message" style="opacity:0"></div><canvas id="live2d" onclick="dontTouchMe()" height="250" width="200" class="live2d"></canvas></div><script src="/vendor/waves/waves.min.js?v=3.0.64"></script><script>var BLOG={ROOT:"/",SHARE:!0,REWARD:!0}</script><script src="/js/jquery.min.js?v=3.0.64"></script><div class="search-panel" id="search-panel"><ul class="search-result" id="search-result"></ul></div><template id="search-tpl"><li class="item waves-block waves-effect" onclick='location.href="{path}"'><div class="title ellipsis" title="{title}">{title}</div></li></template><script src="/js/main.min.js?v=3.0.64"></script><script src="/js/search-fuzzy.js?v=20260319-3"></script><script src="/js/script.min.js?v=3.0.64"></script><script>if(window.innerWidth>800){$(".footer").hover(2),$("#gotop").hover(1),$("#wechat").hover(4),$(".archivestitle").bumpyText();jQuery(".post-content img:not(.github-emoji)").on("click",(function(){mask.classList.add("in"),main.classList.add("Mask"),menu.classList.add("Mask");var o=this.cloneNode(!0);o.classList.add("imgShow"),setTimeout((function(){jQuery(o).animate({opacity:"1"},1e3)}),0),document.body.appendChild(o),o.onclick=function(){document.body.removeChild(o),mask.classList.remove("in"),main.classList.remove("Mask"),menu.classList.remove("Mask")}}))}$("#name").bumpyText(),setInterval((function(){setTime("2021/08/01")}),1e3),postshow(),getHitokoto(),G($(".post-content"),location.href,"衰小孩"),window.console&&window.console.log&&setTimeout((function(){console.log("\n %c 一个坏掉的番茄 %c  © Simon Ma  http://tomotoes.com \n\n","color:#FFFFFB;background:#1abc9c;padding:5px 0;border-radius:.5rem 0 0 .5rem;","color:#FFFFFB;background:#080808;padding:5px 0;border-radius:0 .5rem .5rem 0;")}),0)</script><script src="/vendor/opencc/full.js?v=3.0.64"></script><script src="/vendor/katex/katex.min.js?v=3.0.64"></script><script src="/vendor/katex/contrib/mhchem.min.js?v=3.0.64"></script><script src="/vendor/katex/contrib/auto-render.min.js?v=3.0.64"></script><script src="/js/weibo-count-sync.js?v=20260319"></script>
+  <script src="/js/blog-enhance.js?v=3.0.64"></script><script async src="/vendor/busuanzi/busuanzi.pure.mini.js?v=3.0.64"></script><script defer>var dynamicLoad=window.dynamicLoad||{css:function(e){var d=document.createElement("link");d.href=e,d.rel="stylesheet",d.type="text/css",document.head.appendChild(d)},js:function(e,d){var n=document.createElement("script");n.src=e,n.type="text/javascript",n.async=!1,"function"==typeof d&&(n.onload=d),document.head.appendChild(n)}};function loadLive2DResources(){window.__authorLive2DLoaded||(window.__authorLive2DLoaded=!0,dynamicLoad.css("https://cdn.jsdelivr.net/gh/SimonAKing/blog@7d04115230169/css/live2d-f1e3bae765.css"),dynamicLoad.js("https://cdn.jsdelivr.net/gh/SimonAKing/blog@7d04115230169/js/live2d/live2d-00d3feb260.js"),dynamicLoad.js("https://cdn.jsdelivr.net/gh/SimonAKing/blog@7d04115230169/js/live2d/live-7348bf1137.js"))}window.dynamicLoad=dynamicLoad;var allowLive2D=!/Android|iOS|iPhone|iPad|iPod|Windows Phone|KFAPWI/i.test(navigator.userAgent)&&window.innerWidth>=960;allowLive2D&&document.getElementById("landlord")&&loadLive2DResources()</script></body></html>

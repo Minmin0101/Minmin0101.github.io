@@ -1,0 +1,50 @@
+name: Build Markdown Posts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "markdown-posts/*.md"
+      - "markdown-posts/**/*.md"
+      - "tools/build_markdown_posts.py"
+      - "tools/requirements-posts.txt"
+      - "build-markdown-posts.bat"
+      - ".github/workflows/build-markdown-posts.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r tools/requirements-posts.txt
+
+      - name: Build markdown posts
+        run: python tools/build_markdown_posts.py
+
+      - name: Commit generated files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: build markdown posts"
+          git push
