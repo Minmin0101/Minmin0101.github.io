@@ -248,6 +248,21 @@ git status
 <p>如果你后面忘了某个内容该去哪里改，先回到这份 <code>README.md</code> 看，一般都能找到。
 为了方便你直接在电脑里定位文件，下面文中提到的关键文件路径，我都尽量改成了你本机可用的绝对路径显示。</p>
 <p><img alt="当前头像示例" src="/img/avatar.png"></p>
+<h2 id="0">0. 先看一眼网站现在是什么样</h2>
+<p>下面这些图，是我在 <code>2026-03-23</code> 本地启动博客后，用无头 Edge 从 <code>http://127.0.0.1:4030/</code> 截下来的。<br>
+截图文件都放在：</p>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io\img\posts\2026-03-23-blog-maintenance-readme\screens
+</code></pre>
+<h3 id="01">0.1 入口首页</h3>
+<p><img alt="本地入口首页" src="/img/posts/2026-03-23-blog-maintenance-readme/screens/portal-local.png"></p>
+<h3 id="02">0.2 博客首页（桌面端）</h3>
+<p><img alt="本地博客首页" src="/img/posts/2026-03-23-blog-maintenance-readme/screens/blog-local.png"></p>
+<h3 id="03">0.3 微博页（桌面端）</h3>
+<p><img alt="本地微博页" src="/img/posts/2026-03-23-blog-maintenance-readme/screens/weibo-local.png"></p>
+<h3 id="04">0.4 运维手册文章页（桌面端）</h3>
+<p><img alt="本地运维手册文章页" src="/img/posts/2026-03-23-blog-maintenance-readme/screens/readme-article-local.png"></p>
+<h3 id="05">0.5 博客首页（移动端）</h3>
+<p><img alt="本地博客首页移动端" src="/img/posts/2026-03-23-blog-maintenance-readme/screens/blog-mobile-local.png"></p>
 <hr>
 <h2 id="1">1. 先搞清楚：这个项目是什么</h2>
 <p>这个仓库 <strong>不是“Hexo 源码工程”</strong>，而是一个已经生成好的 <strong>静态网站成品</strong>。</p>
@@ -1396,31 +1411,117 @@ search-input
 </ul>
 <hr>
 <h2 id="12-github-pages">12. 如何部署到 GitHub Pages</h2>
-<p>这是最关键的发布流程。</p>
+<p>这一章专门讲“GitHub 网页界面里到底点哪里”。<br>
+下面这两篇官方文档，我按 <code>2026-03-23</code> 核对过：</p>
+<ul>
+<li><a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository">GitHub 官方：Creating a new repository</a></li>
+<li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site">GitHub 官方：Configuring a publishing source for your GitHub Pages site</a></li>
+</ul>
 <hr>
-<h3 id="121-github">12.1 如果你是第一次在 GitHub 上部署这个项目</h3>
-<h4 id="github">第一步：创建 GitHub 仓库</h4>
-<p>仓库名必须是：</p>
-<pre><code class="language-text">你的 GitHub 用户名.github.io
+<h3 id="121-github">12.1 第一次部署：先在 GitHub 网页上创建仓库</h3>
+<h4 id="github">第一步：打开 GitHub 的新建仓库页面</h4>
+<p>登录 GitHub 后，在右上角点击：</p>
+<pre><code class="language-text">+ -&gt; New repository
 </code></pre>
-<p>例如你的用户名是 <code>Minmin0101</code>，仓库名就要叫：</p>
+<p>你也可以直接打开：</p>
+<pre><code class="language-text">https://github.com/new
+</code></pre>
+<h4 id="_23">第二步：按下面这样填写</h4>
+<ul>
+<li><code>Owner</code>
+  选你自己的 GitHub 账号。</li>
+<li><code>Repository name</code>
+  这里必须填：</li>
+</ul>
 <pre><code class="language-text">Minmin0101.github.io
 </code></pre>
-<h4 id="_23">第二步：把项目文件上传到仓库</h4>
-<p>推荐用 Git 命令，不建议只靠网页上传。</p>
-<h4 id="github-pages">第三步：开启 GitHub Pages</h4>
-<p>进入 GitHub 仓库：</p>
+<p>更通用地说，个人主页仓库名必须是：</p>
+<pre><code class="language-text">你的 GitHub 用户名.github.io
+</code></pre>
+<ul>
+<li><code>Description</code>
+  可填可不填，比如：</li>
+</ul>
+<pre><code class="language-text">My personal blog site
+</code></pre>
+<ul>
+<li>
+<p><code>Visibility</code>
+  选 <code>Public</code></p>
+</li>
+<li>
+<p><code>Add a README file</code>
+  不要勾选</p>
+</li>
+<li>
+<p><code>Add .gitignore</code>
+  不要勾选</p>
+</li>
+<li>
+<p><code>Choose a license</code>
+  不要选</p>
+</li>
+</ul>
+<p>为什么这里建议都不要预先勾选：<br>
+因为你本地已经有完整项目了，如果 GitHub 新仓库里先塞进 README、<code>.gitignore</code> 或 license，第一次推送更容易遇到冲突。</p>
+<h4 id="create-repository">第三步：点击 <code>Create repository</code></h4>
+<p>创建后，GitHub 会带你进入这个新仓库的 <code>Quick setup</code> 页面。</p>
+<hr>
+<h3 id="122-github">12.2 第一次部署：把你本地现有项目推到 GitHub</h3>
+<p>进入本地项目目录：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+</code></pre>
+<p>先看当前远程地址：</p>
+<pre><code class="language-powershell">git remote -v
+</code></pre>
+<p>如果 <code>origin</code> 还没指向你刚建好的仓库，执行：</p>
+<pre><code class="language-powershell">git remote remove origin
+git remote add origin https://github.com/Minmin0101/Minmin0101.github.io.git
+</code></pre>
+<p>然后正常推送：</p>
+<pre><code class="language-powershell">git add .
+git commit -m &quot;feat: initial blog publish&quot;
+git push -u origin main
+</code></pre>
+<p>如果你看到“everything up-to-date”，说明这份项目本来就已经和 GitHub 连上了，不需要重新初始化。</p>
+<hr>
+<h3 id="123-github-github-pages">12.3 在 GitHub 网页里真正开启 GitHub Pages</h3>
+<p>进入你刚创建好的仓库后，按这个路径点：</p>
 <pre><code class="language-text">Settings -&gt; Pages
 </code></pre>
-<p>一般选择：</p>
+<p>然后在 <code>Build and deployment</code> 区域里这样选：</p>
 <ul>
-<li><code>Deploy from a branch</code></li>
-<li>Branch：<code>main</code></li>
-<li>Folder：<code>/ (root)</code></li>
+<li><code>Source</code>：<code>Deploy from a branch</code></li>
+<li><code>Branch</code>：<code>main</code></li>
+<li><code>Folder</code>：<code>/ (root)</code></li>
 </ul>
-<p>保存后，GitHub Pages 会自动部署。</p>
+<p>最后点击：</p>
+<pre><code class="language-text">Save
+</code></pre>
+<p>保存之后，GitHub Pages 会开始部署。<br>
+如果你的仓库顶部或者 <code>Pages</code> 页面里出现了站点链接，说明发布源配置成功了。</p>
 <hr>
-<h3 id="122">12.2 日常更新后怎么推送上线</h3>
+<h3 id="124">12.4 怎么确认线上真的部署成功了</h3>
+<p>你可以按这个顺序检查：</p>
+<ol>
+<li>打开仓库主页，确认最新提交已经在 <code>main</code> 分支上。</li>
+<li>打开：</li>
+</ol>
+<pre><code class="language-text">Settings -&gt; Pages
+</code></pre>
+<ol start="3">
+<li>看这里有没有站点地址，比如：</li>
+</ol>
+<pre><code class="language-text">https://minmin0101.github.io/
+</code></pre>
+<ol start="4">
+<li>再打开：</li>
+</ol>
+<pre><code class="language-text">Actions
+</code></pre>
+<p>看看最近一次 Pages 相关工作流是不是绿色对勾。</p>
+<hr>
+<h3 id="125">12.5 日常更新后怎么推送上线</h3>
 <p>进入项目目录：</p>
 <pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
 </code></pre>
@@ -1436,18 +1537,39 @@ search-input
 <p>推送：</p>
 <pre><code class="language-powershell">git push origin main
 </code></pre>
-<h3 id="123">12.3 部署后多久生效</h3>
+<hr>
+<h3 id="126-github">12.6 完全不会命令行时，GitHub 网页里最笨但能用的上传方法</h3>
+<p>如果你真的只是临时改了 1 到 3 个小文件，也可以直接在 GitHub 网页里操作：</p>
+<pre><code class="language-text">仓库首页 -&gt; Add file -&gt; Upload files
+</code></pre>
+<p>然后把改好的文件拖进去，写提交说明，点击：</p>
+<pre><code class="language-text">Commit changes
+</code></pre>
+<p>但是我不推荐你长期这么做，因为这个项目文件很多，网页上传很容易漏文件。<br>
+尤其是发新文章时，往往不只是一个 <code>.md</code> 文件，还会连带更新：</p>
+<ul>
+<li><code>blog/index.html</code></li>
+<li><code>archives/</code></li>
+<li><code>tags/</code></li>
+<li><code>content.json</code></li>
+<li><code>rss2.xml</code></li>
+<li><code>sitemap.xml</code></li>
+</ul>
+<p>所以，长期维护请尽量还是用本地 <code>git add / git commit / git push</code>。</p>
+<hr>
+<h3 id="127">12.7 部署后多久生效</h3>
 <p>通常：</p>
 <ul>
 <li>1 到 5 分钟内生效</li>
 </ul>
-<p>如果没看到变化：</p>
+<p>如果没看到变化，就按这个顺序排查：</p>
 <ol>
-<li>等几分钟</li>
-<li>强刷浏览器 <code>Ctrl + F5</code></li>
-<li>开隐身窗口看</li>
+<li>先等几分钟。</li>
+<li>强制刷新浏览器：<code>Ctrl + F5</code></li>
+<li>开隐身窗口再看。</li>
+<li>去 GitHub 的 <code>Actions</code> 看是否有失败记录。</li>
+<li>去 <code>Settings -&gt; Pages</code> 再确认发布源还是 <code>main / (root)</code>。</li>
 </ol>
-<hr>
 <h2 id="13">13. 如何打版本号</h2>
 <p>当你做完一次比较完整的更新时，建议打一个 Git 标签，方便以后回滚和留档。</p>
 <h3 id="131">13.1 查看当前状态</h3>
@@ -1613,23 +1735,50 @@ git push origin v2026.03.23-example
 <hr>
 <h2 id="17-10">17. 小白最常见的 10 个问题</h2>
 <h3 id="171">17.1 为什么我改了文章，但博客首页没变</h3>
-<p>因为这个项目不是自动生成的。<br>
-你还要手动改：</p>
+<p>现在要分两种情况看：</p>
+<ol>
+<li>如果你走的是现在推荐的 <code>Markdown 发文流程</code>
+   也就是把新文章放到：</li>
+</ol>
+<pre><code class="language-text">D:\blog\Minmin0101.github.io\markdown-posts
+</code></pre>
+<p>然后运行：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+.\build-markdown-posts.bat
+</code></pre>
+<p>那博客首页、最新文章、标签页、归档页、搜索索引、RSS、站点地图都会自动更新。</p>
+<ol start="2">
+<li>如果你走的是“手工直接改 <code>2026\...\index.html</code>”的老方式
+   那它当然不会自动回写博客首页。</li>
+</ol>
+<p>如果你已经用的是 Markdown 发文流程，但首页还是没变，就检查这几件事：</p>
+<ol>
+<li>新文章 <code>.md</code> 文件是不是确实放进了 <code>D:\blog\Minmin0101.github.io\markdown-posts</code></li>
+<li><code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code> 有没有成功跑完</li>
+<li>有没有把生成后的文件 <code>git push</code> 到 GitHub</li>
+<li>GitHub 上 <code>.github/workflows/build-markdown-posts.yml</code> 有没有跑成功</li>
+</ol>
+<h3 id="172">17.2 为什么搜索搜不到新文章</h3>
+<p>正常情况下，搜索索引：</p>
 <ul>
-<li><code>D:\blog\Minmin0101.github.io\blog\index.html</code></li>
 <li><code>D:\blog\Minmin0101.github.io\content.json</code></li>
-<li>可能还要改 <code>D:\blog\Minmin0101.github.io\tags</code>、<code>D:\blog\Minmin0101.github.io\archives</code></li>
 </ul>
-<h3 id="172">17.2 为什么搜索不到新文章</h3>
-<p>因为没更新：</p>
-<ul>
-<li><code>D:\blog\Minmin0101.github.io\content.json</code></li>
-</ul>
-<h3 id="173">17.3 为什么标签点进去是空的</h3>
-<p>因为你只在文章里写了标签，但没建：</p>
-<ul>
-<li><code>tags/你的标签名/index.html</code></li>
-</ul>
+<p>会在 Markdown 构建时自动更新。<br>
+所以现在搜不到新文章，通常不是你漏改了 <code>content.json</code>，而是：</p>
+<ol>
+<li>你还没运行 <code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code></li>
+<li>构建失败了</li>
+<li>你还没把生成结果推送到 GitHub</li>
+<li>浏览器还在吃旧缓存</li>
+</ol>
+<h3 id="173">17.3 为什么标签点进去是空的?</h3>
+<p>如果你走的是 Markdown 发文流程，单个标签页也是自动生成的。<br>
+现在标签页是空的，通常优先检查：</p>
+<ol>
+<li>这篇文章 front matter 里的 <code>tags:</code> 有没有写对</li>
+<li>有没有运行 <code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code></li>
+<li>对应标签目录有没有被成功生成到 <code>D:\blog\Minmin0101.github.io\tags</code></li>
+</ol>
 <h3 id="174">17.4 为什么微博没显示</h3>
 <p>先确认：</p>
 <ol>
