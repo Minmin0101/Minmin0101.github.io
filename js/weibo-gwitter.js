@@ -475,14 +475,93 @@
     }
   }
 
-  function pickIssueTag(issue) {
-    var labels = (issue && issue.labels) || [];
+  function normalizeLabelColor(value, fallback) {
+    var color = String(value || "").trim().replace(/^#/, "");
 
-    if (labels.length && labels[0] && labels[0].name) {
-      return labels[0].name;
+    if (/^[0-9a-f]{3}$/i.test(color)) {
+      return color
+        .split("")
+        .map(function (char) {
+          return char + char;
+        })
+        .join("")
+        .toLowerCase();
     }
 
-    return "微博";
+    if (/^[0-9a-f]{6}$/i.test(color)) {
+      return color.toLowerCase();
+    }
+
+    return String(fallback || "77aaff").replace(/^#/, "").toLowerCase();
+  }
+
+  function hexToRgb(value) {
+    var normalized = normalizeLabelColor(value);
+
+    return {
+      r: parseInt(normalized.slice(0, 2), 16),
+      g: parseInt(normalized.slice(2, 4), 16),
+      b: parseInt(normalized.slice(4, 6), 16)
+    };
+  }
+
+  function getIssueLabels(issue) {
+    var labels = Array.isArray(issue && issue.labels) ? issue.labels : [];
+
+    if (!labels.length) {
+      return [
+        {
+          name: "微博",
+          color: "77aaff"
+        }
+      ];
+    }
+
+    return labels
+      .filter(function (label) {
+        return label && label.name;
+      })
+      .map(function (label) {
+        return {
+          name: label.name,
+          color: normalizeLabelColor(label.color || label.hex || "77aaff")
+        };
+      });
+  }
+
+  function getLabelStyle(color) {
+    var rgb = hexToRgb(color);
+    var hex = "#" + normalizeLabelColor(color);
+
+    return (
+      "--label-color:" + hex + ";" +
+      "--label-bg:rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0.14);" +
+      "--label-border:rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0.28);"
+    );
+  }
+
+  function renderIssueLabels(issue) {
+    return getIssueLabels(issue)
+      .map(function (label) {
+        return (
+          '<span class="minmin-weibo-seed-tag" style="' + escapeAttribute(getLabelStyle(label.color)) + '">' +
+          escapeHtml(label.name) +
+          "</span>"
+        );
+      })
+      .join("");
+  }
+
+  function isSnapshotOnlyIssue(issueOrState) {
+    if (!issueOrState) {
+      return false;
+    }
+
+    if (typeof issueOrState === "object" && issueOrState.snapshotOnly !== undefined) {
+      return !!issueOrState.snapshotOnly;
+    }
+
+    return !!issueOrState.snapshot_only;
   }
 
   function getLikeCount(issue) {
@@ -661,6 +740,7 @@
         issueNumber: issueNumber,
         issue: null,
         issueUrl: getIssuesUrl(),
+        snapshotOnly: false,
         likeCount: 0,
         commentsCount: 0,
         liked: false,
@@ -680,6 +760,7 @@
     if (issue) {
       state.issue = issue;
       state.issueUrl = issue.html_url || state.issueUrl;
+      state.snapshotOnly = !!issue.snapshot_only;
       state.likeCount = getLikeCount(issue);
       state.commentsCount = normalizeCount(issue.comments);
     }
@@ -845,9 +926,14 @@
 
     button.classList.toggle("is-active", !!state.liked);
     button.classList.toggle("is-busy", !!state.likeBusy);
-    button.disabled = !!state.likeBusy;
+    button.disabled = !!state.likeBusy || !!state.snapshotOnly;
     button.setAttribute("aria-pressed", state.liked ? "true" : "false");
-    button.setAttribute("title", hasOAuthSession() ? (state.liked ? "取消点赞" : "点赞") : "登录 GitHub 后可直接点赞");
+    button.setAttribute(
+      "title",
+      state.snapshotOnly
+        ? "这条测试微博暂不连接真实 GitHub 点赞。"
+        : (hasOAuthSession() ? (state.liked ? "取消点赞" : "点赞") : "登录 GitHub 后可直接点赞")
+    );
     label.textContent = "赞 " + normalizeCount(state.likeCount);
   }
 
@@ -879,11 +965,13 @@
     }
 
     form.classList.toggle("is-disabled", !hasSession);
-    textarea.disabled = !hasSession || !!state.commentSubmitting;
-    textarea.placeholder = hasSession ? "写下你的评论，发布后会同步到这条 GitHub Issue。" : "登录 GitHub 后可直接在这里评论。";
-    submit.disabled = !hasSession || !!state.commentSubmitting;
+    textarea.disabled = !hasSession || !!state.commentSubmitting || !!state.snapshotOnly;
+    textarea.placeholder = state.snapshotOnly
+      ? "这组测试微博只用来检查排版与标签效果，暂不连接真实评论。"
+      : (hasSession ? "写下你的评论，发布后会同步到这条 GitHub Issue。" : "登录 GitHub 后可直接在这里评论。");
+    submit.disabled = !hasSession || !!state.commentSubmitting || !!state.snapshotOnly;
     submit.textContent = state.commentSubmitting ? "发送中…" : "发送评论";
-    loginButton.hidden = hasSession;
+    loginButton.hidden = hasSession || !!state.snapshotOnly;
   }
 
   function applyLoginButtonState() {
@@ -941,6 +1029,14 @@
       return Promise.resolve();
     }
 
+    if (state.snapshotOnly) {
+      state.liked = false;
+      state.reactionId = "";
+      state.viewerSyncedFor = "";
+      updateLikeButton(card);
+      return Promise.resolve();
+    }
+
     if (!hasOAuthSession() || !viewerLogin) {
       state.liked = false;
       state.reactionId = "";
@@ -983,6 +1079,33 @@
     if (state.commentsLoaded && !forceRefresh) {
       renderCommentList(card);
       return Promise.resolve(state.comments || []);
+    }
+
+    if (state.snapshotOnly) {
+      state.commentsLoading = true;
+      state.commentsError = "";
+      renderCommentList(card);
+
+      return loadJsonSnapshot(getCommentsSnapshotUrl())
+        .then(function (snapshot) {
+          var snapshotComments = snapshot && snapshot[String(state.issueNumber)];
+
+          state.comments = Array.isArray(snapshotComments) ? snapshotComments : [];
+          state.commentsLoaded = true;
+          state.commentsError = "";
+          state.commentsCount = state.comments.length;
+          renderCommentList(card);
+          updateCommentButton(card);
+          return state.comments;
+        })
+        .catch(function (error) {
+          state.commentsError = resolveGithubErrorMessage(error, "测试评论加载失败，请稍后再试。");
+          renderCommentList(card);
+          throw error;
+        })
+        .finally(function () {
+          state.commentsLoading = false;
+        });
     }
 
     state.commentsLoading = true;
@@ -1110,7 +1233,7 @@
     publishVisibleCount(0, "empty");
   }
 
-  function createCommentPanelMarkup(issueNumber) {
+  function createCommentPanelMarkup(issueNumber, snapshotOnly) {
     return (
       '<section class="minmin-weibo-comment-panel" hidden aria-label="微博评论区">' +
       '<div class="minmin-weibo-comment-feedback" hidden aria-live="polite"></div>' +
@@ -1118,7 +1241,7 @@
       '<form class="minmin-weibo-comment-form" novalidate>' +
       '<textarea class="minmin-weibo-comment-textarea" rows="3" maxlength="1000" placeholder="登录 GitHub 后可直接在这里评论。"></textarea>' +
       '<div class="minmin-weibo-comment-form-footer">' +
-      '<span class="minmin-weibo-comment-tip">评论会直接同步到这条 GitHub Issue。</span>' +
+      '<span class="minmin-weibo-comment-tip">' + escapeHtml(snapshotOnly ? "这条是页面测试微博，评论区只用于展示样式。" : "评论会直接同步到这条 GitHub Issue。") + "</span>" +
       '<div class="minmin-weibo-comment-form-actions">' +
       '<button type="button" class="minmin-weibo-comment-login-button minmin-weibo-seed-action-button" data-action="comment-login">登录后评论</button>' +
       '<button type="submit" class="minmin-weibo-comment-submit">发送评论</button>' +
@@ -1134,9 +1257,16 @@
     var avatarUrl = (issue.user && issue.user.avatar_url) || "/img/avatar.png";
     var author = (issue.user && issue.user.login) || repoOwner;
     var bodyHtml = decorateIssueHtml(issue.body_html || "");
+    var snapshotOnly = !!state.snapshotOnly;
+    var issueViewMarkup = snapshotOnly
+      ? '<span class="minmin-weibo-action-link is-static">测试微博</span>'
+      : '<a class="minmin-weibo-action-link" data-action="view-issue" data-github-url="' + escapeAttribute(state.issueUrl) + '" href="' + escapeAttribute(buildGithubGatewayHref(state.issueUrl)) + '" target="_blank" rel="noopener noreferrer">在 GitHub 中查看</a>';
+    var actionNote = snapshotOnly
+      ? "这组测试微博只用来检查文案、图片和标签颜色，真实点赞评论仍以 GitHub Issues 为准。"
+      : "登录后可直接在微博页内点赞和评论。";
 
     return (
-      '<article class="minmin-weibo-issue-card minmin-weibo-seed gwitter-card scroll-push-card" data-issue-number="' + state.issueNumber + '" data-issue-url="' + escapeAttribute(state.issueUrl) + '">' +
+      '<article class="minmin-weibo-issue-card minmin-weibo-seed gwitter-card scroll-push-card" data-issue-number="' + state.issueNumber + '" data-issue-url="' + escapeAttribute(state.issueUrl) + '" data-snapshot-only="' + (snapshotOnly ? "1" : "0") + '">' +
       '<div class="minmin-weibo-seed-head">' +
       '<div class="minmin-weibo-seed-author">' +
       '<img class="minmin-weibo-seed-avatar" src="' + escapeAttribute(avatarUrl) + '" alt="' + escapeAttribute(author) + '">' +
@@ -1145,7 +1275,7 @@
       "<span>" + escapeHtml(formatIssueDate(issue.created_at)) + "</span>" +
       "</div>" +
       "</div>" +
-      '<span class="minmin-weibo-seed-tag">' + escapeHtml(pickIssueTag(issue)) + "</span>" +
+      '<div class="minmin-weibo-seed-tags">' + renderIssueLabels(issue) + "</div>" +
       "</div>" +
       '<h3 class="minmin-weibo-seed-title">' + escapeHtml(issue.title || "未命名微博") + "</h3>" +
       '<div class="markdown-body minmin-weibo-seed-body">' + bodyHtml + "</div>" +
@@ -1158,12 +1288,36 @@
       '<span class="minmin-weibo-seed-action-icon" aria-hidden="true">✉</span>' +
       '<span class="minmin-weibo-action-text">评论 ' + normalizeCount(state.commentsCount) + "</span>" +
       "</button>" +
-      '<a class="minmin-weibo-action-link" data-action="view-issue" data-github-url="' + escapeAttribute(state.issueUrl) + '" href="' + escapeAttribute(buildGithubGatewayHref(state.issueUrl)) + '" target="_blank" rel="noopener noreferrer">在 GitHub 中查看</a>' +
-      '<span class="minmin-weibo-seed-action-note">登录后可直接在微博页内点赞和评论。</span>' +
+      issueViewMarkup +
+      '<span class="minmin-weibo-seed-action-note">' + escapeHtml(actionNote) + "</span>" +
       "</div>" +
-      createCommentPanelMarkup(state.issueNumber) +
+      createCommentPanelMarkup(state.issueNumber, snapshotOnly) +
       "</article>"
     );
+  }
+
+  function mergeIssues(primaryIssues, snapshotIssues) {
+    var mergedMap = {};
+
+    (primaryIssues || []).forEach(function (issue) {
+      if (issue && issue.number) {
+        mergedMap[String(issue.number)] = issue;
+      }
+    });
+
+    (snapshotIssues || []).forEach(function (issue) {
+      if (issue && issue.number && !mergedMap[String(issue.number)]) {
+        mergedMap[String(issue.number)] = issue;
+      }
+    });
+
+    return Object.keys(mergedMap)
+      .map(function (key) {
+        return mergedMap[key];
+      })
+      .sort(function (left, right) {
+        return new Date(right.created_at || 0).getTime() - new Date(left.created_at || 0).getTime();
+      });
   }
 
   function syncCards() {
@@ -1226,6 +1380,16 @@
       });
   }
 
+  function loadSnapshotIssues() {
+    return loadJsonSnapshot(getIssuesSnapshotUrl())
+      .then(function (snapshot) {
+        return normalizeIssues(snapshot);
+      })
+      .catch(function () {
+        return [];
+      });
+  }
+
   function fetchIssues() {
     var hasSession = hasOAuthSession();
     var issuesUrl = hasSession ? getIssuesApiUrl() : (getPublicIssuesApiUrl() || getIssuesApiUrl());
@@ -1242,30 +1406,35 @@
       auth: hasSession
     })
       .then(function (payload) {
-        renderIssues(normalizeIssues(payload));
+        return loadSnapshotIssues().then(function (snapshotIssues) {
+          var primaryIssues = normalizeIssues(payload);
+          renderIssues(primaryIssues.length ? primaryIssues : snapshotIssues);
+        });
       })
       .catch(function (error) {
-        if (!hasSession) {
-          return loadJsonSnapshot(getIssuesSnapshotUrl())
-            .then(function (snapshot) {
-              renderIssues(normalizeIssues(snapshot));
-            })
-            .catch(function () {
-              if (!hasOAuthSession() && error && error.status === 403) {
-                renderEmptyState("当前 GitHub 公共接口已达到匿名访问频率上限。登录 GitHub 后会自动回到微博页，并重新读取已经发布的微博。");
-                return;
-              }
+        return loadSnapshotIssues().then(function (snapshotIssues) {
+          if (snapshotIssues.length) {
+            renderIssues(snapshotIssues);
+            return;
+          }
 
-              renderEmptyState(resolveGithubErrorMessage(error, "暂时没能从 GitHub 读取 Issues，你可以点下面的入口直接打开仓库 Issues 看看。"));
-            });
-        }
+          if (!hasSession) {
+            if (!hasOAuthSession() && error && error.status === 403) {
+              renderEmptyState("当前 GitHub 公共接口已达到匿名访问频率上限。登录 GitHub 后会自动回到微博页，并重新读取已经发布的微博。");
+              return;
+            }
 
-        if (!hasOAuthSession() && error && error.status === 403) {
-          renderEmptyState("当前 GitHub 公共接口已达到匿名访问频率上限。登录 GitHub 后会自动回到微博页，并重新读取已经发布的微博。");
-          return;
-        }
+            renderEmptyState(resolveGithubErrorMessage(error, "暂时没能从 GitHub 读取 Issues，你可以点下面的入口直接打开仓库 Issues 看看。"));
+            return;
+          }
 
-        renderEmptyState(resolveGithubErrorMessage(error, "暂时没能从 GitHub 读取 Issues，你可以点下面的入口直接打开仓库 Issues 看看。"));
+          if (!hasOAuthSession() && error && error.status === 403) {
+            renderEmptyState("当前 GitHub 公共接口已达到匿名访问频率上限。登录 GitHub 后会自动回到微博页，并重新读取已经发布的微博。");
+            return;
+          }
+
+          renderEmptyState(resolveGithubErrorMessage(error, "暂时没能从 GitHub 读取 Issues，你可以点下面的入口直接打开仓库 Issues 看看。"));
+        });
       });
   }
 
@@ -1279,7 +1448,7 @@
       '<section class="gwitter-card minmin-weibo-seed minmin-weibo-toolbar-card scroll-push-card">' +
       '<div class="minmin-weibo-toolbar-copy">' +
       "<strong>微博流</strong>" +
-      "<p>这里现在直接读取 GitHub Issues 作为图文微博流，登录 GitHub 后可以直接在当前页面点赞和评论。</p>" +
+      "<p>把那些来不及写成长文的心情、烟火和晚风，都轻轻收进这一页生活里。</p>" +
       "</div>" +
       '<div class="minmin-weibo-seed-actions">' +
       '<button type="button" class="minmin-weibo-login-button minmin-weibo-seed-action-button" data-action="login"></button>' +
@@ -1348,6 +1517,12 @@
     var request = null;
 
     if (!card || state.likeBusy) {
+      return;
+    }
+
+    if (state.snapshotOnly) {
+      setCommentFeedback(card, "这条测试微博只展示排版和标签效果，暂不连接真实点赞。", "info");
+      updateLikeButton(card);
       return;
     }
 
@@ -1438,6 +1613,11 @@
     var content = textarea ? String(textarea.value || "").trim() : "";
 
     if (!card || !textarea) {
+      return;
+    }
+
+    if (state.snapshotOnly) {
+      setCommentFeedback(card, "这条测试微博只展示评论区域样式，暂不连接真实评论。", "info");
       return;
     }
 
