@@ -1063,6 +1063,68 @@
     });
   }
 
+  function resolveViewerReactionId(issueNumber) {
+    return githubRequest(getIssueReactionListUrl(issueNumber), {
+      auth: true
+    }).then(function (reactions) {
+      var matched = findViewerHeartReaction(reactions || []);
+      return matched && matched.id ? String(matched.id) : "";
+    });
+  }
+
+  function createLikeSnapshot(state) {
+    return {
+      liked: !!state.liked,
+      likeCount: normalizeCount(state.likeCount),
+      reactionId: state.reactionId || "",
+      viewerSyncedFor: state.viewerSyncedFor || ""
+    };
+  }
+
+  function restoreLikeSnapshot(state, snapshot) {
+    if (!state || !snapshot) {
+      return;
+    }
+
+    state.liked = !!snapshot.liked;
+    state.likeCount = normalizeCount(snapshot.likeCount);
+    state.reactionId = snapshot.reactionId || "";
+    state.viewerSyncedFor = snapshot.viewerSyncedFor || "";
+  }
+
+  function applyOptimisticLikeState(state, nextLiked) {
+    var likeCount = normalizeCount(state && state.likeCount);
+    var viewer = getGithubUser();
+    var viewerLogin = String((viewer && viewer.login) || "").toLowerCase();
+
+    if (!state) {
+      return;
+    }
+
+    state.liked = !!nextLiked;
+    state.likeCount = nextLiked ? likeCount + 1 : Math.max(likeCount - 1, 0);
+
+    if (!nextLiked) {
+      state.reactionId = "";
+    }
+
+    if (viewerLogin) {
+      state.viewerSyncedFor = viewerLogin;
+    }
+  }
+
+  function queueLikeStateRefresh(card) {
+    if (!card) {
+      return;
+    }
+
+    window.setTimeout(function () {
+      syncLikeState(card, true).catch(function () {
+        return null;
+      });
+    }, 900);
+  }
+
   function loadComments(card, forceRefresh) {
     var state = getIssueStateFromCard(card);
     var hasSession = hasOAuthSession();
@@ -1515,6 +1577,8 @@
     var card = button && button.closest ? button.closest(".minmin-weibo-issue-card") : null;
     var state = getIssueStateFromCard(card);
     var request = null;
+    var previousSnapshot = null;
+    var nextLiked = false;
 
     if (!card || state.likeBusy) {
       return;
@@ -1533,21 +1597,25 @@
     }
 
     state.likeBusy = true;
+    previousSnapshot = createLikeSnapshot(state);
+    nextLiked = !state.liked;
+    applyOptimisticLikeState(state, nextLiked);
     setCommentFeedback(card, "", "");
     updateLikeButton(card);
 
-    if (state.liked && state.reactionId) {
-      request = githubRequest(getIssueReactionDeleteUrl(state.issueNumber, state.reactionId), {
+    if (previousSnapshot.liked && previousSnapshot.reactionId) {
+      request = githubRequest(getIssueReactionDeleteUrl(state.issueNumber, previousSnapshot.reactionId), {
         method: "DELETE",
         auth: true
       });
-    } else if (state.liked) {
-      request = syncLikeState(card, true).then(function () {
-        if (!state.reactionId) {
-          return null;
+    } else if (previousSnapshot.liked) {
+      request = resolveViewerReactionId(state.issueNumber).then(function (reactionId) {
+        if (!reactionId) {
+          throw createGithubError(409, { message: "missing_reaction_id" });
         }
 
-        return githubRequest(getIssueReactionDeleteUrl(state.issueNumber, state.reactionId), {
+        state.reactionId = reactionId;
+        return githubRequest(getIssueReactionDeleteUrl(state.issueNumber, reactionId), {
           method: "DELETE",
           auth: true
         });
@@ -1563,20 +1631,30 @@
     }
 
     request
-      .then(function () {
-        return syncLikeState(card, true);
+      .then(function (response) {
+        if (nextLiked && response && response.id) {
+          state.reactionId = String(response.id);
+        }
+
+        if (!nextLiked) {
+          state.reactionId = "";
+        }
+
+        state.likeBusy = false;
+        updateLikeButton(card);
+        queueLikeStateRefresh(card);
       })
       .catch(function (error) {
+        restoreLikeSnapshot(state, previousSnapshot);
+        state.likeBusy = false;
+        updateLikeButton(card);
+
         if (isAuthError(error)) {
           handleAuthFailure("like", button);
           return;
         }
 
         setCommentFeedback(card, resolveGithubErrorMessage(error, "点赞操作失败，请稍后再试。"), "error");
-      })
-      .finally(function () {
-        state.likeBusy = false;
-        updateLikeButton(card);
       });
   }
 
