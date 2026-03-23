@@ -655,12 +655,20 @@ Ctrl + Shift + F
 
 ### 8.0 现在最推荐的发文方式：只上传一个 Markdown 文件
 
-你只需要记住这 4 个位置：
+你只需要记住这 7 个位置：
 
 - [`D:\blog\Minmin0101.github.io\markdown-posts`](./markdown-posts)
   这里放你以后新写的 Markdown 文章
 - [`D:\blog\Minmin0101.github.io\markdown-posts\_template.md`](./markdown-posts/_template.md)
-  这是写新文章时直接复制的模板
+  这是模板说明入口，会告诉你该选哪一种模板
+- [`D:\blog\Minmin0101.github.io\markdown-posts\_template-with-toc.md`](./markdown-posts/_template-with-toc.md)
+  这是带目录长文模板，适合教程、总结、长文回顾
+- [`D:\blog\Minmin0101.github.io\markdown-posts\_template-no-toc.md`](./markdown-posts/_template-no-toc.md)
+  这是普通无目录模板，适合日常记录、随笔、短中篇分享
+- [`D:\blog\Minmin0101.github.io\img\posts\_template-assets`](./img/posts/_template-assets)
+  这是模板默认图片素材目录
+- [`D:\blog\Minmin0101.github.io\media\posts\_template-assets`](./media/posts/_template-assets)
+  这是模板默认 GIF / 视频素材目录
 - [`D:\blog\Minmin0101.github.io\build-markdown-posts.bat`](./build-markdown-posts.bat)
   本地一键生成文章的脚本
 - [`D:\blog\Minmin0101.github.io\.github\workflows\build-markdown-posts.yml`](./.github/workflows/build-markdown-posts.yml)
@@ -668,15 +676,40 @@ Ctrl + Shift + F
 
 ### 8.0.1 小白最简单步骤
 
-#### 第一步：复制模板文件
+#### 第一步：先选模板，再复制
 
-把这个文件复制一份：
+如果你想写的是长文、教程、复盘、读书总结，选这个：
 
-- [`D:\blog\Minmin0101.github.io\markdown-posts\_template.md`](./markdown-posts/_template.md)
+- [`D:\blog\Minmin0101.github.io\markdown-posts\_template-with-toc.md`](./markdown-posts/_template-with-toc.md)
 
-例如你可以复制成：
+它会保留右侧目录，因为 front matter 里已经带了这一行：
+
+```yaml
+template_path: 2026/03/12/post-interaction-long-test/index.html
+```
+
+如果你想写的是普通随笔、生活记录、短中篇分享，选这个：
+
+- [`D:\blog\Minmin0101.github.io\markdown-posts\_template-no-toc.md`](./markdown-posts/_template-no-toc.md)
+
+它不会显示右侧目录，更适合日常文章。
+
+复制后，把文件改成你自己的名字，例如：
 
 - `D:\blog\Minmin0101.github.io\markdown-posts\2026-03-23-我的新文章.md`
+
+如果你想直接用命令复制，可以这样：
+
+```powershell
+cd D:\blog\Minmin0101.github.io
+Copy-Item .\markdown-posts\_template-with-toc.md .\markdown-posts\2026-03-23-我的长文.md
+Copy-Item .\markdown-posts\_template-no-toc.md .\markdown-posts\2026-03-23-我的随笔.md
+```
+
+小白最好直接记住这句：
+
+- 要目录，就复制 `_template-with-toc.md`
+- 不要目录，就复制 `_template-no-toc.md`
 
 #### 第二步：改这些字段
 
@@ -741,7 +774,12 @@ front matter 下面就是正常 Markdown 正文，你可以直接写：
 - 表格
 - 数学公式
 
-如果要插图片，推荐先把图片放到：
+如果你只是想先快速预览，模板里已经自带一套可用素材：
+
+- [`D:\blog\Minmin0101.github.io\img\posts\_template-assets`](./img/posts/_template-assets)
+- [`D:\blog\Minmin0101.github.io\media\posts\_template-assets`](./media/posts/_template-assets)
+
+如果你要正式发自己的文章，推荐把图片和视频放到：
 
 - [`D:\blog\Minmin0101.github.io\img`](./img)
 - [`D:\blog\Minmin0101.github.io\media`](./media)
