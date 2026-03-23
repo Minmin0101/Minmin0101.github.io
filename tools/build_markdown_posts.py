@@ -243,6 +243,25 @@ def read_template_text(path: Path) -> str:
     return read_head_text(path) or read_text(path)
 
 
+def read_sitemap_lastmods() -> dict[str, str]:
+    if SITEMAP_XML_PATH.exists():
+        source = read_text(SITEMAP_XML_PATH)
+    else:
+        source = read_head_text(SITEMAP_XML_PATH) or ""
+
+    lastmods: dict[str, str] = {}
+    for match in re.finditer(
+        r"<url>\s*<loc>(.*?)</loc>\s*<lastmod>(.*?)</lastmod>",
+        source,
+        flags=re.S,
+    ):
+        loc = unescape(match.group(1)).strip()
+        lastmod = match.group(2).strip()
+        if loc and lastmod:
+            lastmods[loc] = lastmod
+    return lastmods
+
+
 def extract_site_config() -> SiteConfig:
     root_index = read_text(ROOT / "index.html")
     site_name_match = re.search(r"<meta property=\"og:site_name\" content=\"([^\"]+)\">", root_index)
@@ -1046,13 +1065,18 @@ def update_rss(all_posts: list[PostRecord], previous_generated_paths: set[str]) 
 def update_sitemaps(all_posts: list[PostRecord], tag_posts: dict[str, list[PostRecord]]) -> None:
     fixed_pages = ["/", "/blog/", "/blog/weibo/", "/gallery/", "/about/", "/projects/", "/thinking/", "/archives/", "/tags/"]
     urls: list[tuple[str, str, str, str]] = []
-    now = format_day(datetime.now(LOCAL_TZ))
+    existing_lastmods = read_sitemap_lastmods()
+    latest_post_day = format_day(max((post.updated_local for post in all_posts), default=datetime.now(LOCAL_TZ)))
+    post_driven_pages = {"/", "/blog/", "/archives/", "/tags/"}
     for page in fixed_pages:
-        urls.append((SITE.site_url + page, now, "monthly", "0.6"))
+        loc = SITE.site_url + page
+        lastmod = latest_post_day if page in post_driven_pages else existing_lastmods.get(loc, latest_post_day)
+        urls.append((loc, lastmod, "monthly", "0.6"))
     for post in all_posts:
         urls.append((post.url, format_day(post.updated_local), "monthly", "0.6"))
     for tag in sorted(tag_posts):
-        urls.append((SITE.site_url + tag_href(tag), now, "monthly", "0.5"))
+        tag_lastmod = format_day(max(post.updated_local for post in tag_posts[tag]))
+        urls.append((SITE.site_url + tag_href(tag), tag_lastmod, "monthly", "0.5"))
 
     xml_parts = ['<?xml version="1.0" encoding="UTF-8"?>\n', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n']
     for loc, lastmod, changefreq, priority in urls:

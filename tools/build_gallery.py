@@ -59,6 +59,22 @@ def read_head_text(path: Path) -> str | None:
     return result.stdout
 
 
+def extract_article_modified_time(text: str) -> str | None:
+    match = re.search(r'<meta property="article:modified_time" content="([^"]*)">', text)
+    if not match:
+        return None
+    return match.group(1)
+
+
+def normalize_article_modified_time(text: str) -> str:
+    return re.sub(
+        r'<meta property="article:modified_time" content="[^"]*">',
+        '<meta property="article:modified_time" content="__GALLERY_MODIFIED_TIME__">',
+        text,
+        count=1,
+    )
+
+
 def replace_one(text: str, pattern: str, replacement: str, *, label: str) -> str:
     new_text, count = re.subn(pattern, lambda _match: replacement, text, count=1, flags=re.S)
     if count != 1:
@@ -308,10 +324,12 @@ def update_gallery_index(config: dict[str, str], albums: list[AlbumRecord]) -> N
     html = read_text(GALLERY_INDEX_PATH)
     if "\\1" in html or "\\2" in html:
         html = read_head_text(GALLERY_INDEX_PATH) or html
+    original_html = html
+    existing_modified = extract_article_modified_time(original_html)
     page_subtitle = config.get("page_subtitle", "这里放生活切片、界面草稿和想留下来的旅途画面。")
     album_count = len(albums)
     photo_count = sum(len(album.photos) for album in albums)
-    modified = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    modified_placeholder = "__GALLERY_MODIFIED_TIME__"
 
     html = replace_one(
         html,
@@ -328,7 +346,7 @@ def update_gallery_index(config: dict[str, str], albums: list[AlbumRecord]) -> N
     html = replace_one(
         html,
         r'<meta property="article:modified_time" content="[^"]*">',
-        f'<meta property="article:modified_time" content="{modified}">',
+        f'<meta property="article:modified_time" content="{modified_placeholder}">',
         label="article modified time",
     )
     html = replace_one(
@@ -371,6 +389,13 @@ def update_gallery_index(config: dict[str, str], albums: list[AlbumRecord]) -> N
         build_gallery_script_html(albums),
         label="gallery script payload",
     )
+
+    if existing_modified and normalize_article_modified_time(html) == normalize_article_modified_time(original_html):
+        modified = existing_modified
+    else:
+        modified = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+    html = html.replace(modified_placeholder, modified, 1)
 
     write_text(GALLERY_INDEX_PATH, html)
 

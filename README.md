@@ -53,7 +53,7 @@ D:\blog\Minmin0101.github.io\img\posts\2026-03-23-blog-maintenance-readme\screen
 2. 很多页面内容是重复写死在不同 HTML 文件里的。
 3. 这里现在有两套发文方式：
    - 如果你走旧的“手工改 HTML”方式，新文章不会自动更新博客列表、标签页、搜索索引、站点地图，通常需要你手动补几处文件。
-   - 如果你走现在推荐的“Markdown 发文流程”，只要把文章放进 `D:\blog\Minmin0101.github.io\markdown-posts`，再运行 `D:\blog\Minmin0101.github.io\build-markdown-posts.bat`，或者直接推送到 GitHub，博客首页、最新文章、标签页、归档页、搜索索引、RSS、站点地图都会自动更新。
+- 如果你走现在推荐的“Markdown 发文流程”，只要把文章放进 `D:\blog\Minmin0101.github.io\markdown-posts`，再运行 `D:\blog\Minmin0101.github.io\build-markdown-posts.bat`，或者直接双击 `D:\blog\Minmin0101.github.io\publish-markdown-posts.bat`，博客首页、最新文章、标签页、归档页、搜索索引、RSS、站点地图都会自动更新并可一键推送到 GitHub。
 
 你可以把它理解成：
 
@@ -156,6 +156,8 @@ D:\blog\Minmin0101.github.io\
 | 改微博页文案与配置 | [`D:\blog\Minmin0101.github.io\blog\weibo\index.html`](./blog/weibo/index.html) |
 | 改微博样式与交互 | [`D:\blog\Minmin0101.github.io\css\weibo-gwitter.css`](./css/weibo-gwitter.css)、[`D:\blog\Minmin0101.github.io\js\weibo-gwitter.js`](./js/weibo-gwitter.js) |
 | 改相册内容 | [`D:\blog\Minmin0101.github.io\build-gallery.bat`](./build-gallery.bat)、[`D:\blog\Minmin0101.github.io\gallery\gallery-albums.txt`](./gallery/gallery-albums.txt)、[`D:\blog\Minmin0101.github.io\gallery\index.html`](./gallery/index.html) |
+| 一键发布博客文章到 GitHub | [`D:\blog\Minmin0101.github.io\publish-markdown-posts.bat`](./publish-markdown-posts.bat)、[`D:\blog\Minmin0101.github.io\build-markdown-posts.bat`](./build-markdown-posts.bat) |
+| 一键发布相册到 GitHub | [`D:\blog\Minmin0101.github.io\publish-gallery.bat`](./publish-gallery.bat)、[`D:\blog\Minmin0101.github.io\build-gallery.bat`](./build-gallery.bat) |
 | 改关于页 | [`D:\blog\Minmin0101.github.io\about\index.html`](./about/index.html) |
 | 改项目页 | [`D:\blog\Minmin0101.github.io\projects\index.html`](./projects/index.html) |
 | 改思考页 | [`D:\blog\Minmin0101.github.io\thinking\index.html`](./thinking/index.html) |
@@ -816,6 +818,32 @@ cd D:\blog\Minmin0101.github.io
 .\build-markdown-posts.bat
 ```
 
+#### 第四步补充：一键构建并发布文章到 GitHub
+
+如果你不想自己手动执行 `git add / git commit / git push`，可以直接双击：
+
+- [`D:\blog\Minmin0101.github.io\publish-markdown-posts.bat`](./publish-markdown-posts.bat)
+
+或者在命令行里运行：
+
+```powershell
+cd D:\blog\Minmin0101.github.io
+.\publish-markdown-posts.bat
+```
+
+这个脚本会自动做 4 件事：
+
+1. 先运行 [`D:\blog\Minmin0101.github.io\build-markdown-posts.bat`](./build-markdown-posts.bat)
+2. 自动暂存文章相关文件
+3. 自动创建 Git 提交
+4. 自动推送到 `origin/main`
+
+现在它已经做过优化：
+
+- 只有“真的有新文章 / 文章内容变化 / 文章列表变化”时才会提交
+- 如果只是重新运行脚本、没有真实内容变化，就会提示 `No markdown post changes to commit.`
+- 单纯因为 `sitemap` 日期刷新，不会再产生新提交
+
 方法 B：直接推送到 GitHub
 
 只要你把新 Markdown 文件推到仓库，GitHub Actions 就会自动运行：
@@ -1473,6 +1501,32 @@ cd D:\blog\Minmin0101.github.io
 .\build-gallery.bat
 ```
 
+#### 第三步补充：一键构建并发布相册到 GitHub
+
+如果你不想自己再手动提交，可以直接双击：
+
+- [`D:\blog\Minmin0101.github.io\publish-gallery.bat`](./publish-gallery.bat)
+
+或者在命令行里运行：
+
+```powershell
+cd D:\blog\Minmin0101.github.io
+.\publish-gallery.bat
+```
+
+这个脚本会自动做 4 件事：
+
+1. 先运行 [`D:\blog\Minmin0101.github.io\build-gallery.bat`](./build-gallery.bat)
+2. 自动暂存相册相关文件
+3. 自动创建 Git 提交
+4. 自动推送到 `origin/main`
+
+现在它也已经做过优化：
+
+- 只有“真的有新相册 / 新照片 / 相册说明变化”时才会提交
+- 如果只是重新运行脚本、没有真实内容变化，就会提示 `No gallery changes to commit.`
+- 单纯因为相册页 `modified_time` 更新时间，不会再产生新提交
+
 脚本会自动读取：
 
 - 相册页标语
@@ -1775,7 +1829,11 @@ Commit changes
 - `rss2.xml`
 - `sitemap.xml`
 
-所以，长期维护请尽量还是用本地 `git add / git commit / git push`。
+所以，长期维护请尽量还是用本地 Git 流程。  
+如果你不想手动敲命令，也可以直接双击：
+
+- [`D:\blog\Minmin0101.github.io\publish-markdown-posts.bat`](./publish-markdown-posts.bat)
+- [`D:\blog\Minmin0101.github.io\publish-gallery.bat`](./publish-gallery.bat)
 
 ---
 
@@ -2182,7 +2240,7 @@ cd D:\blog\Minmin0101.github.io
 2. 发文章先复制旧文章模板
 3. 发微博直接去 GitHub Issues
 4. 相册图片统一放到 `D:\blog\Minmin0101.github.io\img\gallery\你的相册目录`，改完后跑 `build-gallery.bat`
-5. 每次改完先本地看，再推 GitHub
+5. 发文章可以双击 `publish-markdown-posts.bat`，发相册可以双击 `publish-gallery.bat`
 6. 每做完一次大改就打一个版本号
 
 ---

@@ -273,7 +273,7 @@ git status
 <li>很多页面内容是重复写死在不同 HTML 文件里的。</li>
 <li>这里现在有两套发文方式：
    - 如果你走旧的“手工改 HTML”方式，新文章不会自动更新博客列表、标签页、搜索索引、站点地图，通常需要你手动补几处文件。
-   - 如果你走现在推荐的“Markdown 发文流程”，只要把文章放进 <code>D:\blog\Minmin0101.github.io\markdown-posts</code>，再运行 <code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code>，或者直接推送到 GitHub，博客首页、最新文章、标签页、归档页、搜索索引、RSS、站点地图都会自动更新。</li>
+   - 如果你走现在推荐的“Markdown 发文流程”，只要把文章放进 <code>D:\blog\Minmin0101.github.io\markdown-posts</code>，再运行 <code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code>，或者直接双击 <code>D:\blog\Minmin0101.github.io\publish-markdown-posts.bat</code>，博客首页、最新文章、标签页、归档页、搜索索引、RSS、站点地图都会自动更新并可一键推送到 GitHub。</li>
 </ol>
 <p>你可以把它理解成：</p>
 <ul>
@@ -393,6 +393,14 @@ git status
 <tr>
 <td>改相册内容</td>
 <td><code>D:\blog\Minmin0101.github.io\build-gallery.bat</code>、<code>D:\blog\Minmin0101.github.io\gallery\gallery-albums.txt</code>、<code>D:\blog\Minmin0101.github.io\gallery\index.html</code></td>
+</tr>
+<tr>
+<td>一键发布博客文章到 GitHub</td>
+<td><code>D:\blog\Minmin0101.github.io\publish-markdown-posts.bat</code>、<code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code></td>
+</tr>
+<tr>
+<td>一键发布相册到 GitHub</td>
+<td><code>D:\blog\Minmin0101.github.io\publish-gallery.bat</code>、<code>D:\blog\Minmin0101.github.io\build-gallery.bat</code></td>
 </tr>
 <tr>
 <td>改关于页</td>
@@ -931,6 +939,28 @@ cover_alt: 文章封面
 <pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
 .\build-markdown-posts.bat
 </code></pre>
+<h4 id="github">第四步补充：一键构建并发布文章到 GitHub</h4>
+<p>如果你不想自己手动执行 <code>git add / git commit / git push</code>，可以直接双击：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\publish-markdown-posts.bat</code></li>
+</ul>
+<p>或者在命令行里运行：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+.\publish-markdown-posts.bat
+</code></pre>
+<p>这个脚本会自动做 4 件事：</p>
+<ol>
+<li>先运行 <code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code></li>
+<li>自动暂存文章相关文件</li>
+<li>自动创建 Git 提交</li>
+<li>自动推送到 <code>origin/main</code></li>
+</ol>
+<p>现在它已经做过优化：</p>
+<ul>
+<li>只有“真的有新文章 / 文章内容变化 / 文章列表变化”时才会提交</li>
+<li>如果只是重新运行脚本、没有真实内容变化，就会提示 <code>No markdown post changes to commit.</code></li>
+<li>单纯因为 <code>sitemap</code> 日期刷新，不会再产生新提交</li>
+</ul>
 <p>方法 B：直接推送到 GitHub</p>
 <p>只要你把新 Markdown 文件推到仓库，GitHub Actions 就会自动运行：</p>
 <ul>
@@ -1424,6 +1454,28 @@ photo=回程天色|03.jpg|返程路上拍到的最后一张。
 <pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
 .\build-gallery.bat
 </code></pre>
+<h4 id="github_1">第三步补充：一键构建并发布相册到 GitHub</h4>
+<p>如果你不想自己再手动提交，可以直接双击：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\publish-gallery.bat</code></li>
+</ul>
+<p>或者在命令行里运行：</p>
+<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
+.\publish-gallery.bat
+</code></pre>
+<p>这个脚本会自动做 4 件事：</p>
+<ol>
+<li>先运行 <code>D:\blog\Minmin0101.github.io\build-gallery.bat</code></li>
+<li>自动暂存相册相关文件</li>
+<li>自动创建 Git 提交</li>
+<li>自动推送到 <code>origin/main</code></li>
+</ol>
+<p>现在它也已经做过优化：</p>
+<ul>
+<li>只有“真的有新相册 / 新照片 / 相册说明变化”时才会提交</li>
+<li>如果只是重新运行脚本、没有真实内容变化，就会提示 <code>No gallery changes to commit.</code></li>
+<li>单纯因为相册页 <code>modified_time</code> 更新时间，不会再产生新提交</li>
+</ul>
 <p>脚本会自动读取：</p>
 <ul>
 <li>相册页标语</li>
@@ -1508,7 +1560,7 @@ search-input
 </ul>
 <hr>
 <h3 id="121-github">12.1 第一次部署：先在 GitHub 网页上创建仓库</h3>
-<h4 id="github">第一步：打开 GitHub 的新建仓库页面</h4>
+<h4 id="github_2">第一步：打开 GitHub 的新建仓库页面</h4>
 <p>登录 GitHub 后，在右上角点击：</p>
 <pre><code class="language-text">+ -&gt; New repository
 </code></pre>
@@ -1644,7 +1696,12 @@ git push -u origin main
 <li><code>rss2.xml</code></li>
 <li><code>sitemap.xml</code></li>
 </ul>
-<p>所以，长期维护请尽量还是用本地 <code>git add / git commit / git push</code>。</p>
+<p>所以，长期维护请尽量还是用本地 Git 流程。<br>
+如果你不想手动敲命令，也可以直接双击：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\publish-markdown-posts.bat</code></li>
+<li><code>D:\blog\Minmin0101.github.io\publish-gallery.bat</code></li>
+</ul>
 <hr>
 <h3 id="127">12.7 部署后多久生效</h3>
 <p>通常：</p>
@@ -2027,7 +2084,7 @@ git push origin v2026.03.23-example
 <li>发文章先复制旧文章模板</li>
 <li>发微博直接去 GitHub Issues</li>
 <li>相册图片统一放到 <code>D:\blog\Minmin0101.github.io\img\gallery\你的相册目录</code>，改完后跑 <code>build-gallery.bat</code></li>
-<li>每次改完先本地看，再推 GitHub</li>
+<li>发文章可以双击 <code>publish-markdown-posts.bat</code>，发相册可以双击 <code>publish-gallery.bat</code></li>
 <li>每做完一次大改就打一个版本号</li>
 </ol>
 <hr>
