@@ -129,10 +129,13 @@ D:\blog\Minmin0101.github.io\
 ├─ about/index.html                    # 关于页
 ├─ projects/index.html                 # 项目页
 ├─ thinking/index.html                 # 思考页
+├─ build-gallery.bat                   # 相册一键构建脚本
 ├─ gallery/index.html                  # 相册页
+├─ gallery/gallery-albums.txt          # 相册配置文件
 ├─ archives/                           # 归档页
 ├─ tags/                               # 标签页总目录
 ├─ img/                                # 常规图片资源
+├─ img/gallery/                        # 相册图片目录
 ├─ media/                              # 动图、视频等资源
 ├─ css/                                # 全站样式
 ├─ js/                                 # 全站脚本
@@ -152,7 +155,7 @@ D:\blog\Minmin0101.github.io\
 | 改博客首页文案 | [`D:\blog\Minmin0101.github.io\blog\index.html`](./blog/index.html) |
 | 改微博页文案与配置 | [`D:\blog\Minmin0101.github.io\blog\weibo\index.html`](./blog/weibo/index.html) |
 | 改微博样式与交互 | [`D:\blog\Minmin0101.github.io\css\weibo-gwitter.css`](./css/weibo-gwitter.css)、[`D:\blog\Minmin0101.github.io\js\weibo-gwitter.js`](./js/weibo-gwitter.js) |
-| 改相册内容 | [`D:\blog\Minmin0101.github.io\gallery\index.html`](./gallery/index.html) |
+| 改相册内容 | [`D:\blog\Minmin0101.github.io\build-gallery.bat`](./build-gallery.bat)、[`D:\blog\Minmin0101.github.io\gallery\gallery-albums.txt`](./gallery/gallery-albums.txt)、[`D:\blog\Minmin0101.github.io\gallery\index.html`](./gallery/index.html) |
 | 改关于页 | [`D:\blog\Minmin0101.github.io\about\index.html`](./about/index.html) |
 | 改项目页 | [`D:\blog\Minmin0101.github.io\projects\index.html`](./projects/index.html) |
 | 改思考页 | [`D:\blog\Minmin0101.github.io\thinking\index.html`](./thinking/index.html) |
@@ -563,6 +566,8 @@ Ctrl + Shift + F
 
 文件：
 
+- [`D:\blog\Minmin0101.github.io\gallery\gallery-albums.txt`](./gallery/gallery-albums.txt)
+- [`D:\blog\Minmin0101.github.io\build-gallery.bat`](./build-gallery.bat)
 - [`D:\blog\Minmin0101.github.io\gallery\index.html`](./gallery/index.html)
 
 可以改的地方包括：
@@ -571,6 +576,7 @@ Ctrl + Shift + F
 - 相册总览说明
 - 相册统计文字
 - 相册说明段落
+- 每本相册的名字、简介、封面、照片标题和描述
 
 搜索关键词：
 
@@ -579,6 +585,9 @@ Ctrl + Shift + F
 把生活碎片收进相册里，想看的时候就翻出来。
 目前收录
 每一本相册都可以继续往里加照片
+page_subtitle=
+overview_title=
+photo=
 ```
 
 ---
@@ -1341,29 +1350,42 @@ Labels
 
 ## 10. 如何新建相册并上传图片
 
-相册页是纯静态页，不会自动从某个图库后台读取。
+现在相册页已经改成“小白模式”自动生成了。  
+以后你不用再手改 `gallery/index.html` 里的卡片 HTML，也不用手改 `window.galleryAlbums`。
 
-也就是说：
+你只需要：
 
-1. 你先把图片放进项目目录
-2. 再去改 `gallery/index.html`
+1. 把照片放进相册目录
+2. 改相册配置文件
+3. 双击相册构建脚本
 
 ### 10.1 相册相关文件
 
+- [`D:\blog\Minmin0101.github.io\build-gallery.bat`](./build-gallery.bat)
+- [`D:\blog\Minmin0101.github.io\gallery\gallery-albums.txt`](./gallery/gallery-albums.txt)
+- [`D:\blog\Minmin0101.github.io\tools\build_gallery.py`](./tools/build_gallery.py)
 - [`D:\blog\Minmin0101.github.io\gallery\index.html`](./gallery/index.html)
+- [`D:\blog\Minmin0101.github.io\img\gallery`](./img/gallery)
 - [`D:\blog\Minmin0101.github.io\js\gallery-viewer.js`](./js/gallery-viewer.js)
 
-真正的数据写在：
+这几个文件分别是：
 
-```html
-<script>
-window.galleryAlbums = [...]
-</script>
-```
+- `build-gallery.bat`
+  你以后双击运行的脚本
+- `gallery-albums.txt`
+  你以后真正要填写的相册配置文件
+- `build_gallery.py`
+  bat 背后调用的内部生成脚本
+- `gallery/index.html`
+  自动生成后的相册页结果
+- `img\gallery`
+  最推荐的相册图片上传目录
 
 ### 10.2 图片放哪里
 
-推荐自己建立更整齐的目录。
+现在最推荐统一放到：
+
+- [`D:\blog\Minmin0101.github.io\img\gallery`](./img/gallery)
 
 比如：
 
@@ -1373,103 +1395,124 @@ D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip\02.jpg
 D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip\03.jpg
 ```
 
-或者：
+当前仓库里已经给你放好了 3 个示例相册目录：
 
-```text
-D:\blog\Minmin0101.github.io\media\gallery\2026-spring-trip\01.jpg
-```
+- [`D:\blog\Minmin0101.github.io\img\gallery\rainy-street`](./img/gallery/rainy-street)
+- [`D:\blog\Minmin0101.github.io\img\gallery\ui-sketches`](./img/gallery/ui-sketches)
+- [`D:\blog\Minmin0101.github.io\img\gallery\long-wind-trip`](./img/gallery/long-wind-trip)
 
 ### 10.3 新建一个相册的步骤
 
 #### 第一步：上传图片
 
-把图片复制到你准备好的目录里。
+先建一个你自己的新目录，比如：
 
-#### 第二步：改相册页面正文卡片
+```text
+D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip
+```
+
+然后把照片复制进去。
+
+#### 第二步：改相册配置文件
 
 文件：
 
+- [`D:\blog\Minmin0101.github.io\gallery\gallery-albums.txt`](./gallery/gallery-albums.txt)
+
+你真正要改的是这里面的全局配置和 `[album]` 区块。
+
+文件开头这些是整页共用设置：
+
+```text
+page_subtitle=
+overview_label=
+overview_title=
+overview_copy=
+upload_root=
+```
+
+每个 `[album]` 代表一本相册，例如：
+
+```text
+[album]
+title=春天短途
+subtitle=把风、树影和午后天光收进一页里。
+folder=D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip
+cover=01.jpg
+photo=湖边长椅|01.jpg|坐了十分钟，风很轻。
+photo=树影落地|02.jpg|阳光把叶子的边缘照得很清楚。
+photo=回程天色|03.jpg|返程路上拍到的最后一张。
+```
+
+`photo=` 这一行的格式是：
+
+```text
+照片标题|文件名或路径|照片说明
+```
+
+如果你懒得一张张写 `photo=`，也可以只写：
+
+- `title=`
+- `subtitle=`
+- `folder=`
+- `cover=`
+
+然后把图片全放进这个目录里。  
+脚本会自动扫描文件夹里的图片并生成相册。
+
+#### 第三步：双击构建脚本
+
+双击：
+
+- [`D:\blog\Minmin0101.github.io\build-gallery.bat`](./build-gallery.bat)
+
+或者命令行运行：
+
+```powershell
+cd D:\blog\Minmin0101.github.io
+.\build-gallery.bat
+```
+
+脚本会自动读取：
+
+- 相册页标语
+- 相册总览标题
+- 相册说明文案
+- 相册图片目录
+- 相册标题 / 简介 / 封面 / 照片列表
+
+然后自动更新：
+
 - [`D:\blog\Minmin0101.github.io\gallery\index.html`](./gallery/index.html)
 
-搜索：
-
-```text
-gallery-album-list
-```
-
-你会看到每本相册的卡片 HTML，大概长这样：
-
-```html
-<article class="gallery-album" data-album="0">
-```
-
-复制一整块，改成你的新相册：
-
-- 相册名
-- 相册简介
-- 封面图
-- 相册照片数量
-
-#### 第三步：改 `window.galleryAlbums`
-
-同样在 [`D:\blog\Minmin0101.github.io\gallery\index.html`](./gallery/index.html) 搜索：
-
-```text
-window.galleryAlbums=
-```
-
-结构是：
-
-```js
-{
-  title: "相册标题",
-  subtitle: "相册副标题",
-  photos: [
-    {
-      src: "/D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip\01.jpg",
-      thumb: "/D:\blog\Minmin0101.github.io\img\gallery\2026-spring-trip\01.jpg",
-      title: "照片标题",
-      description: "照片说明"
-    }
-  ]
-}
-```
-
-你每加一本相册，都要把这里的数据同步补上。
+而且现在其它页面左侧菜单里的“相册数量”也会自动跟着同步，不需要你再一个页面一个页面改。
 
 ### 10.4 修改相册总数和照片总数
 
-在 [`D:\blog\Minmin0101.github.io\gallery\index.html`](./gallery/index.html) 搜索：
+现在不用手改。  
+`build-gallery.bat` 会根据 `gallery-albums.txt` 和相册图片自动统计：
 
-```text
-目前收录
-```
-
-例如当前是：
-
-```text
-目前收录 3 本相册，9 张照片
-```
-
-如果你新加 1 本相册、3 张图，就改成：
-
-```text
-目前收录 4 本相册，12 张照片
-```
+- 相册总数
+- 照片总数
+- 当前相册页左侧菜单里的相册数量
+- 其它页面左侧菜单里的相册数量（前端自动同步）
 
 ### 10.5 相册页介绍文字去哪改
 
-搜索：
+你以后主要改这里：
 
-```text
-这里放生活切片、界面草稿和想留下来的旅途画面。
-把生活碎片收进相册里，想看的时候就翻出来。
-每一本相册都可以继续往里加照片
-```
+- [`D:\blog\Minmin0101.github.io\gallery\gallery-albums.txt`](./gallery/gallery-albums.txt)
 
-都在：
+对应关系是：
 
-- [`D:\blog\Minmin0101.github.io\gallery\index.html`](./gallery/index.html)
+- `page_subtitle=`
+  相册页标题下面那句副标题
+- `overview_label=`
+  相册总览左上角的小字
+- `overview_title=`
+  相册总览主标题
+- `overview_copy=`
+  相册总览下面那段说明
 
 ---
 
@@ -2119,7 +2162,7 @@ cd D:\blog\Minmin0101.github.io
 | 微博样式 | [`D:\blog\Minmin0101.github.io\css\weibo-gwitter.css`](./css/weibo-gwitter.css) |
 | 微博逻辑 | [`D:\blog\Minmin0101.github.io\js\weibo-gwitter.js`](./js/weibo-gwitter.js) |
 | 微博登录 | [`D:\blog\Minmin0101.github.io\js\weibo-oauth-client.js`](./js/weibo-oauth-client.js)、[`D:\blog\Minmin0101.github.io\serverless\github-oauth-worker`](./serverless/github-oauth-worker) |
-| 相册卡片和数据 | [`D:\blog\Minmin0101.github.io\gallery\index.html`](./gallery/index.html) |
+| 相册卡片和数据 | [`D:\blog\Minmin0101.github.io\build-gallery.bat`](./build-gallery.bat)、[`D:\blog\Minmin0101.github.io\gallery\gallery-albums.txt`](./gallery/gallery-albums.txt)、[`D:\blog\Minmin0101.github.io\gallery\index.html`](./gallery/index.html) |
 | 关于页内容 | [`D:\blog\Minmin0101.github.io\about\index.html`](./about/index.html) |
 | 项目页内容 | [`D:\blog\Minmin0101.github.io\projects\index.html`](./projects/index.html) |
 | 思考页内容 | [`D:\blog\Minmin0101.github.io\thinking\index.html`](./thinking/index.html) |
@@ -2138,7 +2181,7 @@ cd D:\blog\Minmin0101.github.io
 1. 图片尽量覆盖原文件，不轻易改路径
 2. 发文章先复制旧文章模板
 3. 发微博直接去 GitHub Issues
-4. 相册统一把图片放到自己新建的子目录里
+4. 相册图片统一放到 `D:\blog\Minmin0101.github.io\img\gallery\你的相册目录`，改完后跑 `build-gallery.bat`
 5. 每次改完先本地看，再推 GitHub
 6. 每做完一次大改就打一个版本号
 

@@ -1,9 +1,11 @@
 (function (window, document) {
-  var CACHE_KEY = "minmin-weibo-count-cache-v1";
+  var WEIBO_CACHE_KEY = "minmin-weibo-count-cache-v1";
+  var GALLERY_CACHE_KEY = "minmin-gallery-count-cache-v1";
   var REMOTE_TTL = 90000;
   var DEFAULT_OWNER = "Minmin0101";
   var DEFAULT_REPO = "Minmin0101.github.io";
   var DEFAULT_FALLBACK_COUNT = 4;
+  var DEFAULT_GALLERY_COUNT = 3;
 
   function parseCount(value) {
     var count = parseInt(value, 10);
@@ -19,6 +21,10 @@
     return document.querySelectorAll('.statistics .total-link[href="/blog/weibo/"] .count');
   }
 
+  function getGalleryCountNodes() {
+    return document.querySelectorAll('.statistics .total-link[href="/gallery/"] .count');
+  }
+
   function applyCount(count) {
     Array.prototype.forEach.call(getCountNodes(), function (node) {
       node.textContent = String(count);
@@ -28,7 +34,16 @@
     window.__MINMIN_WEIBO_COUNT__ = count;
   }
 
-  function readCache() {
+  function applyGalleryCount(count) {
+    Array.prototype.forEach.call(getGalleryCountNodes(), function (node) {
+      node.textContent = String(count);
+      node.setAttribute("data-gallery-count", String(count));
+    });
+
+    window.__MINMIN_GALLERY_COUNT__ = count;
+  }
+
+  function readCache(cacheKey) {
     var payload = null;
 
     if (!window.localStorage) {
@@ -36,7 +51,7 @@
     }
 
     try {
-      payload = JSON.parse(window.localStorage.getItem(CACHE_KEY) || "null");
+      payload = JSON.parse(window.localStorage.getItem(cacheKey) || "null");
     } catch (error) {
       payload = null;
     }
@@ -52,15 +67,15 @@
     };
   }
 
-  function createCountEvent(payload) {
+  function createCountEvent(eventName, payload) {
     if (typeof window.CustomEvent === "function") {
-      return new window.CustomEvent("minmin:weibo-count", {
+      return new window.CustomEvent(eventName, {
         detail: payload
       });
     }
 
     var legacyEvent = document.createEvent("CustomEvent");
-    legacyEvent.initCustomEvent("minmin:weibo-count", false, false, payload);
+    legacyEvent.initCustomEvent(eventName, false, false, payload);
     return legacyEvent;
   }
 
@@ -75,13 +90,33 @@
 
     if (window.localStorage) {
       try {
-        window.localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
+        window.localStorage.setItem(WEIBO_CACHE_KEY, JSON.stringify(payload));
       } catch (error) {
         // Ignore private-mode or storage quota failures.
       }
     }
 
-    window.dispatchEvent(createCountEvent(payload));
+    window.dispatchEvent(createCountEvent("minmin:weibo-count", payload));
+  }
+
+  function publishGalleryCount(count, source) {
+    var payload = {
+      count: count,
+      updatedAt: Date.now(),
+      source: source || ""
+    };
+
+    applyGalleryCount(count);
+
+    if (window.localStorage) {
+      try {
+        window.localStorage.setItem(GALLERY_CACHE_KEY, JSON.stringify(payload));
+      } catch (error) {
+        // Ignore private-mode or storage quota failures.
+      }
+    }
+
+    window.dispatchEvent(createCountEvent("minmin:gallery-count", payload));
   }
 
   function getFallbackCount() {
@@ -108,6 +143,20 @@
       owner: shared.owner || config.owner || DEFAULT_OWNER,
       repo: shared.repo || config.repo || DEFAULT_REPO
     };
+  }
+
+  function getGalleryFallbackCount() {
+    var explicitCount = parseCount(window.__MINMIN_GALLERY_COUNT__);
+
+    if (explicitCount !== null) {
+      return explicitCount;
+    }
+
+    if (Array.isArray(window.galleryAlbums) && window.galleryAlbums.length) {
+      return window.galleryAlbums.length;
+    }
+
+    return DEFAULT_GALLERY_COUNT;
   }
 
   function fetchRemoteCount() {
@@ -139,7 +188,7 @@
         publishCount(nextCount, remoteCount !== null && remoteCount > 0 ? "github" : "seed");
       })
       .catch(function () {
-        var cache = readCache();
+        var cache = readCache(WEIBO_CACHE_KEY);
 
         if (cache) {
           applyCount(cache.count);
@@ -150,9 +199,70 @@
       });
   }
 
+  function extractGalleryCountFromHtml(html) {
+    var payloadMatch = html && html.match(/window\.galleryAlbums=(\[[\s\S]*?\])<\/script>/);
+    var countMatch = html && html.match(/href="\/gallery\/"><div class="count">(\d+)<\/div><div class="type">相册<\/div><\/a>/);
+    var albums = null;
+    var parsedCount = null;
+
+    if (payloadMatch) {
+      try {
+        albums = JSON.parse(payloadMatch[1]);
+      } catch (error) {
+        albums = null;
+      }
+
+      if (Array.isArray(albums)) {
+        return albums.length;
+      }
+    }
+
+    if (countMatch) {
+      parsedCount = parseCount(countMatch[1]);
+    }
+
+    return parsedCount;
+  }
+
+  function fetchGalleryRemoteCount() {
+    var fallbackCount = getGalleryFallbackCount();
+
+    if (!window.fetch) {
+      return;
+    }
+
+    window
+      .fetch("/gallery/index.html", {
+        credentials: "same-origin"
+      })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("Gallery page fetch failed: " + response.status);
+        }
+
+        return response.text();
+      })
+      .then(function (html) {
+        var remoteCount = extractGalleryCountFromHtml(html);
+        var nextCount = remoteCount !== null && remoteCount > 0 ? remoteCount : fallbackCount;
+
+        publishGalleryCount(nextCount, remoteCount !== null && remoteCount > 0 ? "gallery-page" : "seed");
+      })
+      .catch(function () {
+        var cache = readCache(GALLERY_CACHE_KEY);
+
+        if (cache) {
+          applyGalleryCount(cache.count);
+          return;
+        }
+
+        applyGalleryCount(fallbackCount);
+      });
+  }
+
   function initWeiboCountSync() {
     var nodes = getCountNodes();
-    var cache = readCache();
+    var cache = readCache(WEIBO_CACHE_KEY);
     var presetCount = parseCount(window.__MINMIN_WEIBO_COUNT__);
 
     if (!nodes.length) {
@@ -170,11 +280,11 @@
     window.addEventListener("storage", function (event) {
       var nextCache = null;
 
-      if (event.key !== CACHE_KEY) {
+      if (event.key !== WEIBO_CACHE_KEY) {
         return;
       }
 
-      nextCache = readCache();
+      nextCache = readCache(WEIBO_CACHE_KEY);
       if (nextCache) {
         applyCount(nextCache.count);
       }
@@ -194,9 +304,59 @@
     }
   }
 
+  function initGalleryCountSync() {
+    var nodes = getGalleryCountNodes();
+    var cache = readCache(GALLERY_CACHE_KEY);
+    var presetCount = parseCount(window.__MINMIN_GALLERY_COUNT__);
+
+    if (!nodes.length) {
+      return;
+    }
+
+    if (presetCount !== null) {
+      applyGalleryCount(presetCount);
+    } else if (Array.isArray(window.galleryAlbums) && window.galleryAlbums.length) {
+      applyGalleryCount(window.galleryAlbums.length);
+    } else if (cache) {
+      applyGalleryCount(cache.count);
+    } else {
+      applyGalleryCount(getGalleryFallbackCount());
+    }
+
+    window.addEventListener("storage", function (event) {
+      var nextCache = null;
+
+      if (event.key !== GALLERY_CACHE_KEY) {
+        return;
+      }
+
+      nextCache = readCache(GALLERY_CACHE_KEY);
+      if (nextCache) {
+        applyGalleryCount(nextCache.count);
+      }
+    });
+
+    window.addEventListener("minmin:gallery-count", function (event) {
+      var detail = event && event.detail;
+      var nextCount = parseCount(detail && detail.count);
+
+      if (nextCount !== null) {
+        applyGalleryCount(nextCount);
+      }
+    });
+
+    if (!cache || Date.now() - cache.updatedAt > REMOTE_TTL) {
+      fetchGalleryRemoteCount();
+    }
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initWeiboCountSync);
+    document.addEventListener("DOMContentLoaded", function () {
+      initWeiboCountSync();
+      initGalleryCountSync();
+    });
   } else {
     initWeiboCountSync();
+    initGalleryCountSync();
   }
 })(window, document);

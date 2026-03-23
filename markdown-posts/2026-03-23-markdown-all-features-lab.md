@@ -1,7 +1,7 @@
 ---
 title: "Markdown 全功能长文实验室"
 date: 2026-03-23 23:40:00
-updated: 2026-03-23 23:40:00
+updated: 2026-03-23 23:59:00
 slug: markdown-all-features-lab
 summary: "这是一篇专门用来回归测试 Markdown 全部常用显示能力的长文，包含目录、图片、SVG、GIF、视频、数学公式、化学公式、化学结构式、表格、脚注、定义列表、HTML 扩展和多语言代码块。"
 tags:
@@ -217,6 +217,7 @@ for file in sorted(markdown_dir.glob("*.md")):
 ```bash
 cd D:/blog/Minmin0101.github.io
 ./build-markdown-posts.bat
+./build-gallery.bat
 git status
 ```
 

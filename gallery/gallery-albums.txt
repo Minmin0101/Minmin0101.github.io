@@ -1,0 +1,44 @@
+# 相册自动生成配置
+# 你以后只需要改这个文件，然后双击 D:\blog\Minmin0101.github.io\build-gallery.bat
+# bat 会自动读取这里的标语、相册路径、照片列表，并更新 D:\blog\Minmin0101.github.io\gallery\index.html
+#
+# 常用规则：
+# 1. upload_root 是你以后最推荐上传相册图片的根目录
+# 2. 每个 [album] 代表一本相册
+# 3. folder 可以写绝对路径，也可以只写相对 upload_root 的子目录
+# 4. photo 的格式是：标题|文件名或路径|照片描述
+# 5. 如果某本相册不写 photo=...，脚本会自动扫描 folder 里的图片文件
+# 6. cover 可以留空；留空时会自动用第一张照片当封面
+
+page_subtitle=这里放生活切片、界面草稿和想留下来的旅途画面。
+overview_label=Album Archive
+overview_title=把生活碎片收进相册里，想看的时候就翻出来。
+overview_copy=每一本相册都可以继续往里加照片，点开后支持上一张、下一张和右上角关闭。
+upload_root=D:\blog\Minmin0101.github.io\img\gallery
+
+[album]
+title=雨后街角
+subtitle=偏安静的一组日常记录，适合慢慢翻。
+folder=D:\blog\Minmin0101.github.io\img\gallery\rainy-street
+cover=cover.jpg
+photo=暮色站牌|cover.jpg|风从街口吹过来，整座城市都慢了一拍。
+photo=远山天光|horizon.svg|把一整天里最干净的一束光留在这里。
+photo=橙色晚霞|sunset.jpg|下班路上随手拍的一张，却意外像一帧电影。
+
+[album]
+title=界面草稿
+subtitle=一些设计灵感、动画测试和页面细节。
+folder=D:\blog\Minmin0101.github.io\img\gallery\ui-sketches
+cover=motion.svg
+photo=动效实验|motion.svg|记录页面切换和光影粒子的一次小测试。
+photo=卡片头像|avatar.png|留作不同模块里的视觉占位和头像版本。
+photo=界面色板|palette.png|顺手存下来的配色和层次关系，后面继续优化。
+
+[album]
+title=长风旅途
+subtitle=更偏收藏向的一本相册，放几张我想留下来的画面。
+folder=D:\blog\Minmin0101.github.io\img\gallery\long-wind-trip
+cover=mountain.svg
+photo=山谷来信|mountain.svg|像是从很远的地方寄来的安静消息。
+photo=旅途玩伴|dog.png|偶然遇见的可爱瞬间，值得被单独留档。
+photo=光落窗边|window.jpg|把普通的一天，拍成了带点温度的片段。
