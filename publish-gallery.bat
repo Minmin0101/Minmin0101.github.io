@@ -4,12 +4,13 @@ setlocal EnableExtensions
 cd /d "%~dp0"
 
 echo Building gallery...
+set "MINMIN_SKIP_PREVIEW=1"
 call build-gallery.bat
 if errorlevel 1 goto :fail
 
 echo.
 echo Staging gallery files...
-git add gallery img/gallery build-gallery.bat tools/build_gallery.py
+git add gallery img/gallery build-gallery.bat publish-gallery.bat tools\build_gallery.py tools\start_local_preview.py
 if errorlevel 1 goto :fail
 
 git diff --cached --quiet --exit-code

@@ -395,6 +395,10 @@ git status
 <td><code>D:\blog\Minmin0101.github.io\build-gallery.bat</code>、<code>D:\blog\Minmin0101.github.io\gallery\gallery-albums.txt</code>、<code>D:\blog\Minmin0101.github.io\gallery\index.html</code></td>
 </tr>
 <tr>
+<td>自动启动本地预览</td>
+<td><code>D:\blog\Minmin0101.github.io\tools\start_local_preview.py</code>、<code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code>、<code>D:\blog\Minmin0101.github.io\build-gallery.bat</code></td>
+</tr>
+<tr>
 <td>一键发布博客文章到 GitHub</td>
 <td><code>D:\blog\Minmin0101.github.io\publish-markdown-posts.bat</code>、<code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code></td>
 </tr>
@@ -471,7 +475,18 @@ code .
 <pre><code class="language-text">D:\blog\Minmin0101.github.io
 </code></pre>
 <h3 id="52">5.2 本地预览网站</h3>
-<p>推荐最简单的预览方式：</p>
+<p>推荐你现在最简单的预览方式：</p>
+<ol>
+<li>改完文章时，双击 <code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code></li>
+<li>改完相册时，双击 <code>D:\blog\Minmin0101.github.io\build-gallery.bat</code></li>
+</ol>
+<p>这两个脚本现在都会自动做两件事：</p>
+<ul>
+<li>先完成对应内容的构建</li>
+<li>再自动启动本地预览站：<code>http://127.0.0.1:4000/</code></li>
+</ul>
+<p>如果本地预览站已经在运行，它会直接复用，不会重复起一份。</p>
+<p>手动命令行方式也保留，作为备用：</p>
 <pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
 python -m http.server 4000
 </code></pre>
@@ -486,13 +501,13 @@ python -m http.server 4000
 <li>相册：<code>http://127.0.0.1:4000/gallery/</code></li>
 </ul>
 <h3 id="53-4000">5.3 如果端口 4000 被占用</h3>
-<p>可以换成别的端口，比如 4010：</p>
-<pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
-python -m http.server 4010
+<p>现在不建议再换成别的端口了。</p>
+<p>因为当前本地预览、微博本地 callback 和这两个构建脚本，都是按固定端口 <code>4000</code> 设计的。</p>
+<p>如果脚本提示端口被占用，你就先把占用 <code>4000</code> 的程序关掉，再重新双击构建脚本。</p>
+<p>排查命令：</p>
+<pre><code class="language-powershell">netstat -ano | findstr :4000
 </code></pre>
-<p>然后打开：</p>
-<pre><code class="language-text">http://127.0.0.1:4010/
-</code></pre>
+<p>如果你看到某个 PID 正在占用，再到任务管理器里结束它，或者先关闭那个程序。</p>
 <hr>
 <h2 id="6">6. 站点基础信息怎么改</h2>
 <p>这一章解决这些问题：</p>
@@ -939,6 +954,10 @@ cover_alt: 文章封面
 <pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
 .\build-markdown-posts.bat
 </code></pre>
+<p>运行完成后，脚本会自动拉起本地站点并打开：</p>
+<pre><code class="language-text">http://127.0.0.1:4000/
+</code></pre>
+<p>这样你就可以先本地检查文章、目录、封面、标签和样式，确认没问题后再决定要不要执行 <code>publish-markdown-posts.bat</code>。</p>
 <h4 id="github">第四步补充：一键构建并发布文章到 GitHub</h4>
 <p>如果你不想自己手动执行 <code>git add / git commit / git push</code>，可以直接双击：</p>
 <ul>
@@ -955,6 +974,11 @@ cover_alt: 文章封面
 <li>自动创建 Git 提交</li>
 <li>自动推送到 <code>origin/main</code></li>
 </ol>
+<p>注意：</p>
+<ul>
+<li>发布脚本内部会跳过自动打开本地预览</li>
+<li>推荐顺序是先跑 <code>build-markdown-posts.bat</code> 本地看，再跑 <code>publish-markdown-posts.bat</code> 推送</li>
+</ul>
 <p>现在它已经做过优化：</p>
 <ul>
 <li>只有“真的有新文章 / 文章内容变化 / 文章列表变化”时才会提交</li>
@@ -1454,6 +1478,10 @@ photo=回程天色|03.jpg|返程路上拍到的最后一张。
 <pre><code class="language-powershell">cd D:\blog\Minmin0101.github.io
 .\build-gallery.bat
 </code></pre>
+<p>运行完成后，脚本会自动拉起本地站点并打开：</p>
+<pre><code class="language-text">http://127.0.0.1:4000/
+</code></pre>
+<p>这样你就可以先本地检查相册文案、图片、相册数量和布局，确认没问题后再决定要不要执行 <code>publish-gallery.bat</code>。</p>
 <h4 id="github_1">第三步补充：一键构建并发布相册到 GitHub</h4>
 <p>如果你不想自己再手动提交，可以直接双击：</p>
 <ul>
@@ -1470,6 +1498,11 @@ photo=回程天色|03.jpg|返程路上拍到的最后一张。
 <li>自动创建 Git 提交</li>
 <li>自动推送到 <code>origin/main</code></li>
 </ol>
+<p>注意：</p>
+<ul>
+<li>发布脚本内部会跳过自动打开本地预览</li>
+<li>推荐顺序是先跑 <code>build-gallery.bat</code> 本地看，再跑 <code>publish-gallery.bat</code> 推送</li>
+</ul>
 <p>现在它也已经做过优化：</p>
 <ul>
 <li>只有“真的有新相册 / 新照片 / 相册说明变化”时才会提交</li>

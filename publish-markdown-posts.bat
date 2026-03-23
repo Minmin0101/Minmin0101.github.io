@@ -4,12 +4,13 @@ setlocal EnableExtensions
 cd /d "%~dp0"
 
 echo Building markdown posts...
+set "MINMIN_SKIP_PREVIEW=1"
 call build-markdown-posts.bat
 if errorlevel 1 goto :fail
 
 echo.
 echo Staging markdown post files...
-git add markdown-posts 2026 blog/index.html archives tags content.json rss2.xml sitemap.xml sitemap.txt baidusitemap.xml img/posts media/posts
+git add markdown-posts 2026 blog/index.html archives tags content.json rss2.xml sitemap.xml sitemap.txt baidusitemap.xml img/posts media/posts build-markdown-posts.bat publish-markdown-posts.bat tools\build_markdown_posts.py tools\start_local_preview.py
 if errorlevel 1 goto :fail
 
 git diff --cached --quiet --exit-code

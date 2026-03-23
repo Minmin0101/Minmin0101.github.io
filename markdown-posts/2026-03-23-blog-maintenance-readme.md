@@ -171,6 +171,7 @@ D:\blog\Minmin0101.github.io\
 | 改微博页文案与配置 | `D:\blog\Minmin0101.github.io\blog\weibo\index.html` |
 | 改微博样式与交互 | `D:\blog\Minmin0101.github.io\css\weibo-gwitter.css`、`D:\blog\Minmin0101.github.io\js\weibo-gwitter.js` |
 | 改相册内容 | `D:\blog\Minmin0101.github.io\build-gallery.bat`、`D:\blog\Minmin0101.github.io\gallery\gallery-albums.txt`、`D:\blog\Minmin0101.github.io\gallery\index.html` |
+| 自动启动本地预览 | `D:\blog\Minmin0101.github.io\tools\start_local_preview.py`、`D:\blog\Minmin0101.github.io\build-markdown-posts.bat`、`D:\blog\Minmin0101.github.io\build-gallery.bat` |
 | 一键发布博客文章到 GitHub | `D:\blog\Minmin0101.github.io\publish-markdown-posts.bat`、`D:\blog\Minmin0101.github.io\build-markdown-posts.bat` |
 | 一键发布相册到 GitHub | `D:\blog\Minmin0101.github.io\publish-gallery.bat`、`D:\blog\Minmin0101.github.io\build-gallery.bat` |
 | 改关于页 | `D:\blog\Minmin0101.github.io\about\index.html` |
@@ -226,7 +227,19 @@ D:\blog\Minmin0101.github.io
 
 ### 5.2 本地预览网站
 
-推荐最简单的预览方式：
+推荐你现在最简单的预览方式：
+
+1. 改完文章时，双击 `D:\blog\Minmin0101.github.io\build-markdown-posts.bat`
+2. 改完相册时，双击 `D:\blog\Minmin0101.github.io\build-gallery.bat`
+
+这两个脚本现在都会自动做两件事：
+
+- 先完成对应内容的构建
+- 再自动启动本地预览站：`http://127.0.0.1:4000/`
+
+如果本地预览站已经在运行，它会直接复用，不会重复起一份。
+
+手动命令行方式也保留，作为备用：
 
 ```powershell
 cd D:\blog\Minmin0101.github.io
@@ -248,18 +261,19 @@ http://127.0.0.1:4000/
 
 ### 5.3 如果端口 4000 被占用
 
-可以换成别的端口，比如 4010：
+现在不建议再换成别的端口了。
+
+因为当前本地预览、微博本地 callback 和这两个构建脚本，都是按固定端口 `4000` 设计的。
+
+如果脚本提示端口被占用，你就先把占用 `4000` 的程序关掉，再重新双击构建脚本。
+
+排查命令：
 
 ```powershell
-cd D:\blog\Minmin0101.github.io
-python -m http.server 4010
+netstat -ano | findstr :4000
 ```
 
-然后打开：
-
-```text
-http://127.0.0.1:4010/
-```
+如果你看到某个 PID 正在占用，再到任务管理器里结束它，或者先关闭那个程序。
 
 ---
 
@@ -833,6 +847,14 @@ cd D:\blog\Minmin0101.github.io
 .\build-markdown-posts.bat
 ```
 
+运行完成后，脚本会自动拉起本地站点并打开：
+
+```text
+http://127.0.0.1:4000/
+```
+
+这样你就可以先本地检查文章、目录、封面、标签和样式，确认没问题后再决定要不要执行 `publish-markdown-posts.bat`。
+
 #### 第四步补充：一键构建并发布文章到 GitHub
 
 如果你不想自己手动执行 `git add / git commit / git push`，可以直接双击：
@@ -852,6 +874,11 @@ cd D:\blog\Minmin0101.github.io
 2. 自动暂存文章相关文件
 3. 自动创建 Git 提交
 4. 自动推送到 `origin/main`
+
+注意：
+
+- 发布脚本内部会跳过自动打开本地预览
+- 推荐顺序是先跑 `build-markdown-posts.bat` 本地看，再跑 `publish-markdown-posts.bat` 推送
 
 现在它已经做过优化：
 
@@ -1516,6 +1543,14 @@ cd D:\blog\Minmin0101.github.io
 .\build-gallery.bat
 ```
 
+运行完成后，脚本会自动拉起本地站点并打开：
+
+```text
+http://127.0.0.1:4000/
+```
+
+这样你就可以先本地检查相册文案、图片、相册数量和布局，确认没问题后再决定要不要执行 `publish-gallery.bat`。
+
 #### 第三步补充：一键构建并发布相册到 GitHub
 
 如果你不想自己再手动提交，可以直接双击：
@@ -1535,6 +1570,11 @@ cd D:\blog\Minmin0101.github.io
 2. 自动暂存相册相关文件
 3. 自动创建 Git 提交
 4. 自动推送到 `origin/main`
+
+注意：
+
+- 发布脚本内部会跳过自动打开本地预览
+- 推荐顺序是先跑 `build-gallery.bat` 本地看，再跑 `publish-gallery.bat` 推送
 
 现在它也已经做过优化：
 
