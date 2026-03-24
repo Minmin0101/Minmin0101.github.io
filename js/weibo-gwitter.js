@@ -505,7 +505,7 @@
     };
   }
 
-  function getIssueLabels(issue) {
+  function getLegacyIssueLabels(issue) {
     var labels = Array.isArray(issue && issue.labels) ? issue.labels : [];
 
     if (!labels.length) {
@@ -545,6 +545,116 @@
       .map(function (label) {
         return (
           '<span class="minmin-weibo-seed-tag" style="' + escapeAttribute(getLabelStyle(label.color)) + '">' +
+          escapeHtml(label.name) +
+          "</span>"
+        );
+      })
+      .join("");
+  }
+
+  function getCustomIssueLabels(issue) {
+    var labels = Array.isArray(issue && issue.labels) ? issue.labels : [];
+
+    return labels
+      .filter(function (label) {
+        return label && label.name && label.default !== true;
+      })
+      .map(function (label) {
+        return {
+          name: label.name,
+          color: normalizeLabelColor(label.color || label.hex || "77aaff")
+        };
+      });
+  }
+
+  function getIssueLabels(issue) {
+    var labels = getCustomIssueLabels(issue);
+
+    if (!labels.length) {
+      return [
+        {
+          name: "\u5fae\u535a",
+          color: "77aaff"
+        }
+      ];
+    }
+
+    return labels;
+  }
+
+  function getSummaryLabels(issues) {
+    var labelMap = {};
+    var needsFallback = false;
+
+    (issues || []).forEach(function (issue) {
+      var labels = getCustomIssueLabels(issue);
+
+      if (!labels.length) {
+        needsFallback = true;
+        return;
+      }
+
+      labels.forEach(function (label) {
+        var key = String(label.name || "").toLowerCase();
+
+        if (!key) {
+          return;
+        }
+
+        if (!labelMap[key]) {
+          labelMap[key] = {
+            name: label.name,
+            color: label.color,
+            count: 0
+          };
+        }
+
+        labelMap[key].count += 1;
+      });
+    });
+
+    var summaryLabels = Object.keys(labelMap)
+      .map(function (key) {
+        return labelMap[key];
+      })
+      .sort(function (left, right) {
+        if (right.count !== left.count) {
+          return right.count - left.count;
+        }
+
+        return String(left.name || "").localeCompare(String(right.name || ""), "zh-Hans-CN");
+      });
+
+    if (!summaryLabels.length && needsFallback) {
+      summaryLabels.push({
+        name: "\u5fae\u535a",
+        color: "77aaff",
+        count: 1
+      });
+    }
+
+    return summaryLabels;
+  }
+
+  function updateSummaryTagCloud(issues) {
+    var cloud = document.querySelector(".minmin-weibo-summary-tag-cloud");
+    var summaryLabels = [];
+
+    if (!cloud) {
+      return;
+    }
+
+    summaryLabels = getSummaryLabels(issues);
+
+    if (!summaryLabels.length) {
+      cloud.innerHTML = "";
+      return;
+    }
+
+    cloud.innerHTML = summaryLabels
+      .map(function (label) {
+        return (
+          '<span class="minmin-weibo-summary-tag" style="' + escapeAttribute(getLabelStyle(label.color)) + '">' +
           escapeHtml(label.name) +
           "</span>"
         );
@@ -1407,6 +1517,7 @@
     var feed = null;
 
     ensureShell();
+    updateSummaryTagCloud(issues);
     feed = root.querySelector(".minmin-weibo-issue-list");
     if (!feed) {
       return;
