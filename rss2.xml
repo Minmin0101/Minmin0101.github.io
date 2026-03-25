@@ -501,6 +501,48 @@ python -m http.server 4000
 <li>相册：<code>http://127.0.0.1:4000/gallery/</code></li>
 </ul>
 <h3 id="53-4000">5.3 如果端口 4000 被占用</h3>
+<h4 id="531">5.3.1 如何关闭本地预览网站</h4>
+<p>如果你是自己在终端里手动运行了：</p>
+<pre><code class="language-powershell">python -m http.server 4000
+</code></pre>
+<p>要关闭它，最简单的方法就是：</p>
+<ul>
+<li>回到那个正在运行命令的终端窗口</li>
+<li>按 <code>Ctrl + C</code></li>
+</ul>
+<p>如果你是通过下面这些脚本启动的本地预览：</p>
+<ul>
+<li><code>D:\blog\Minmin0101.github.io\build-markdown-posts.bat</code></li>
+<li><code>D:\blog\Minmin0101.github.io\build-gallery.bat</code></li>
+</ul>
+<p>通常会另外弹出一个本地预览窗口。你可以直接：</p>
+<ul>
+<li>关闭那个预览命令行窗口</li>
+<li>或者按窗口里的 <code>Ctrl + C</code></li>
+</ul>
+<h4 id="532-4000">5.3.2 如果你不知道哪个窗口在占用 4000</h4>
+<p>先查 PID：</p>
+<pre><code class="language-powershell">netstat -ano | findstr :4000
+</code></pre>
+<p>你会看到类似：</p>
+<pre><code class="language-text">TCP    127.0.0.1:4000    0.0.0.0:0    LISTENING    12345
+</code></pre>
+<p>最后一列 <code>12345</code> 就是 PID。</p>
+<p>如果你想进一步确认这个 PID 是什么程序：</p>
+<pre><code class="language-powershell">tasklist | findstr 12345
+</code></pre>
+<p>或者：</p>
+<pre><code class="language-powershell">Get-Process -Id 12345
+</code></pre>
+<p>确认之后，直接结束它：</p>
+<pre><code class="language-powershell">taskkill /PID 12345 /F
+</code></pre>
+<p>如果你更习惯 PowerShell，也可以这样：</p>
+<pre><code class="language-powershell">Stop-Process -Id 12345 -Force
+</code></pre>
+<p>结束成功后，再重新运行你的构建脚本或重新打开：</p>
+<pre><code class="language-powershell">http://127.0.0.1:4000/
+</code></pre>
 <p>现在不建议再换成别的端口了。</p>
 <p>因为当前本地预览、微博本地 callback 和这两个构建脚本，都是按固定端口 <code>4000</code> 设计的。</p>
 <p>如果脚本提示端口被占用，你就先把占用 <code>4000</code> 的程序关掉，再重新双击构建脚本。</p>
@@ -1644,6 +1686,16 @@ search-input
 </ul>
 <hr>
 <h3 id="121-github">12.1 第一次部署：先在 GitHub 网页上创建仓库</h3>
+<h4 id="1211-github">12.1.1 GitHub 新建仓库界面截图</h4>
+<p>下面这张图，就是你当前登录 GitHub 后打开 <code>https://github.com/new</code> 会看到的位置：</p>
+<p><img alt="GitHub 新建仓库页面" src="./img/posts/2026-03-23-blog-maintenance-readme/screens/github-new-repository.png"></p>
+<p>你重点看这几个位置：</p>
+<ol>
+<li><code>Owner</code></li>
+<li><code>Repository name</code></li>
+<li><code>Description</code></li>
+<li><code>Visibility</code></li>
+</ol>
 <h4 id="github_2">第一步：打开 GitHub 的新建仓库页面</h4>
 <p>登录 GitHub 后，在右上角点击：</p>
 <pre><code class="language-text">+ -&gt; New repository
@@ -1711,6 +1763,19 @@ git push -u origin main
 <p>如果你看到“everything up-to-date”，说明这份项目本来就已经和 GitHub 连上了，不需要重新初始化。</p>
 <hr>
 <h3 id="123-github-github-pages">12.3 在 GitHub 网页里真正开启 GitHub Pages</h3>
+<h4 id="1231-github-pages">12.3.1 GitHub Pages 配置界面截图</h4>
+<p>下面这张图，就是仓库里 <code>Settings -&gt; Pages</code> 的位置：</p>
+<p><img alt="GitHub Pages 设置页面" src="./img/posts/2026-03-23-blog-maintenance-readme/screens/github-pages-settings.png"></p>
+<p>你主要看这几个位置：</p>
+<ol>
+<li>顶部 <code>Settings</code></li>
+<li>左侧设置菜单</li>
+<li><code>GitHub Pages</code></li>
+<li><code>Build and deployment</code></li>
+<li><code>Source</code></li>
+<li><code>Branch</code></li>
+<li><code>Save</code></li>
+</ol>
 <p>进入你刚创建好的仓库后，按这个路径点：</p>
 <pre><code class="language-text">Settings -&gt; Pages
 </code></pre>

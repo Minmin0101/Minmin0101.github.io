@@ -261,6 +261,75 @@ http://127.0.0.1:4000/
 
 ### 5.3 如果端口 4000 被占用
 
+#### 5.3.1 如何关闭本地预览网站
+
+如果你是自己在终端里手动运行了：
+
+```powershell
+python -m http.server 4000
+```
+
+要关闭它，最简单的方法就是：
+
+- 回到那个正在运行命令的终端窗口
+- 按 `Ctrl + C`
+
+如果你是通过下面这些脚本启动的本地预览：
+
+- `D:\blog\Minmin0101.github.io\build-markdown-posts.bat`
+- `D:\blog\Minmin0101.github.io\build-gallery.bat`
+
+通常会另外弹出一个本地预览窗口。你可以直接：
+
+- 关闭那个预览命令行窗口
+- 或者按窗口里的 `Ctrl + C`
+
+#### 5.3.2 如果你不知道哪个窗口在占用 4000
+
+先查 PID：
+
+```powershell
+netstat -ano | findstr :4000
+```
+
+你会看到类似：
+
+```text
+TCP    127.0.0.1:4000    0.0.0.0:0    LISTENING    12345
+```
+
+最后一列 `12345` 就是 PID。
+
+如果你想进一步确认这个 PID 是什么程序：
+
+```powershell
+tasklist | findstr 12345
+```
+
+或者：
+
+```powershell
+Get-Process -Id 12345
+```
+
+确认之后，直接结束它：
+
+```powershell
+taskkill /PID 12345 /F
+```
+
+如果你更习惯 PowerShell，也可以这样：
+
+```powershell
+Stop-Process -Id 12345 -Force
+```
+
+结束成功后，再重新运行你的构建脚本或重新打开：
+
+```powershell
+http://127.0.0.1:4000/
+```
+
 现在不建议再换成别的端口了。
 
 因为当前本地预览、微博本地 callback 和这两个构建脚本，都是按固定端口 `4000` 设计的。
@@ -1737,6 +1806,19 @@ search-input
 
 ### 12.1 第一次部署：先在 GitHub 网页上创建仓库
 
+#### 12.1.1 GitHub 新建仓库界面截图
+
+下面这张图，就是你当前登录 GitHub 后打开 `https://github.com/new` 会看到的位置：
+
+![GitHub 新建仓库页面](./img/posts/2026-03-23-blog-maintenance-readme/screens/github-new-repository.png)
+
+你重点看这几个位置：
+
+1. `Owner`
+2. `Repository name`
+3. `Description`
+4. `Visibility`
+
 #### 第一步：打开 GitHub 的新建仓库页面
 
 登录 GitHub 后，在右上角点击：
@@ -1830,6 +1912,22 @@ git push -u origin main
 ---
 
 ### 12.3 在 GitHub 网页里真正开启 GitHub Pages
+
+#### 12.3.1 GitHub Pages 配置界面截图
+
+下面这张图，就是仓库里 `Settings -> Pages` 的位置：
+
+![GitHub Pages 设置页面](./img/posts/2026-03-23-blog-maintenance-readme/screens/github-pages-settings.png)
+
+你主要看这几个位置：
+
+1. 顶部 `Settings`
+2. 左侧设置菜单
+3. `GitHub Pages`
+4. `Build and deployment`
+5. `Source`
+6. `Branch`
+7. `Save`
 
 进入你刚创建好的仓库后，按这个路径点：
 
