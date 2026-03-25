@@ -16,3 +16,17 @@
   -webkit-transform: none !important;
   transform: none !important;
 }
+
+/* The maintenance guide uses manual heading numbers. Hide the theme's
+ * auto-generated TOC numbers so the sidebar matches the heading text. */
+.post-detail-page .post-toc-number {
+  display: none;
+}
+
+.post-detail-page .post-toc-link {
+  display: block;
+}
+
+.post-detail-page .post-toc-text {
+  margin-left: 0 !important;
+}
