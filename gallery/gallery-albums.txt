@@ -42,3 +42,12 @@ cover=mountain.svg
 photo=山谷来信|mountain.svg|像是从很远的地方寄来的安静消息。
 photo=旅途玩伴|dog.png|偶然遇见的可爱瞬间，值得被单独留档。
 photo=光落窗边|window.jpg|把普通的一天，拍成了带点温度的片段。
+
+[album]
+title=她的头像
+subtitle=记录她用过的头像的一本相册，每个头像都诉说了这段期间的内心变化。
+folder=D:\blog\Minmin0101.github.io\img\gallery\Her profile picture
+cover=3.jpg
+photo=奶酪蛋糕|1.jpg|你应该很喜欢吃蛋糕吧，把我都看馋了。
+photo=慵懒小猫|2.png|我想要一只小猫，没错这只慵懒小猫就是你哇。
+photo=这是网图|3.jpg|这是网图，这是网图，这是网图。
