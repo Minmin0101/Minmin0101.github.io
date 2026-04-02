@@ -16,8 +16,8 @@ if errorlevel 1 goto :fail
 git diff --cached --quiet --exit-code
 if not errorlevel 1 (
   echo.
-  echo No markdown post changes to commit.
-  goto :end
+  echo No new markdown post changes to commit.
+  goto :check_pending_push
 )
 
 for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyy-MM-dd_HH-mm-ss"') do set "STAMP=%%i"
@@ -30,6 +30,21 @@ if errorlevel 1 goto :fail
 
 echo.
 echo Pushing markdown post updates to GitHub...
+goto :push_start
+
+:check_pending_push
+set "AHEAD_COUNT=0"
+for /f %%i in ('git rev-list --count origin/main..main 2^>nul') do set "AHEAD_COUNT=%%i"
+
+if "%AHEAD_COUNT%"=="0" (
+  echo No pending local markdown post commits to push.
+  goto :end
+)
+
+echo.
+echo Found %AHEAD_COUNT% pending local markdown post commit(s). Pushing to GitHub...
+
+:push_start
 set "PUSH_ATTEMPT=0"
 
 :push_retry
