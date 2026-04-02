@@ -7,6 +7,7 @@ https://minmin0101.github.io/projects/
 https://minmin0101.github.io/thinking/
 https://minmin0101.github.io/archives/
 https://minmin0101.github.io/tags/
+https://minmin0101.github.io/2026/04/02/you-must-have-been-so-tired/
 https://minmin0101.github.io/2026/04/02/heart-skipped-a-beat/
 https://minmin0101.github.io/2026/03/23/markdown-all-features-lab/
 https://minmin0101.github.io/2026/03/23/blog-maintenance-readme/
@@ -29,6 +30,7 @@ https://minmin0101.github.io/tags/%E5%BB%BA%E7%AB%99/
 https://minmin0101.github.io/tags/%E6%83%85%E6%84%9F%E6%95%85%E4%BA%8B/
 https://minmin0101.github.io/tags/%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F/
 https://minmin0101.github.io/tags/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/
+https://minmin0101.github.io/tags/%E7%94%9F%E5%91%BD%E6%80%9D%E8%80%83/
 https://minmin0101.github.io/tags/%E7%94%9F%E6%B4%BB/
 https://minmin0101.github.io/tags/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/
 https://minmin0101.github.io/tags/%E9%95%BF%E6%96%87%E6%B5%8B%E8%AF%95/
