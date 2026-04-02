@@ -38,6 +38,7 @@ ARCHIVES_INDEX_PATH = ROOT / "archives" / "index.html"
 TAGS_INDEX_PATH = ROOT / "tags" / "index.html"
 TAG_TEMPLATE_PATH = ROOT / "tags" / "生活" / "index.html"
 ARTICLE_TEMPLATE_PATH = ROOT / "2026" / "01" / "23" / "hello-world" / "index.html"
+LONG_ARTICLE_TEMPLATE_PATH = ROOT / "2026" / "03" / "12" / "post-interaction-long-test" / "index.html"
 CONTENT_JSON_PATH = ROOT / "content.json"
 RSS_PATH = ROOT / "rss2.xml"
 SITEMAP_XML_PATH = ROOT / "sitemap.xml"
@@ -241,6 +242,31 @@ def read_head_text(path: Path) -> str | None:
 
 def read_template_text(path: Path) -> str:
     return read_head_text(path) or read_text(path)
+
+
+def resolve_article_template_path(post: PostRecord) -> Path:
+    if not post.template_path:
+        return ARTICLE_TEMPLATE_PATH
+
+    candidate = ROOT / post.template_path
+    if candidate.exists():
+        return candidate
+
+    expected_output_path = normalize_path(f"{post.path}/index.html")
+    if normalize_path(post.template_path) == expected_output_path:
+        print(
+            f"Warning: template_path for '{post.title}' points to the generated output path "
+            f"({post.template_path}). Falling back to the long-form article template.",
+            file=sys.stderr,
+        )
+        return LONG_ARTICLE_TEMPLATE_PATH
+
+    print(
+        f"Warning: template_path for '{post.title}' was not found ({post.template_path}). "
+        f"Falling back to the long-form article template.",
+        file=sys.stderr,
+    )
+    return LONG_ARTICLE_TEMPLATE_PATH
 
 
 def read_sitemap_lastmods() -> dict[str, str]:
@@ -830,7 +856,7 @@ def build_copyright_block(post: PostRecord) -> str:
 
 
 def build_generated_article_page(post: PostRecord, all_posts: list[PostRecord], current_index: int) -> str:
-    template_path = ROOT / post.template_path if post.template_path else ARTICLE_TEMPLATE_PATH
+    template_path = resolve_article_template_path(post)
     html = read_template_text(template_path)
     old_path = "/2026/01/23/hello-world/"
     html = html.replace(old_path, post.url_path)
