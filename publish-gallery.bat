@@ -89,16 +89,28 @@ goto :push_retry
 :push_fail
 echo.
 echo Push failed after 3 attempts.
+echo Gallery files have already been built and any local commit is still safe on this computer.
+echo The most common reason is a network problem reaching github.com:443.
+echo Please check your network or GitHub status, then run publish-gallery.bat again.
+echo You can also inspect pending local commits with:
+echo   git log --oneline origin/main..main
 exit /b 1
 
 :sync_fail
 echo.
 echo Could not sync with GitHub before pushing gallery updates.
+echo This usually means github.com could not be reached, or the connection was reset mid-sync.
+echo Your local gallery commit has NOT been lost.
+echo After your network recovers, just run publish-gallery.bat again.
+echo Helpful checks:
+echo   git fetch origin
+echo   git log --oneline origin/main..main
 exit /b 1
 
 :fail
 echo.
 echo Gallery publish failed.
+echo If the build step failed, please scroll up and fix the first error shown above.
 exit /b 1
 
 :end
