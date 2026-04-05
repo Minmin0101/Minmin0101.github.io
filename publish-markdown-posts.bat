@@ -29,6 +29,20 @@ git commit -m "%COMMIT_MESSAGE%"
 if errorlevel 1 goto :fail
 
 echo.
+echo Syncing with remote before push...
+git -c http.sslBackend=openssl fetch origin
+if errorlevel 1 goto :sync_fail
+
+set "BEHIND_COUNT=0"
+for /f %%i in ('git rev-list --count main..origin/main 2^>nul') do set "BEHIND_COUNT=%%i"
+
+if not "%BEHIND_COUNT%"=="0" (
+  echo Remote has %BEHIND_COUNT% newer commit(s). Rebasing local changes first...
+  git -c http.sslBackend=openssl -c rebase.autoStash=true -c core.editor=true pull --rebase origin main
+  if errorlevel 1 goto :sync_fail
+)
+
+echo.
 echo Pushing markdown post updates to GitHub...
 goto :push_start
 
@@ -43,6 +57,20 @@ if "%AHEAD_COUNT%"=="0" (
 
 echo.
 echo Found %AHEAD_COUNT% pending local markdown post commit(s). Pushing to GitHub...
+
+echo.
+echo Syncing with remote before push...
+git -c http.sslBackend=openssl fetch origin
+if errorlevel 1 goto :sync_fail
+
+set "BEHIND_COUNT=0"
+for /f %%i in ('git rev-list --count main..origin/main 2^>nul') do set "BEHIND_COUNT=%%i"
+
+if not "%BEHIND_COUNT%"=="0" (
+  echo Remote has %BEHIND_COUNT% newer commit(s). Rebasing local changes first...
+  git -c http.sslBackend=openssl -c rebase.autoStash=true -c core.editor=true pull --rebase origin main
+  if errorlevel 1 goto :sync_fail
+)
 
 :push_start
 set "PUSH_ATTEMPT=0"
@@ -61,6 +89,11 @@ goto :push_retry
 :push_fail
 echo.
 echo Push failed after 3 attempts.
+exit /b 1
+
+:sync_fail
+echo.
+echo Could not sync with GitHub before pushing markdown post updates.
 exit /b 1
 
 :fail
